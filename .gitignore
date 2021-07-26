@@ -9,6 +9,10 @@
 .history
 .svn/
 
+# Build platforms
+linux/
+web/
+
 # IntelliJ related
 *.iml
 *.ipr
