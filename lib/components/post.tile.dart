@@ -9,36 +9,32 @@ class PostTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[200],
-      margin: EdgeInsets.all(5),
-      height: 75,
+      color: Theme.of(context).cardColor,
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       width: MediaQuery.of(context).size.width,
       child: ListTile(
           leading: Container(
-            height: 75,
-            width: 30,
+            width: 20,
+            height: 50,
             child: Center(child: Text('${post.score}')),
           ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                post.title,
-                maxLines: 2,
-                style: TextStyle(
-                  color: post.stickied ? Colors.green : Colors.black,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                post.author,
-                style: TextStyle(fontSize: 10),
-              )
-            ],
+          title: Text(
+            post.title,
+            maxLines: 2,
+            style: TextStyle(
+              color: post.stickied ? Colors.green : null,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            post.author,
+            style: TextStyle(
+              fontSize: 10,
+              color: Theme.of(context).hintColor,
+            ),
           ),
           trailing: Container(
-            color: Colors.blueGrey,
+            color: Theme.of(context).canvasColor,
             height: 50,
             width: 50,
             child: post.thumbnail.contains('http')
