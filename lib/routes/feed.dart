@@ -23,23 +23,23 @@ class Feed extends StatelessWidget {
       limit: 50,
     );
     return Container(
+        color: Colors.transparent,
         child: Obx(
-      () => ListView.builder(
-        itemCount: c.feedPosts.length + 1,
-        itemBuilder: (context, i) {
-          if (i < c.feedPosts.length) {
-            RedditPost post = c.feedPosts[i];
-            return PostTile(post: post);
-          } else {
-            c.getNextPosts(
-              sub: subreddit,
-              listing: listing,
-              limit: 25,
-            );
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    ));
+          () => ListView.builder(
+            itemCount: c.feedPosts.length + 1,
+            itemBuilder: (context, i) {
+              if (i < c.feedPosts.length) {
+                return PostTile(post: c.feedPosts[i]);
+              } else {
+                c.getNextPosts(
+                  sub: subreddit,
+                  listing: listing,
+                  limit: 25,
+                );
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ));
   }
 }
