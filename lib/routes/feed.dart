@@ -4,22 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Feed extends StatelessWidget {
-  Feed({
-    Key? key,
-    required this.listing,
-    required this.subreddit,
-  }) : super(key: key);
+  Feed({Key? key}) : super(key: key);
 
-  RedditController c = Get.find();
-
-  final String listing;
-  final String subreddit;
+  final RedditController c = Get.find();
 
   @override
   Widget build(BuildContext context) {
     c.getSubredditPosts(
-      sub: subreddit,
-      listing: listing,
       limit: 50,
     );
     return Container(
@@ -31,12 +22,17 @@ class Feed extends StatelessWidget {
               if (i < c.feedPosts.length) {
                 return PostTile(post: c.feedPosts[i]);
               } else {
-                c.getNextPosts(
-                  sub: subreddit,
-                  listing: listing,
-                  limit: 25,
+                if (c.feedPosts.length > 1) {
+                  c.getNextPosts(
+                    limit: 25,
+                  );
+                }
+                return Container(
+                  height: 75,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
-                return Center(child: CircularProgressIndicator());
               }
             },
           ),
