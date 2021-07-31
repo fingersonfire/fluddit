@@ -1,21 +1,25 @@
 import 'dart:convert';
-
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as HTTP;
 
 class RedditController extends GetxController {
+  TextEditingController userController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
+  RxString subreddit = 'popular'.obs;
+  RxString listing = 'hot'.obs;
   RxList feedPosts = [].obs;
   String after = '';
 
-  getSubredditPosts({
-    required String sub,
-    required String listing,
+  void getSubredditPosts({
     required int limit,
     String time = 'week',
   }) async {
     try {
       Uri url = Uri.parse(
-          'https://www.reddit.com/r/$sub/$listing.json?limit=$limit&t=$time&t=$time');
+        'https://www.reddit.com/r/${this.subreddit.value}/${this.listing.value}.json?limit=$limit&t=$time&t=$time',
+      );
       HTTP.Response resp = await HTTP.get(url);
 
       Map<String, dynamic> parsedResp = jsonDecode(resp.body);
@@ -30,14 +34,22 @@ class RedditController extends GetxController {
     } catch (e) {}
   }
 
-  getNextPosts({
-    required String sub,
-    required String listing,
+  String getScoreString(int score) {
+    if (score.isGreaterThan(999)) {
+      String str = score.toString();
+      return '${str.substring(0, str.length - 3)}k';
+    } else {
+      return score.toString();
+    }
+  }
+
+  void getNextPosts({
     required int limit,
     String time = 'week',
   }) async {
     Uri url = Uri.parse(
-        'https://www.reddit.com/r/$sub/$listing.json?limit=$limit&t=$time&after=$after');
+      'https://www.reddit.com/r/${this.subreddit.value}/${this.listing.value}.json?limit=$limit&t=$time&after=$after',
+    );
     HTTP.Response resp = await HTTP.get(url);
 
     Map<String, dynamic> parsedResp = jsonDecode(resp.body);
