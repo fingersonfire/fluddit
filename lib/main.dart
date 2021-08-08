@@ -13,6 +13,7 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  final AuthController auth = Get.put(AuthController());
   final ComponentController comp = Get.put(ComponentController());
   final RedditController reddit = Get.put(RedditController());
 
