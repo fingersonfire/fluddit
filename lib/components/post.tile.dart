@@ -1,4 +1,5 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,9 +47,6 @@ class PostTile extends StatelessWidget {
         ),
         trailing: Container(
           decoration: BoxDecoration(
-            // borderRadius: BorderRadius.all(
-            //   Radius.circular(50),
-            // ),
             color: Theme.of(context).canvasColor,
           ),
           height: 50,

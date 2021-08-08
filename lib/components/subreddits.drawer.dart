@@ -1,4 +1,4 @@
-import 'package:fluddit/components/index.dart';
+import 'package:fluddit/routes/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +16,7 @@ Drawer subredditsDrawer() {
           child: TextButton(
             onPressed: () {
               Get.back();
-              loginDialog();
+              Get.to(() => WebLogin());
             },
             child: Text(
               'Sign In',

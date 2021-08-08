@@ -17,8 +17,9 @@ BottomAppBar bottomAppBar(
         Spacer(),
         IconButton(
           onPressed: () {
+            // Clear the feedPosts var first to show loading indicator.
             reddit.feedPosts.clear();
-            reddit.getSubredditPosts(
+            reddit.getInitPosts(
               limit: 50,
             );
           },

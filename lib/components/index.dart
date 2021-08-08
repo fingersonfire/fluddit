@@ -1,6 +1,6 @@
 export 'bottom.appbar.dart';
 
-export 'login.dialog.dart';
+export 'dialog.dart';
 
 export 'post.tile.dart';
 
