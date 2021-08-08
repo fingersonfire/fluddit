@@ -13,6 +13,8 @@ dependencies:
   http: ^0.13.3
   get: ^4.2.5
   flutter_nord_theme: ^2.1.0
+  flutter_webview_plugin: ^0.4.0
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:
