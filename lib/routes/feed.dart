@@ -10,32 +10,40 @@ class Feed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    c.getSubredditPosts(
-      limit: 50,
+    return FutureBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Container(
+            color: Colors.transparent,
+            child: Obx(
+              () => ListView.builder(
+                itemCount: c.feedPosts.length + 1,
+                itemBuilder: (context, i) {
+                  if (i < c.feedPosts.length) {
+                    return PostTile(post: c.feedPosts[i]);
+                  } else {
+                    if (c.feedPosts.length > 1) {
+                      c.getNextPosts(
+                        limit: 25,
+                      );
+                    }
+                    return Container(
+                      height: 75,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+      future: c.getInitPosts(limit: 50),
     );
-    return Container(
-        color: Colors.transparent,
-        child: Obx(
-          () => ListView.builder(
-            itemCount: c.feedPosts.length + 1,
-            itemBuilder: (context, i) {
-              if (i < c.feedPosts.length) {
-                return PostTile(post: c.feedPosts[i]);
-              } else {
-                if (c.feedPosts.length > 1) {
-                  c.getNextPosts(
-                    limit: 25,
-                  );
-                }
-                return Container(
-                  height: 75,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-            },
-          ),
-        ));
   }
 }
