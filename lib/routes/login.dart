@@ -16,8 +16,8 @@ class _WebLoginState extends State<WebLogin> {
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   final String authUrl = 'https://www.reddit.com/api/v1/authorize.compact?' +
-      'client_id=$secret&response_type=code&state=jefferson' +
-      '&redirect_uri=$redirectUri&duration=permanent' +
+      'client_id=$clientId&response_type=token&state=$codeVerifier' +
+      '&redirect_uri=$redirectUri' +
       '&scope=identity edit flair history modconfig modflair modlog modposts ' +
       'modwiki mysubreddits privatemessages read report save submit subscribe ' +
       'vote wikiedit wikiread';
@@ -30,9 +30,7 @@ class _WebLoginState extends State<WebLogin> {
       if (url.contains(redirectUri) && !url.contains('www.reddit.com')) {
         flutterWebviewPlugin.close();
 
-        // Parse the code property from the redirect url.
-        final String code = url.split('code=')[1];
-        await auth.setAuthToken(code);
+        await auth.setAuthToken(url);
 
         Get.back();
       }
@@ -42,6 +40,8 @@ class _WebLoginState extends State<WebLogin> {
   Widget build(BuildContext context) {
     return WebviewScaffold(
       url: authUrl,
+      userAgent:
+          'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.86 Mobile Safari/537.36',
       appBar: AppBar(
         backgroundColor: Theme.of(context).bottomAppBarColor,
         leading: IconButton(
