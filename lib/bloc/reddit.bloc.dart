@@ -1,39 +1,39 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
+import 'package:fluddit/models/index.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as HTTP;
 
 class RedditController extends GetxController {
-  TextEditingController userController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-
-  RxString subreddit = 'popular'.obs;
-  RxString listing = 'hot'.obs;
   RxList feedPosts = [].obs;
-  String after = '';
+  RxMap<String, dynamic> options = {
+    'after': '',
+    'listing': 'hot',
+    'subreddit': 'popular',
+    'time': 'week',
+  }.obs;
 
-  void getSubredditPosts({
-    required int limit,
-    String time = 'week',
-  }) async {
-    try {
-      Uri url = Uri.parse(
-        'https://www.reddit.com/r/${this.subreddit.value}/${this.listing.value}.json?limit=$limit&t=$time&t=$time',
-      );
-      HTTP.Response resp = await HTTP.get(url);
+  /// Gets the initial posts for the subreddit stored in the options map.
+  /// Returns a bool so a FutureBuilder knows when it's finished.
+  Future<bool> getInitPosts({required int limit}) async {
+    // Setting after option to empty so first page is returned.
+    this.options['after'] = '';
 
-      Map<String, dynamic> parsedResp = jsonDecode(resp.body);
-      after = parsedResp['data']['after'];
+    var posts = await _getPosts(limit, this.options);
+    feedPosts.value = posts;
 
-      List<dynamic> posts = parsedResp['data']['children']
-          .map((p) => RedditPost.fromJson(p['data']))
-          .toList();
-
-      feedPosts.value = posts;
-      after = parsedResp['data']['after'];
-    } catch (e) {}
+    return true;
   }
 
+  /// Adds posts to the [feedPosts] list after the last pagination page.
+  void getNextPosts({required int limit}) async {
+    var posts = await _getPosts(limit, this.options);
+
+    posts.removeWhere((post) => feedPosts.contains(post));
+    feedPosts.addAll(posts);
+  }
+
+  /// Returns the [score] int as a concatinated String (e.g. 3000 => "3k").
+  /// Anything that's less than 4 digits long returns as a unconcatinated String.
   String getScoreString(int score) {
     if (score.isGreaterThan(999)) {
       String str = score.toString();
@@ -42,57 +42,24 @@ class RedditController extends GetxController {
       return score.toString();
     }
   }
-
-  void getNextPosts({
-    required int limit,
-    String time = 'week',
-  }) async {
-    Uri url = Uri.parse(
-      'https://www.reddit.com/r/${this.subreddit.value}/${this.listing.value}.json?limit=$limit&t=$time&after=$after',
-    );
-    HTTP.Response resp = await HTTP.get(url);
-
-    Map<String, dynamic> parsedResp = jsonDecode(resp.body);
-
-    List<dynamic> posts = parsedResp['data']['children']
-        .map((p) => RedditPost.fromJson(p['data']))
-        .toList();
-
-    posts.removeWhere((post) => feedPosts.contains(post));
-
-    feedPosts.addAll(posts);
-    after = parsedResp['data']['after'];
-  }
 }
 
-class RedditPost {
-  final String author;
-  final bool saved;
-  final int score;
-  final bool stickied;
-  final String subreddit;
-  final String thumbnail;
-  final String title;
+Future _getPosts(int limit, Map<String, dynamic> options) async {
+  String postUrl = 'https://www.reddit.com/r/${options['subreddit']}/' +
+      '${options['listing']}.json' +
+      '?limit=$limit' +
+      '&t=${options['time']}' +
+      '&after=${options['after']}'; // after param being empty returns first page.
 
-  RedditPost({
-    required this.author,
-    required this.saved,
-    required this.score,
-    required this.stickied,
-    required this.subreddit,
-    required this.thumbnail,
-    required this.title,
-  });
+  Uri url = Uri.parse(postUrl);
+  HTTP.Response resp = await HTTP.get(url);
 
-  factory RedditPost.fromJson(Map<String, dynamic> json) {
-    return RedditPost(
-      author: json['author'],
-      saved: json['saved'],
-      score: json['score'],
-      stickied: json['stickied'],
-      subreddit: json['subreddit'],
-      thumbnail: json['thumbnail'],
-      title: json['title'],
-    );
-  }
+  Map<String, dynamic> parsedResp = jsonDecode(resp.body);
+  options['after'] = parsedResp['data']['after'];
+
+  var posts = parsedResp['data']['children']
+      .map((p) => RedditPost.fromJson(p['data']))
+      .toList();
+
+  return posts;
 }
