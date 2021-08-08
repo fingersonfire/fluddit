@@ -9,13 +9,6 @@
 .history
 .svn/
 
-android/
-ios/
-linux/
-macos/
-web/
-windows/
-
 # IntelliJ related
 *.iml
 *.ipr
