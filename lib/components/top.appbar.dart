@@ -10,7 +10,7 @@ AppBar topAppBar(
     backgroundColor: Colors.indigo[300],
     brightness: Brightness.dark,
     centerTitle: true,
-    title: Obx(() => Text(reddit.subreddit.value)),
+    title: Obx(() => Text(reddit.options['subreddit'])),
     leading: Container(),
   );
 }
