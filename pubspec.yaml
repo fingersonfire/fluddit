@@ -1,7 +1,7 @@
 name: fluddit
-description: A new Flutter project.
+description: An open source Reddit client written in Flutter with minimal dependencies.
 publish_to: 'none'
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
