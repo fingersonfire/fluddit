@@ -13,11 +13,13 @@ class WebLogin extends StatefulWidget {
 
 class _WebLoginState extends State<WebLogin> {
   final AuthController auth = Get.find();
+  final RedditController reddit = Get.find();
+
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   final String authUrl = 'https://www.reddit.com/api/v1/authorize.compact?' +
-      'client_id=$clientId&response_type=token&state=$codeVerifier' +
-      '&redirect_uri=$redirectUri' +
+      'client_id=$clientId&response_type=code&state=$codeVerifier' +
+      '&duration=permanent&redirect_uri=$redirectUri' +
       '&scope=identity edit flair history modconfig modflair modlog modposts ' +
       'modwiki mysubreddits privatemessages read report save submit subscribe ' +
       'vote wikiedit wikiread';
@@ -31,6 +33,8 @@ class _WebLoginState extends State<WebLogin> {
         flutterWebviewPlugin.close();
 
         await auth.setAuthToken(url);
+        await reddit.getUserSubreddits();
+        reddit.getInitPosts(limit: 50);
 
         Get.back();
       }
@@ -40,8 +44,7 @@ class _WebLoginState extends State<WebLogin> {
   Widget build(BuildContext context) {
     return WebviewScaffold(
       url: authUrl,
-      userAgent:
-          'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.86 Mobile Safari/537.36',
+      userAgent: userAgent,
       appBar: AppBar(
         backgroundColor: Theme.of(context).bottomAppBarColor,
         leading: IconButton(
