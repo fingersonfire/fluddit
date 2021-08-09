@@ -11,29 +11,37 @@ Drawer subredditsDrawer() {
     child: Column(
       children: [
         Expanded(
-          child: Container(
-            child: Container(
-              color: Colors.transparent,
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: reddit.options['subscribed'].length,
-                  itemBuilder: (context, i) {
-                    final Subreddit subreddit =
-                        reddit.options['subscribed'][i] as Subreddit;
+          child: FutureBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Container(
+                  color: Colors.transparent,
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: reddit.options['subscribed'].length,
+                      itemBuilder: (context, i) {
+                        final Subreddit subreddit =
+                            reddit.options['subscribed'][i] as Subreddit;
 
-                    return TextButton(
-                      onPressed: () {
-                        reddit.options['subreddit'] = subreddit.name;
-                        reddit.feedPosts.clear();
-                        reddit.getInitPosts(limit: 50);
-                        Get.back();
+                        return TextButton(
+                          onPressed: () {
+                            reddit.options['subreddit'] = subreddit.name;
+                            reddit.feedPosts.clear();
+                            reddit.getInitPosts(limit: 50);
+                            Get.back();
+                          },
+                          child: Text(subreddit.name),
+                        );
                       },
-                      child: Text(subreddit.name),
-                    );
-                  },
-                ),
-              ),
-            ),
+                    ),
+                  ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            future: reddit.getUserSubreddits(),
           ),
         ),
         Container(
