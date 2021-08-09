@@ -16,10 +16,10 @@ BottomAppBar bottomAppBar(
             }),
         Spacer(),
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             // Clear the feedPosts var first to show loading indicator.
             reddit.feedPosts.clear();
-            reddit.getInitPosts(
+            await reddit.getInitPosts(
               limit: 50,
             );
           },
