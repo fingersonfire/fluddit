@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'package:fluddit/models/index.dart';
+import 'package:fluddit/secrets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as HTTP;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RedditController extends GetxController {
   RxList feedPosts = [].obs;
   RxMap<String, dynamic> options = {
     'after': '',
     'listing': 'hot',
-    'subreddit': 'popular',
+    'subreddit': 'frontpage',
+    'subscribed': [],
     'time': 'week',
   }.obs;
 
@@ -42,22 +45,67 @@ class RedditController extends GetxController {
       return score.toString();
     }
   }
+
+  /// Fetches the subreddits for the logged in user.
+  Future<bool> getUserSubreddits() async {
+    HTTP.Response resp = await _get('/subreddits/mine/subscriber');
+
+    Map<String, dynamic> _json = jsonDecode(resp.body);
+    List subreddits = _json['data']['children']
+        .map((s) => Subreddit.fromJson(s['data']))
+        .toList();
+
+    this.options['subscribed'] = subreddits;
+    return true;
+  }
+}
+
+Future<HTTP.Response> _get(String endpoint) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool isLoggedIn = prefs.getString('access_token') != null;
+
+  // Requests need to be made to different URl dependeding on auth state.
+  String baseUrl = isLoggedIn ? 'oauth.reddit.com' : 'www.reddit.com';
+
+  Map<String, String> headers = {
+    'User-Agent': userAgent,
+  };
+
+  // Add bearer auth to header if token exists.
+  if (isLoggedIn) {
+    headers['Authorization'] = 'bearer ${prefs.getString('access_token')}';
+  }
+
+  Uri url = Uri.parse('https://$baseUrl$endpoint');
+  HTTP.Response resp = await HTTP.get(url, headers: headers);
+
+  return resp;
 }
 
 Future _getPosts(int limit, Map<String, dynamic> options) async {
-  String postUrl = 'https://www.reddit.com/r/${options['subreddit']}/' +
-      '${options['listing']}.json' +
-      '?limit=$limit' +
-      '&t=${options['time']}' +
-      '&after=${options['after']}'; // after param being empty returns first page.
+  HTTP.Response resp;
 
-  Uri url = Uri.parse(postUrl);
-  HTTP.Response resp = await HTTP.get(url);
+  // Fetch the default route json if subreddit is 'frontpage'.
+  if (options['subreddit'] == 'frontpage') {
+    resp = await _get(
+      '/.json' +
+          '?limit=$limit' +
+          '&after=${options['after']}', // [after] param being empty returns first page.
+    );
+  } else {
+    resp = await _get(
+      '/r/${options['subreddit']}/' +
+          '${options['listing']}.json' +
+          '?limit=$limit' +
+          '&t=${options['time']}' +
+          '&after=${options['after']}', // [after] param being empty returns first page.
+    );
+  }
 
-  Map<String, dynamic> parsedResp = jsonDecode(resp.body);
-  options['after'] = parsedResp['data']['after'];
+  Map<String, dynamic> _json = jsonDecode(resp.body);
+  options['after'] = _json['data']['after'];
 
-  var posts = parsedResp['data']['children']
+  List posts = _json['data']['children']
       .map((p) => RedditPost.fromJson(p['data']))
       .toList();
 
