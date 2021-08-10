@@ -6,15 +6,19 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
-  final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
-
   Future refreshAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // TODO: Add request to fetch new bearer using refresh_token.
+
+    await _getToken({
+      'grant_type': 'refresh_token',
+      'refresh_token': prefs.getString('refresh_token'),
+    });
   }
 
   /// Gets Reddit auth token.
   Future setAuthToken(String url) async {
+    final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
+
     // Starts the getInstance function while making time consuming requests.
     Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
@@ -45,4 +49,26 @@ class AuthController extends GetxController {
     await instance.setString('access_token', _json['access_token']);
     await instance.setString('refresh_token', _json['refresh_token']);
   }
+}
+
+Future _getToken(Map<String, dynamic> body) async {
+  final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+
+  final HTTP.Response _resp = await HTTP.post(
+    authUrl,
+    headers: {
+      'Authorization': 'basic $basicAuth',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': userAgent,
+    },
+    body: body,
+  );
+
+  Map<String, dynamic> _json = jsonDecode(_resp.body);
+
+  // Await the results of the getInstance function called earlier.
+  SharedPreferences instance = await prefs;
+  await instance.setString('access_token', _json['access_token']);
+  await instance.setString('refresh_token', _json['refresh_token']);
 }
