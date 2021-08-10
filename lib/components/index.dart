@@ -4,4 +4,8 @@ export 'dialog.dart';
 
 export 'post.tile.dart';
 
-export 'subreddits.drawer.dart';
+export 'subreddit.button.dart';
+
+export 'subreddit.list.dart';
+
+export 'drawer.dart';
