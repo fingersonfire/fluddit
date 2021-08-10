@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/secrets.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +18,9 @@ class RedditController extends GetxController {
   /// Gets the initial posts for the subreddit stored in the options map.
   /// Returns a bool so a FutureBuilder knows when it's finished.
   Future<bool> getInitPosts({required int limit}) async {
+    // Clear the current posts
+    this.feedPosts.clear();
+
     // Setting after option to empty so first page is returned.
     this.options['after'] = '';
 
@@ -48,20 +51,29 @@ class RedditController extends GetxController {
 
   /// Fetches the subreddits for the logged in user.
   Future<bool> getUserSubreddits() async {
-    HTTP.Response resp = await _get('/subreddits/mine/subscriber');
+    try {
+      HTTP.Response resp = await _get('/subreddits/mine/subscriber');
 
-    Map<String, dynamic> _json = jsonDecode(resp.body);
-    List subreddits = _json['data']['children']
-        .map((s) => Subreddit.fromJson(s['data']))
-        .toList();
+      Map<String, dynamic> _json = jsonDecode(resp.body);
+      List subreddits = _json['data']['children']
+          .map((s) => Subreddit.fromJson(s['data']))
+          .toList();
 
-    this.options['subscribed'] = subreddits;
+      subreddits.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
+
+      this.options['subscribed'] = subreddits;
+    } catch (e) {}
+
     return true;
   }
 }
 
 Future<HTTP.Response> _get(String endpoint) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  HTTP.Response resp;
   final bool isLoggedIn = prefs.getString('access_token') != null;
 
   // Requests need to be made to different URl dependeding on auth state.
@@ -77,7 +89,13 @@ Future<HTTP.Response> _get(String endpoint) async {
   }
 
   Uri url = Uri.parse('https://$baseUrl$endpoint');
-  HTTP.Response resp = await HTTP.get(url, headers: headers);
+  resp = await HTTP.get(url, headers: headers);
+
+  if (resp.statusCode == 401) {
+    final AuthController auth = Get.find();
+    await auth.refreshAuthToken();
+    resp = await HTTP.get(url, headers: headers);
+  }
 
   return resp;
 }
