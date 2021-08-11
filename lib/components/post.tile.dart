@@ -1,5 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
+import 'package:fluddit/routes/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,9 +53,17 @@ class PostTile extends StatelessWidget {
           height: 50,
           width: 50,
           child: post.thumbnail.contains('http')
-              ? Image.network(
-                  post.thumbnail,
-                  fit: BoxFit.cover,
+              ? GestureDetector(
+                  onTap: () {
+                    Get.to(
+                      ImageView(src: '${post.imageUrl}'),
+                      transition: Transition.rightToLeft,
+                    );
+                  },
+                  child: Image.network(
+                    post.thumbnail,
+                    fit: BoxFit.cover,
+                  ),
                 )
               : Center(
                   child: Text('Tt'),
