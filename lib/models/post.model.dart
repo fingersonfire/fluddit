@@ -1,7 +1,7 @@
 class RedditPost {
   final String author;
+  final String domain;
   final String id;
-  final String? imageUrl;
   final bool isSelf;
   final bool isVideo;
   final bool saved;
@@ -11,11 +11,12 @@ class RedditPost {
   final String thumbnail;
   final String title;
   final String? postHint;
+  final String? url;
 
   RedditPost({
     required this.author,
+    required this.domain,
     required this.id,
-    required this.imageUrl,
     required this.isSelf,
     required this.isVideo,
     required this.saved,
@@ -25,13 +26,14 @@ class RedditPost {
     required this.thumbnail,
     required this.title,
     required this.postHint,
+    required this.url,
   });
 
   factory RedditPost.fromJson(Map<String, dynamic> json) {
     return RedditPost(
       author: json['author'],
+      domain: json['domain'],
       id: json['id'],
-      imageUrl: json['url_overridden_by_dest'],
       isSelf: json['is_self'],
       isVideo: json['is_video'],
       saved: json['saved'],
@@ -41,6 +43,7 @@ class RedditPost {
       thumbnail: json['thumbnail'],
       title: json['title'],
       postHint: json['post_hint'],
+      url: json['url_overridden_by_dest'],
     );
   }
 }
