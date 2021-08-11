@@ -1,5 +1,5 @@
 import 'package:fluddit/bloc/reddit.bloc.dart';
-import 'package:fluddit/components/post.tile.dart';
+import 'package:fluddit/components/index.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
