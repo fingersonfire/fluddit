@@ -23,16 +23,30 @@ class App extends StatelessWidget {
       theme: NordTheme.light(),
       darkTheme: NordTheme.dark(),
       title: 'fluddit',
-      home: Scaffold(
-        key: scaffoldKey,
-        bottomNavigationBar: bottomAppBar(
-          comp,
-          reddit,
-          scaffoldKey,
-        ),
-        appBar: topAppBar(reddit),
-        body: Feed(),
-        drawer: subredditsDrawer(),
+      home: FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Scaffold(
+              key: scaffoldKey,
+              bottomNavigationBar: bottomAppBar(
+                comp,
+                reddit,
+                scaffoldKey,
+              ),
+              appBar: topAppBar(reddit),
+              body: Feed(),
+              drawer: subredditsDrawer(),
+            );
+          }
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Colors.indigo[300],
+              ),
+            ),
+          );
+        },
+        future: auth.refreshAuthToken(),
       ),
     );
   }
