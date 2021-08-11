@@ -9,10 +9,12 @@ class AuthController extends GetxController {
   Future refreshAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await _getToken({
-      'grant_type': 'refresh_token',
-      'refresh_token': prefs.getString('refresh_token'),
-    });
+    if (prefs.getString('refresh_token') != null) {
+      await _getToken({
+        'grant_type': 'refresh_token',
+        'refresh_token': prefs.getString('refresh_token'),
+      });
+    }
   }
 
   /// Gets Reddit auth token.
