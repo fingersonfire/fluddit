@@ -1,14 +1,15 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
-import 'package:fluddit/routes/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostTile extends StatelessWidget {
   PostTile({Key? key, required this.post}) : super(key: key);
 
-  final RedditController c = Get.find();
   final RedditPost post;
+
+  final RedditController reddit = Get.find();
+  final ComponentController comp = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class PostTile extends StatelessWidget {
           height: 50,
           child: Center(
             child: Text(
-              c.getScoreString(post.score),
+              reddit.getScoreString(post.score),
             ),
           ),
         ),
@@ -52,22 +53,7 @@ class PostTile extends StatelessWidget {
           ),
           height: 50,
           width: 50,
-          child: post.thumbnail.contains('http')
-              ? GestureDetector(
-                  onTap: () {
-                    Get.to(
-                      ImageView(src: '${post.imageUrl}'),
-                      transition: Transition.rightToLeft,
-                    );
-                  },
-                  child: Image.network(
-                    post.thumbnail,
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : Center(
-                  child: Text('Tt'),
-                ),
+          child: comp.getPostThumbnail(post),
         ),
       ),
     );

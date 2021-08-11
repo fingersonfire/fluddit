@@ -1,9 +1,15 @@
 export 'bottom.appbar.dart';
 
-export 'post.tile.dart';
+export 'drawer/drawer.dart';
 
-export 'subreddit.button.dart';
+export 'feed/imageThumbnail.dart';
 
-export 'subreddit.list.dart';
+export 'feed/post.tile.dart';
 
-export 'drawer.dart';
+export 'drawer/subreddit.button.dart';
+
+export 'drawer/subreddit.list.dart';
+
+export 'feed/videoThumbnail.dart';
+
+export 'feed/webThumbnail.dart';
