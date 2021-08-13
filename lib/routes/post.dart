@@ -1,8 +1,12 @@
+import 'package:fluddit/components/index.dart';
+import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostView extends StatelessWidget {
-  const PostView({Key? key}) : super(key: key);
+  const PostView({Key? key, required this.post}) : super(key: key);
+
+  final RedditPost post;
 
   @override
   Widget build(BuildContext context) {
@@ -24,37 +28,18 @@ class PostView extends StatelessWidget {
               child: Column(
                 children: [
                   // Content
-                  Container(
-                    height: constraints.maxHeight - 110,
-                    // alignment: Alignment.topCenter,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: constraints.maxHeight - 110,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.blue[400],
-                          ),
-                          Container(
-                            height: constraints.maxHeight - 110,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.green[400],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  ContentBox(constraints: constraints, post: post),
                   // Title
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 110,
-                    color: Colors.red[400],
+                  TitleBar(
+                    post: post,
                   ),
                   // Comments
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 500,
-                    color: Colors.yellow[300],
+                    height: 300,
+                    child: Center(
+                      child: Text('Comments not yet implemented'),
+                    ),
                   ),
                 ],
               ),
