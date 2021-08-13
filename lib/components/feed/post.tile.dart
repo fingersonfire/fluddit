@@ -24,9 +24,10 @@ class PostTile extends StatelessWidget {
       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       width: MediaQuery.of(context).size.width,
       child: GestureDetector(
+        // Launch the post view
         onTap: () {
           Get.to(
-            PostView(),
+            () => PostView(post: post),
             transition: Transition.rightToLeft,
           );
         },
@@ -40,6 +41,7 @@ class PostTile extends StatelessWidget {
               ),
             ),
           ),
+          // Post title
           title: Text(
             post.title,
             maxLines: 2,
@@ -48,6 +50,7 @@ class PostTile extends StatelessWidget {
             ),
             overflow: TextOverflow.ellipsis,
           ),
+          // Subreddit and author
           subtitle: Text(
             'r/${post.subreddit} | ${post.author}',
             style: TextStyle(
@@ -55,6 +58,7 @@ class PostTile extends StatelessWidget {
               color: Theme.of(context).hintColor,
             ),
           ),
+          // Thumbnail
           trailing: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,

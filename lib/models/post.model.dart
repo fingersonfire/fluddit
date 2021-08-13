@@ -6,6 +6,7 @@ class RedditPost {
   final bool isVideo;
   final bool saved;
   final int score;
+  final String selfText;
   final bool stickied;
   final String subreddit;
   final String thumbnail;
@@ -21,6 +22,7 @@ class RedditPost {
     required this.isVideo,
     required this.saved,
     required this.score,
+    required this.selfText,
     required this.stickied,
     required this.subreddit,
     required this.thumbnail,
@@ -38,6 +40,7 @@ class RedditPost {
       isVideo: json['is_video'],
       saved: json['saved'],
       score: json['score'],
+      selfText: json['selftext'],
       stickied: json['stickied'],
       subreddit: json['subreddit'],
       thumbnail: json['thumbnail'],
