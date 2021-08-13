@@ -14,9 +14,16 @@ class WebThumbnail extends StatelessWidget {
         children: [
           ConditionalWidget(
             condition: post.thumbnail != 'default',
-            trueWidget: Image.network(
-              post.thumbnail,
-              fit: BoxFit.cover,
+            trueWidget: Container(
+              width: 50,
+              height: 50,
+              child: Opacity(
+                opacity: .5,
+                child: Image.network(
+                  post.thumbnail,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             falseWidget: Container(),
           ),
