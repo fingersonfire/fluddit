@@ -38,6 +38,28 @@ class RedditController extends GetxController {
     feedPosts.addAll(posts);
   }
 
+  Future<List<dynamic>> getPostComments({
+    required String subreddit,
+    required String postId,
+  }) async {
+    HTTP.Response _resp = await _get('/r/$subreddit/comments/$postId');
+    List<dynamic> _json = jsonDecode(_resp.body);
+
+    print(subreddit);
+    print(postId);
+
+    final List<dynamic> repliesJson = _json[1]['data']['children'];
+    repliesJson.removeWhere((e) => e['kind'] == 'more');
+
+    final List<dynamic> comments = repliesJson
+        .map(
+          (s) => Comment.fromJson(s['data']),
+        )
+        .toList();
+
+    return comments;
+  }
+
   /// Returns the [score] int as a concatinated String (e.g. 3000 => "3k").
   /// Anything that's less than 4 digits long returns as a unconcatinated String.
   String getScoreString(int score) {
@@ -97,6 +119,7 @@ Future<HTTP.Response> _get(String endpoint) async {
     resp = await HTTP.get(url, headers: headers);
   }
 
+  print(prefs.getString('access_token'));
   return resp;
 }
 
