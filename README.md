@@ -1,16 +1,7 @@
 # fluddit
+An open source Reddit client for Android and iOS using the [Nord theme](https://www.nordtheme.com/).
 
-A new Flutter project.
+## Functionality
+As it currently stands the app is not complete. However, I make updates everyday with new fixes and functionality. There are pre-release builds available for Android if you wish to test the initial functionality.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The app supports logging in to your account, browsing subreddits, and viewing most types of post content.
