@@ -38,7 +38,7 @@ Widget getContent(RedditPost post) {
   } else if (post.domain == 'i.redd.it') {
     return Image.network(
       '${post.url}',
-      fit: BoxFit.cover,
+      fit: BoxFit.contain,
     );
   } else {
     return WebContent(url: '${post.url}');
