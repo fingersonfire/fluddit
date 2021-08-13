@@ -1,8 +1,6 @@
 import 'package:fluddit/models/index.dart';
-import 'package:fluddit/routes/video.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class VideoThumbnail extends StatelessWidget {
   const VideoThumbnail({Key? key, required this.post}) : super(key: key);
@@ -12,12 +10,6 @@ class VideoThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.to(
-          VideoView(url: '${post.url}/DASH_1080.mp4'),
-          transition: Transition.rightToLeft,
-        );
-      },
       child: Stack(
         children: [
           ConditionalWidget(

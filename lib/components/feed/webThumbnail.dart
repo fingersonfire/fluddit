@@ -1,8 +1,6 @@
 import 'package:fluddit/models/index.dart';
-import 'package:fluddit/routes/web.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class WebThumbnail extends StatelessWidget {
   const WebThumbnail({Key? key, required this.post}) : super(key: key);
@@ -12,12 +10,6 @@ class WebThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.to(
-          WebView(url: '${post.url}'),
-          transition: Transition.rightToLeft,
-        );
-      },
       child: Stack(
         children: [
           ConditionalWidget(
