@@ -17,6 +17,8 @@ export 'feed/videoThumbnail.dart';
 export 'feed/webThumbnail.dart';
 
 // Post view components
+export 'post/comments.dart';
+
 export 'post/content.dart';
 
 export 'post/title.dart';
