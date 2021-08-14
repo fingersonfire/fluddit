@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/components/drawer/subreddit.icon.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,16 @@ class SubredditButton extends StatelessWidget {
     return MaterialButton(
       child: Row(
         children: [
-          Icon(Icons.android_rounded),
+          subreddit.icon == ''
+              ? SubredditIcon()
+              : CachedNetworkImage(
+                  imageUrl: subreddit.icon.replaceAll('&amp;', '&'),
+                  imageBuilder: (context, imageProvider) => Container(
+                    child: SubredditIcon(image: imageProvider),
+                  ),
+                  placeholder: (context, url) => SubredditIcon(),
+                  errorWidget: (context, url, error) => SubredditIcon(),
+                ),
           Text(subreddit.name),
         ],
       ),
