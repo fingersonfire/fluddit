@@ -33,7 +33,7 @@ class PostTile extends StatelessWidget {
         },
         child: ListTile(
           leading: Container(
-            width: 30,
+            width: 25,
             height: 50,
             child: Center(
               child: Text(
@@ -51,11 +51,28 @@ class PostTile extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           // Subreddit and author
-          subtitle: Text(
-            'r/${post.subreddit} | ${post.author}',
-            style: TextStyle(
-              fontSize: 10,
-              color: Theme.of(context).hintColor,
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'r/${post.subreddit} | ${post.author}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Theme.of(context).hintColor,
+                  ),
+                ),
+                post.thumbnail == 'nsfw'
+                    ? Text(
+                        '[NSFW]',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.red[400],
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ),
           // Thumbnail

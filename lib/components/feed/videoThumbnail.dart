@@ -13,8 +13,27 @@ class VideoThumbnail extends StatelessWidget {
       child: Stack(
         children: [
           ConditionalWidget(
-            condition: post.thumbnail != 'default',
-            trueWidget: Container(
+            condition: post.thumbnail == 'default' ||
+                post.thumbnail == 'nsfw' ||
+                post.thumbnail == 'spoiler',
+            trueWidget: Opacity(
+              opacity: .5,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.pink,
+                      Colors.pinkAccent,
+                      Colors.red,
+                      Colors.redAccent
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ),
+            falseWidget: Container(
               width: 50,
               height: 50,
               child: Opacity(
@@ -25,7 +44,6 @@ class VideoThumbnail extends StatelessWidget {
                 ),
               ),
             ),
-            falseWidget: Container(),
           ),
           Center(
             child: Icon(Icons.play_arrow_outlined),
