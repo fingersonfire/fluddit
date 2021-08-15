@@ -1,49 +1,65 @@
+import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/bloc/reddit.bloc.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/components/top.appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
 class Feed extends StatelessWidget {
   Feed({Key? key}) : super(key: key);
 
-  final RedditController c = Get.find();
+  final ComponentController comp = Get.find();
+  final RedditController reddit = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            color: Colors.transparent,
-            child: Obx(
-              () => ListView.builder(
-                itemCount: c.feedPosts.length + 1,
-                itemBuilder: (context, i) {
-                  if (i < c.feedPosts.length) {
-                    return PostTile(post: c.feedPosts[i]);
-                  } else {
-                    if (c.feedPosts.length > 1) {
-                      c.getNextPosts(
-                        limit: 25,
+          return Scaffold(
+            key: scaffoldKey,
+            bottomNavigationBar: bottomAppBar(
+              comp,
+              reddit,
+              scaffoldKey,
+            ),
+            appBar: topAppBar(context, reddit),
+            body: Container(
+              color: Colors.transparent,
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: reddit.feedPosts.length + 1,
+                  itemBuilder: (context, i) {
+                    if (i < reddit.feedPosts.length) {
+                      return PostTile(post: reddit.feedPosts[i]);
+                    } else {
+                      if (reddit.feedPosts.length > 1) {
+                        reddit.getNextPosts(
+                          limit: 25,
+                        );
+                      }
+                      return Container(
+                        height: 75,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
                     }
-                    return Container(
-                      height: 75,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                },
+                  },
+                ),
               ),
             ),
+            drawer: subredditsDrawer(),
           );
         }
         return Center(
           child: CircularProgressIndicator(),
         );
       },
-      future: c.getInitPosts(limit: 50),
+      future: Future.wait(
+          [reddit.getInitPosts(limit: 50), reddit.getUserSubreddits()]),
     );
   }
 }
