@@ -45,8 +45,7 @@ class RedditController extends GetxController {
     HTTP.Response _resp = await _get('/r/$subreddit/comments/$postId');
     List<dynamic> _json = jsonDecode(_resp.body);
 
-    print(subreddit);
-    print(postId);
+    print('Loaded post: $subreddit $postId');
 
     final List<dynamic> repliesJson = _json[1]['data']['children'];
     repliesJson.removeWhere((e) => e['kind'] == 'more');
