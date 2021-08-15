@@ -1,12 +1,8 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/components/index.dart';
-import 'package:fluddit/components/top.appbar.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 import 'package:get/get.dart';
-
-GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
 void main() {
   runApp(App());
@@ -24,27 +20,8 @@ class App extends StatelessWidget {
       darkTheme: NordTheme.dark(),
       title: 'fluddit',
       home: FutureBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Scaffold(
-              key: scaffoldKey,
-              bottomNavigationBar: bottomAppBar(
-                comp,
-                reddit,
-                scaffoldKey,
-              ),
-              appBar: topAppBar(reddit),
-              body: Feed(),
-              drawer: subredditsDrawer(),
-            );
-          }
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                color: Colors.indigo[300],
-              ),
-            ),
-          );
+        builder: (context, AsyncSnapshot snapshot) {
+          return Feed();
         },
         future: auth.refreshAuthToken(),
       ),
