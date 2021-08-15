@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Drawer subredditsDrawer() {
-  final RedditController reddit = Get.find();
   final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
   return Drawer(
     child: FutureBuilder(
-      future: Future.wait([reddit.getUserSubreddits(), prefs]),
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+      future: prefs,
+      builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
             children: [
@@ -24,8 +23,7 @@ Drawer subredditsDrawer() {
                 height: 50,
                 width: 305,
                 child: ConditionalWidget(
-                  condition:
-                      snapshot.data?[1].getString('access_token') != null,
+                  condition: snapshot.data?.getString('access_token') != null,
                   trueWidget: TextButton(
                     onPressed: () {},
                     child: Text(

@@ -15,8 +15,28 @@ class SubredditList extends StatelessWidget {
       child: Obx(
         () => SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              children: List<Widget>.generate(
+            child: Column(children: [
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: TextButton(
+                  child: Text(
+                    'frontpage',
+                    style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 18,
+                    ),
+                  ),
+                  onPressed: () {
+                    final RedditController reddit = Get.find();
+
+                    reddit.options['subreddit'] = 'frontpage';
+                    reddit.getInitPosts(limit: 50);
+                    Get.back();
+                  },
+                ),
+              ),
+              Divider(),
+              ...List<Widget>.generate(
                 reddit.options['subscribed'].length,
                 (i) {
                   final Subreddit subreddit =
@@ -24,7 +44,7 @@ class SubredditList extends StatelessWidget {
                   return SubredditButton(subreddit: subreddit);
                 },
               ),
-            ),
+            ]),
           ),
         ),
       ),
