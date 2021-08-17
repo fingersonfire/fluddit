@@ -9,29 +9,27 @@ class WebThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Stack(
-        children: [
-          ConditionalWidget(
-            condition: post.thumbnail != 'default',
-            trueWidget: Container(
-              width: 50,
-              height: 50,
-              child: Opacity(
-                opacity: .5,
-                child: Image.network(
-                  post.thumbnail,
-                  fit: BoxFit.cover,
-                ),
+    return Stack(
+      children: [
+        ConditionalWidget(
+          condition: post.thumbnail != 'default' && post.thumbnail != '',
+          trueWidget: Container(
+            width: 75,
+            height: 75,
+            child: Opacity(
+              opacity: .5,
+              child: Image.network(
+                post.thumbnail,
+                fit: BoxFit.cover,
               ),
             ),
-            falseWidget: Container(),
           ),
-          Center(
-            child: Icon(Icons.link_outlined),
-          ),
-        ],
-      ),
+          falseWidget: Container(),
+        ),
+        Center(
+          child: Icon(Icons.link_outlined),
+        ),
+      ],
     );
   }
 }

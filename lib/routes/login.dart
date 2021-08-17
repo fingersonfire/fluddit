@@ -13,7 +13,7 @@ class WebLogin extends StatefulWidget {
 
 class _WebLoginState extends State<WebLogin> {
   final AuthController auth = Get.find();
-  final RedditController reddit = Get.find();
+  final FrontpageController frontpage = Get.find();
 
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
@@ -33,8 +33,7 @@ class _WebLoginState extends State<WebLogin> {
         flutterWebviewPlugin.close();
 
         await auth.setAuthToken(url);
-        await reddit.getUserSubreddits();
-        reddit.getInitPosts(limit: 50);
+        await frontpage.getSubscriptions();
 
         Get.back();
       }

@@ -9,47 +9,45 @@ class VideoThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Stack(
-        children: [
-          ConditionalWidget(
-            condition: post.thumbnail == 'default' ||
-                post.thumbnail == 'nsfw' ||
-                post.thumbnail == 'spoiler',
-            trueWidget: Opacity(
+    return Stack(
+      children: [
+        ConditionalWidget(
+          condition: post.thumbnail == 'default' ||
+              post.thumbnail == 'nsfw' ||
+              post.thumbnail == 'spoiler',
+          trueWidget: Opacity(
+            opacity: .5,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.pink,
+                    Colors.pinkAccent,
+                    Colors.red,
+                    Colors.redAccent
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+          ),
+          falseWidget: Container(
+            width: 75,
+            height: 75,
+            child: Opacity(
               opacity: .5,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.pink,
-                      Colors.pinkAccent,
-                      Colors.red,
-                      Colors.redAccent
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
-            ),
-            falseWidget: Container(
-              width: 50,
-              height: 50,
-              child: Opacity(
-                opacity: .5,
-                child: Image.network(
-                  post.thumbnail,
-                  fit: BoxFit.cover,
-                ),
+              child: Image.network(
+                post.thumbnail,
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          Center(
-            child: Icon(Icons.play_arrow_outlined),
-          ),
-        ],
-      ),
+        ),
+        Center(
+          child: Icon(Icons.play_arrow_outlined),
+        ),
+      ],
     );
   }
 }
