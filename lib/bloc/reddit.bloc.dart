@@ -6,36 +6,43 @@ import 'package:http/http.dart' as HTTP;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RedditController extends GetxController {
-  RxList feedPosts = [].obs;
-  RxMap<String, dynamic> options = {
-    'after': '',
-    'listing': 'hot',
-    'subreddit': 'frontpage',
-    'subscribed': [],
-    'time': 'week',
-  }.obs;
+  Future<Map<String, dynamic>> getPosts({
+    required String after,
+    required int limit,
+    required String listing,
+    required String subreddit,
+    required String time,
+  }) async {
+    HTTP.Response resp;
 
-  /// Gets the initial posts for the subreddit stored in the options map.
-  /// Returns a bool so a FutureBuilder knows when it's finished.
-  Future<bool> getInitPosts({required int limit}) async {
-    // Clear the current posts
-    this.feedPosts.clear();
+    // Fetch the default route json if subreddit is 'frontpage'.
+    if (subreddit == 'frontpage') {
+      resp = await _get(
+        '/.json' +
+            '?limit=$limit' +
+            '&after=$after', // [after] param being empty returns first page.
+      );
+    } else {
+      resp = await _get(
+        '/r/$subreddit/' +
+            '$listing.json' +
+            '?limit=$limit' +
+            '&t=$time' +
+            '&after=$after', // [after] param being empty returns first page.
+      );
+    }
 
-    // Setting after option to empty so first page is returned.
-    this.options['after'] = '';
+    Map<String, dynamic> _json = jsonDecode(resp.body);
+    List posts = _json['data']['children']
+        .map((p) => RedditPost.fromJson(p['data']))
+        .toList();
 
-    var posts = await _getPosts(limit, this.options);
-    feedPosts.value = posts;
+    final Map<String, dynamic> response = {
+      'after': _json['data']['after'],
+      'posts': posts
+    };
 
-    return true;
-  }
-
-  /// Adds posts to the [feedPosts] list after the last pagination page.
-  void getNextPosts({required int limit}) async {
-    var posts = await _getPosts(limit, this.options);
-
-    posts.removeWhere((post) => feedPosts.contains(post));
-    feedPosts.addAll(posts);
+    return response;
   }
 
   Future<List<dynamic>> getPostComments({
@@ -71,11 +78,11 @@ class RedditController extends GetxController {
   }
 
   /// Fetches the subreddits for the logged in user.
-  Future<bool> getUserSubreddits() async {
+  Future getUserSubreddits() async {
     try {
-      HTTP.Response resp = await _get('/subreddits/mine/subscriber');
+      HTTP.Response _resp = await _get('/subreddits/mine/subscriber');
 
-      Map<String, dynamic> _json = jsonDecode(resp.body);
+      Map<String, dynamic> _json = jsonDecode(_resp.body);
       List subreddits = _json['data']['children']
           .map((s) => Subreddit.fromJson(s['data']))
           .toList();
@@ -84,10 +91,54 @@ class RedditController extends GetxController {
         (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
       );
 
-      this.options['subscribed'] = subreddits;
-    } catch (e) {}
+      return subreddits;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 
-    return true;
+  Future<List<dynamic>> searchSubreddits({required String query}) async {
+    final HTTP.Response _resp = await _get('/subreddits/search?q=$query');
+
+    Map<String, dynamic> _json = jsonDecode(_resp.body);
+
+    List filteredSubs = _json['data']['children'];
+    filteredSubs.removeWhere((f) => f['data']['subreddit_type'] == 'private');
+
+    List subreddits =
+        filteredSubs.map((s) => Subreddit.fromJson(s['data'])).toList();
+
+    return subreddits;
+  }
+
+  Future<bool> subscribe(String subredditFullName) async {
+    final HTTP.Response _resp = await _post(
+      '/api/subscribe?sr=$subredditFullName&action=sub&skip_initial_defaults=true',
+      null,
+    );
+
+    if (_resp.statusCode == 200) {
+      await this.getUserSubreddits();
+    }
+
+    return _resp.statusCode == 200;
+  }
+
+  Future<bool> unsubscribe(String subredditFullName) async {
+    final FrontpageController frontpage = Get.find();
+
+    final HTTP.Response _resp = await _post(
+      '/api/subscribe?sr=$subredditFullName&action=unsub',
+      null,
+    );
+
+    if (_resp.statusCode == 200) {
+      frontpage.subscriptions
+          .removeWhere((s) => s.fullName == subredditFullName);
+    }
+
+    return _resp.statusCode == 200;
   }
 }
 
@@ -122,32 +173,37 @@ Future<HTTP.Response> _get(String endpoint) async {
   return resp;
 }
 
-Future _getPosts(int limit, Map<String, dynamic> options) async {
-  HTTP.Response resp;
+Future<HTTP.Response> _post(String endpoint, Map? body) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  // Fetch the default route json if subreddit is 'frontpage'.
-  if (options['subreddit'] == 'frontpage') {
-    resp = await _get(
-      '/.json' +
-          '?limit=$limit' +
-          '&after=${options['after']}', // [after] param being empty returns first page.
-    );
-  } else {
-    resp = await _get(
-      '/r/${options['subreddit']}/' +
-          '${options['listing']}.json' +
-          '?limit=$limit' +
-          '&t=${options['time']}' +
-          '&after=${options['after']}', // [after] param being empty returns first page.
-    );
+  HTTP.Response _resp;
+  final bool isLoggedIn = prefs.getString('access_token') != null;
+
+  // Requests need to be made to different URl dependeding on auth state.
+  String baseUrl = isLoggedIn ? 'oauth.reddit.com' : 'www.reddit.com';
+
+  Map<String, String> headers = {
+    'User-Agent': userAgent,
+  };
+
+  // Add bearer auth to header if token exists.
+  if (isLoggedIn) {
+    headers['Authorization'] = 'bearer ${prefs.getString('access_token')}';
   }
 
-  Map<String, dynamic> _json = jsonDecode(resp.body);
-  options['after'] = _json['data']['after'];
+  Uri url = Uri.parse('https://$baseUrl$endpoint');
 
-  List posts = _json['data']['children']
-      .map((p) => RedditPost.fromJson(p['data']))
-      .toList();
+  if (body != null) {
+    _resp = await HTTP.post(url, headers: headers, body: body);
+  } else {
+    _resp = await HTTP.post(url, headers: headers);
+  }
 
-  return posts;
+  if (_resp.statusCode == 401) {
+    final AuthController auth = Get.find();
+    await auth.refreshAuthToken();
+    _resp = await HTTP.get(url, headers: headers);
+  }
+
+  return _resp;
 }
