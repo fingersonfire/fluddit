@@ -1,14 +1,18 @@
-export 'bottom.appbar.dart';
+export 'subscribe.button.dart';
 
 // Drawer widget components
 export 'drawer/drawer.dart';
 
 export 'drawer/subreddit.button.dart';
 
+export 'drawer/subreddit.icon.dart';
+
 export 'drawer/subreddit.list.dart';
 
 // Feed view components
 export 'feed/imageThumbnail.dart';
+
+export 'feed/post.listing.dart';
 
 export 'feed/post.tile.dart';
 
