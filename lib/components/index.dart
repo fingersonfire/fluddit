@@ -10,6 +10,8 @@ export 'drawer/subreddit.icon.dart';
 export 'drawer/subreddit.list.dart';
 
 // Feed view components
+export 'feed/galleryThumbnail.dart';
+
 export 'feed/imageThumbnail.dart';
 
 export 'feed/post.listing.dart';
