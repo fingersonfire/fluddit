@@ -86,7 +86,6 @@ class SearchBody extends StatelessWidget {
                     height: 100,
                     onPressed: () {
                       controller.name.value = subreddit.name;
-                      controller.getInitPosts();
                       Get.to(
                         () => SubredditView(subreddit: subreddit),
                       );
