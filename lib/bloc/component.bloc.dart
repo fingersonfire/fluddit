@@ -23,10 +23,19 @@ class ComponentController extends GetxController {
       );
     } else if (post.isVideo) {
       return VideoThumbnail(post: post);
-    } else if (post.domain == 'i.redd.it') {
+    } else if (isImage(post.url) || post.domain == 'imgur.com') {
       return ImageThumbnail(post: post);
+    } else if (post.isGallery) {
+      return GalleryThumbnail(post: post);
     } else {
       return WebThumbnail(post: post);
     }
+  }
+
+  bool isImage(String? url) {
+    final String parsedUrl = url ?? '';
+    return parsedUrl.endsWith('jpg') ||
+        parsedUrl.endsWith('png') ||
+        parsedUrl.endsWith('gif');
   }
 }
