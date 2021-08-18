@@ -1,7 +1,9 @@
 class RedditPost {
   final String author;
   final String domain;
+  final List galleryData;
   final String id;
+  final bool isGallery;
   final bool isSelf;
   final bool isVideo;
   final bool saved;
@@ -17,7 +19,9 @@ class RedditPost {
   RedditPost({
     required this.author,
     required this.domain,
+    required this.galleryData,
     required this.id,
+    required this.isGallery,
     required this.isSelf,
     required this.isVideo,
     required this.saved,
@@ -35,7 +39,9 @@ class RedditPost {
     return RedditPost(
       author: json['author'],
       domain: json['domain'],
+      galleryData: json['gallery_data']?['items'] ?? [],
       id: json['id'],
+      isGallery: json['is_gallery'] ?? false,
       isSelf: json['is_self'],
       isVideo: json['is_video'],
       saved: json['saved'],
