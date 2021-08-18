@@ -27,20 +27,20 @@ class GalleryContent extends StatelessWidget {
           return Stack(
             children: [
               Container(
+                margin: EdgeInsets.all(10),
+                child: Image.network(
+                  'https://i.redd.it/${post.galleryData[i]['media_id']}.jpg',
+                  width: MediaQuery.of(context).size.width,
+                  height: constraints.maxHeight - 115,
+                ),
+              ),
+              Container(
                 alignment: Alignment.topRight,
                 margin: EdgeInsets.all(15),
                 child: Container(
                   padding: EdgeInsets.all(5),
                   color: Colors.black45,
                   child: Text('${i + 1} / ${post.galleryData.length}'),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                child: Image.network(
-                  'https://i.redd.it/${post.galleryData[i]['media_id']}.jpg',
-                  width: MediaQuery.of(context).size.width,
-                  height: constraints.maxHeight - 115,
                 ),
               ),
             ],

@@ -16,10 +16,10 @@ class PostListing extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(
-          () => PostView(post: post),
-          transition: Transition.rightToLeft,
-        );
+        // Get.to(
+        //   () => PostView(post: post),
+        //   transition: Transition.rightToLeft,
+        // );
       },
       child: Container(
         decoration: BoxDecoration(
