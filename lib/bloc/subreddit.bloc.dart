@@ -9,13 +9,14 @@ class SubredditController extends GetxController {
   RxList posts = [].obs;
   RxString name = ''.obs;
   RxList subscriptions = [].obs;
-  RxString time = ''.obs;
+  RxString time = 'day'.obs;
 
-  Future<bool> getInitPosts() async {
+  Future getInitPosts() async {
+    this.after.value = '';
     this.posts.clear();
 
     final Map<String, dynamic> _data = await reddit.getPosts(
-      after: this.after.value,
+      after: '',
       limit: 50,
       listing: this.listing.value,
       subreddit: this.name.value,
@@ -24,8 +25,6 @@ class SubredditController extends GetxController {
 
     this.after.value = _data['after'] == null ? '' : _data['after'];
     this.posts.value = _data['posts'];
-
-    return true;
   }
 
   Future getNextPosts() async {

@@ -9,13 +9,14 @@ class FrontpageController extends GetxController {
   RxList posts = [].obs;
   RxString name = 'frontpage'.obs;
   RxList subscriptions = [].obs;
-  RxString time = ''.obs;
+  RxString time = 'week'.obs;
 
   Future getInitPosts() async {
+    this.after.value = '';
     this.posts.clear();
 
     final Map<String, dynamic> _data = await reddit.getPosts(
-      after: this.after.value,
+      after: '',
       limit: 50,
       listing: this.listing.value,
       subreddit: this.name.value,
