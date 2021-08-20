@@ -2,7 +2,6 @@ import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nord_theme/flutter_nord_theme.dart';
-import 'package:http/http.dart';
 
 void main() {
   runApp(App());
