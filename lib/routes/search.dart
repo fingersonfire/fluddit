@@ -18,9 +18,11 @@ class _SearchViewState extends State<SearchView> {
   bool startSearch = false;
 
   void search() {
-    setState(() {
-      startSearch = true;
-    });
+    if (searchController.text != "") {
+      setState(() {
+        startSearch = true;
+      });
+    }
   }
 
   @override
@@ -32,8 +34,24 @@ class _SearchViewState extends State<SearchView> {
           controller: searchController,
           style: TextStyle(fontSize: 20),
           cursorColor: Colors.white,
+          textInputAction: TextInputAction.search,
+          onSubmitted: (String param) {
+            search();
+          },
           decoration: InputDecoration(
             focusColor: Colors.white,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.0,
+              ),
+            ),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.0,
+              ),
+            ),
           ),
         ),
         actions: [
