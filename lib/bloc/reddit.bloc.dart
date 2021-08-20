@@ -80,7 +80,8 @@ class RedditController extends GetxController {
   /// Fetches the subreddits for the logged in user.
   Future getUserSubreddits() async {
     try {
-      HTTP.Response _resp = await _get('/subreddits/mine/subscriber');
+      // TODO: Add pagination handling as better solution
+      HTTP.Response _resp = await _get('/subreddits/mine/subscriber?limit=500');
 
       Map<String, dynamic> _json = jsonDecode(_resp.body);
       List subreddits = _json['data']['children']
