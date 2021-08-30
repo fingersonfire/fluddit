@@ -1,7 +1,7 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/components/post/gallery.content.dart';
-import 'package:fluddit/components/post/video.content.dart';
-import 'package:fluddit/components/post/web.content.dart';
+import 'package:fluddit/components/post/content/gallery.content.dart';
+import 'package:fluddit/components/post/content/video.content.dart';
+import 'package:fluddit/components/post/content/web.content.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 

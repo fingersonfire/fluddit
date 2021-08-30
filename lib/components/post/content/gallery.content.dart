@@ -14,6 +14,7 @@ class GalleryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(post.galleryData);
     return CarouselSlider(
       options: CarouselOptions(
         enableInfiniteScroll: false,
@@ -24,12 +25,15 @@ class GalleryContent extends StatelessWidget {
       items: List.generate(
         post.galleryData.length,
         (i) {
+          final String mediaId = post.galleryData[i]['media_id'];
+          final String contentType = post.metaData[mediaId]['m'].split('/')[1];
+
           return Stack(
             children: [
               Container(
                 margin: EdgeInsets.all(10),
                 child: Image.network(
-                  'https://i.redd.it/${post.galleryData[i]['media_id']}.jpg',
+                  'https://i.redd.it/$mediaId.$contentType',
                   width: MediaQuery.of(context).size.width,
                   height: constraints.maxHeight - 115,
                 ),

@@ -16,7 +16,7 @@ class CommentContent extends StatelessWidget {
       child: FutureBuilder(
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data.length < 1) {
+            if (reddit.postComments.length < 1) {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 height: 75,
@@ -25,7 +25,7 @@ class CommentContent extends StatelessWidget {
                 ),
               );
             } else {
-              return CommentList(comments: snapshot.data);
+              return CommentList();
             }
           }
           return Container(

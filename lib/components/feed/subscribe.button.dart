@@ -8,7 +8,6 @@ class SubscribeButton extends StatelessWidget {
   final Subreddit subreddit;
 
   final RedditController reddit = Get.find();
-  final FrontpageController frontpage = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class SubscribeButton extends StatelessWidget {
       child: Obx(() {
         return ConditionalWidget(
           // Check if the user is subscribed
-          condition: frontpage.subscriptions
+          condition: reddit.subscriptions
                   .where((s) => s.name == subreddit.name)
                   .length >
               0,
