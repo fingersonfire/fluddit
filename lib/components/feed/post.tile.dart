@@ -21,6 +21,7 @@ class PostTile extends StatelessWidget {
         ),
         color: Theme.of(context).cardColor,
       ),
+      padding: EdgeInsets.symmetric(vertical: 5),
       margin: EdgeInsets.only(top: 10, left: 10, right: 10),
       width: MediaQuery.of(context).size.width,
       child: GestureDetector(
@@ -31,59 +32,62 @@ class PostTile extends StatelessWidget {
             transition: Transition.rightToLeft,
           );
         },
-        child: ListTile(
-          leading: Container(
-            width: 25,
-            height: 50,
-            child: Center(
-              child: Text(
-                reddit.getScoreString(post.score),
-              ),
-            ),
-          ),
-          // Post title
-          title: Text(
-            post.title,
-            maxLines: 2,
-            style: TextStyle(
-              color: post.stickied ? Colors.green : null,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          // Subreddit and author
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'r/${post.subreddit} | ${post.author}',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Theme.of(context).hintColor,
+        child: Column(
+          children: [
+            ListTile(
+              leading: Container(
+                width: 25,
+                height: 50,
+                child: Center(
+                  child: Text(
+                    post.getScoreString(),
                   ),
                 ),
-                post.thumbnail == 'nsfw'
-                    ? Text(
-                        '[NSFW]',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.red[400],
-                        ),
-                      )
-                    : Container(),
-              ],
+              ),
+              // Post title
+              title: Text(
+                post.title,
+                maxLines: 2,
+                style: TextStyle(
+                  color: post.stickied ? Colors.green : null,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              // Thumbnail
+              trailing: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor,
+                ),
+                height: 50,
+                width: 50,
+                child: comp.getPostThumbnail(post),
+              ),
             ),
-          ),
-          // Thumbnail
-          trailing: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'r/${post.subreddit} | ${post.author}',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  post.thumbnail == 'nsfw'
+                      ? Text(
+                          '[NSFW]',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.red[400],
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
             ),
-            height: 50,
-            width: 50,
-            child: comp.getPostThumbnail(post),
-          ),
+          ],
         ),
       ),
     );
