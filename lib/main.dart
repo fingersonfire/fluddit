@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 
 void main() {
+  _loadBlocs();
   runApp(App());
 }
 
 class App extends StatelessWidget {
-  final AuthController auth = Get.put(AuthController());
-  final ComponentController comp = Get.put(ComponentController());
-  final RedditController reddit = Get.put(RedditController());
-  final FrontpageController frontpage = Get.put(FrontpageController());
-  final SubredditController subreddit = Get.put(SubredditController());
+  final AuthController auth = Get.find();
+  final ComponentController component = Get.find();
 
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -23,7 +21,7 @@ class App extends StatelessWidget {
       home: FutureBuilder(
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Frontpage();
+            return Feed();
           }
           return LoadingView();
         },
@@ -31,4 +29,10 @@ class App extends StatelessWidget {
       ),
     );
   }
+}
+
+void _loadBlocs() {
+  Get.put<AuthController>(AuthController());
+  Get.put<ComponentController>(ComponentController());
+  Get.put<RedditController>(RedditController());
 }

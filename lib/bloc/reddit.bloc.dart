@@ -6,6 +6,23 @@ import 'package:http/http.dart' as HTTP;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RedditController extends GetxController {
+  RxString after = ''.obs;
+  RxString listing = 'hot'.obs;
+  RxList<Comment> postComments = <Comment>[].obs;
+  RxList posts = [].obs;
+  RxString name = 'frontpage'.obs;
+  RxList subscriptions = [].obs;
+  RxString time = 'day'.obs;
+
+  late Subreddit subreddit;
+
+  Future getSubscriptions() async {
+    final List subscriptions = await this.getUserSubreddits();
+    if (subscriptions.length > 0) {
+      this.subscriptions.value = subscriptions;
+    }
+  }
+
   Future<Map<String, dynamic>> getPosts({
     required String after,
     required int limit,
@@ -45,7 +62,37 @@ class RedditController extends GetxController {
     return response;
   }
 
-  Future<List<dynamic>> getPostComments({
+  Future<void> getInitPosts(String subreddit) async {
+    this.name.value = subreddit;
+    this.after.value = '';
+    this.posts.clear();
+
+    final Map<String, dynamic> _data = await this.getPosts(
+      after: this.after.value,
+      limit: 50,
+      listing: this.listing.value,
+      subreddit: this.name.value,
+      time: this.time.value,
+    );
+
+    this.after.value = _data['after'] == null ? '' : _data['after'];
+    this.posts.value = _data['posts'];
+  }
+
+  Future getNextPosts() async {
+    final Map<String, dynamic> _data = await this.getPosts(
+      after: this.after.value,
+      limit: 25,
+      listing: this.listing.value,
+      subreddit: this.name.value,
+      time: this.time.value,
+    );
+
+    this.after.value = _data['after'];
+    this.posts.addAll(_data['posts']);
+  }
+
+  Future<void> getPostComments({
     required String subreddit,
     required String postId,
   }) async {
@@ -57,31 +104,24 @@ class RedditController extends GetxController {
     final List<dynamic> repliesJson = _json[1]['data']['children'];
     repliesJson.removeWhere((e) => e['kind'] == 'more');
 
-    final List<dynamic> comments = repliesJson
+    final List<Comment> comments = repliesJson
         .map(
           (s) => Comment.fromJson(s['data']),
         )
         .toList();
 
-    return comments;
-  }
+    final List<Comment> flattenedComments = _flattenComments(
+      comments: comments,
+      list: <Comment>[],
+    );
 
-  /// Returns the [score] int as a concatinated String (e.g. 3000 => "3k").
-  /// Anything that's less than 4 digits long returns as a unconcatinated String.
-  String getScoreString(int score) {
-    if (score.isGreaterThan(999)) {
-      String str = score.toString();
-      return '${str.substring(0, str.length - 3)}k';
-    } else {
-      return score.toString();
-    }
+    this.postComments.value = flattenedComments;
   }
 
   /// Fetches the subreddits for the logged in user.
   Future getUserSubreddits() async {
     try {
-      // TODO: Add pagination handling as better solution
-      HTTP.Response _resp = await _get('/subreddits/mine/subscriber?limit=500');
+      HTTP.Response _resp = await _get('/subreddits/mine/subscriber?limit=150');
 
       Map<String, dynamic> _json = jsonDecode(_resp.body);
       List subreddits = _json['data']['children']
@@ -127,19 +167,99 @@ class RedditController extends GetxController {
   }
 
   Future<bool> unsubscribe(String subredditFullName) async {
-    final FrontpageController frontpage = Get.find();
-
     final HTTP.Response _resp = await _post(
       '/api/subscribe?sr=$subredditFullName&action=unsub',
       null,
     );
 
     if (_resp.statusCode == 200) {
-      frontpage.subscriptions
-          .removeWhere((s) => s.fullName == subredditFullName);
+      this.subscriptions.removeWhere((s) => s.fullName == subredditFullName);
     }
 
     return _resp.statusCode == 200;
+  }
+
+  void _updateLocalCommentVote(int vote, int commentIndex) {
+    this.postComments[commentIndex].updateVote(vote);
+    this.postComments.refresh();
+  }
+
+  void _updateLocalPostVote(int vote, int postIndex) {
+    this.posts[postIndex].updateVote(vote);
+    this.posts.refresh();
+  }
+
+  Future<int> vote(String fullname, int dir) async {
+    final _resp = await _post('/api/vote?id=$fullname&dir=$dir', null);
+    return _resp.statusCode;
+  }
+
+  Future<void> voteOnComment(String fullName, int vote) async {
+    final int i = this.postComments.indexWhere((c) => c.fullName == fullName);
+    final int originalVote = this.postComments[i].vote;
+
+    late int voteStatus;
+
+    switch (vote) {
+      case 1:
+        if (this.postComments[i].vote == 1) {
+          _updateLocalCommentVote(vote, i);
+          voteStatus = await this.vote(fullName, 0);
+        } else {
+          _updateLocalCommentVote(vote, i);
+          voteStatus = await this.vote(fullName, 1);
+        }
+        break;
+      case -1:
+        if (this.postComments[i].vote == -1) {
+          _updateLocalCommentVote(vote, i);
+          voteStatus = await this.vote(fullName, 0);
+        } else {
+          _updateLocalCommentVote(vote, i);
+          voteStatus = await this.vote(fullName, -1);
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (voteStatus != 200) {
+      _updateLocalCommentVote(originalVote, i);
+    }
+  }
+
+  Future<void> voteOnPost(String fullName, int vote) async {
+    final int i = this.posts.indexWhere((p) => p.fullName == fullName);
+    final int originalVote = this.posts[i].vote;
+
+    late int voteStatus;
+
+    switch (vote) {
+      case 1:
+        if (this.posts[i].vote == 1) {
+          _updateLocalPostVote(vote, i);
+          voteStatus = await this.vote(fullName, 0);
+        } else {
+          _updateLocalPostVote(vote, i);
+          voteStatus = await this.vote(fullName, 1);
+        }
+        break;
+      case -1:
+        if (this.posts[i].vote == -1) {
+          _updateLocalPostVote(vote, i);
+          voteStatus = await this.vote(fullName, 0);
+        } else {
+          _updateLocalPostVote(vote, i);
+          voteStatus = await this.vote(fullName, -1);
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (voteStatus != 200) {
+      _updateLocalPostVote(originalVote, i);
+    }
   }
 }
 
@@ -172,6 +292,25 @@ Future<HTTP.Response> _get(String endpoint) async {
 
   print(prefs.getString('access_token'));
   return resp;
+}
+
+List<Comment> _flattenComments({
+  required List comments,
+  required List<Comment> list,
+  int level = 0,
+}) {
+  for (Comment comment in comments) {
+    comment.level = level;
+    list.add(comment);
+
+    list = _flattenComments(
+      comments: comment.replies,
+      list: list,
+      level: level + 1,
+    );
+  }
+
+  return list;
 }
 
 Future<HTTP.Response> _post(String endpoint, Map? body) async {
