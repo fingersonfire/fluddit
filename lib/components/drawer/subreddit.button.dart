@@ -1,7 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/drawer/subreddit.icon.dart';
 import 'package:fluddit/models/index.dart';
-import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 
 class SubredditButton extends StatelessWidget {
@@ -9,7 +8,7 @@ class SubredditButton extends StatelessWidget {
 
   final Subreddit subreddit;
 
-  final SubredditController controller = Get.find();
+  final RedditController reddit = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +20,9 @@ class SubredditButton extends StatelessWidget {
         ],
       ),
       onPressed: () {
-        controller.name.value = subreddit.name;
+        reddit.subreddit = subreddit;
+        reddit.getInitPosts(subreddit.name);
         Get.back();
-        Get.to(() => SubredditView(subreddit: subreddit));
       },
     );
   }
