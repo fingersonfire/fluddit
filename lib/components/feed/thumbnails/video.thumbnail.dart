@@ -1,4 +1,4 @@
-import 'package:fluddit/components/feed/default.thumbnail.dart';
+import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/material.dart';

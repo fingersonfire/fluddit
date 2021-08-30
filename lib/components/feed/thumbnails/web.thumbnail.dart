@@ -1,17 +1,17 @@
-import 'package:fluddit/components/feed/default.thumbnail.dart';
+import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/material.dart';
 
-class ImageThumbnail extends StatelessWidget {
-  const ImageThumbnail({Key? key, required this.post}) : super(key: key);
+class WebThumbnail extends StatelessWidget {
+  const WebThumbnail({Key? key, required this.post}) : super(key: key);
 
   final RedditPost post;
 
   @override
   Widget build(BuildContext context) {
     return DefaultThumbnail(
-      contentIcon: Icon(Icons.image_outlined),
+      contentIcon: Icon(Icons.link_outlined),
       post: post,
     );
   }
