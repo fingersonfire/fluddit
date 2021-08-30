@@ -1,18 +1,15 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/models/index.dart';
+import 'package:fluddit/bloc/reddit.bloc.dart';
+import 'package:fluddit/components/post/vote.buttons.dart';
 import 'package:flutter/material.dart';
 
-class TitleBar extends StatefulWidget {
-  TitleBar({Key? key, required this.post}) : super(key: key);
+class TitleBar extends StatelessWidget {
+  TitleBar({Key? key, required this.postIndex}) : super(key: key);
 
-  final RedditPost post;
+  final int postIndex;
+
   final RedditController reddit = Get.find();
 
-  @override
-  _TitleBarState createState() => _TitleBarState();
-}
-
-class _TitleBarState extends State<TitleBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +24,7 @@ class _TitleBarState extends State<TitleBar> {
         children: [
           Container(
             child: Text(
-              widget.post.title,
+              reddit.posts[postIndex].title,
               softWrap: true,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -41,29 +38,11 @@ class _TitleBarState extends State<TitleBar> {
             children: [
               Container(
                 child: Text(
-                  'u/${widget.post.author}',
+                  'u/${reddit.posts[postIndex].author}',
                   style: TextStyle(fontSize: 12),
                 ),
               ),
-              Row(
-                children: [
-                  IconButton(
-                    iconSize: 20,
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_upward_outlined,
-                    ),
-                  ),
-                  Text(
-                    widget.reddit.getScoreString(widget.post.score),
-                  ),
-                  IconButton(
-                    iconSize: 20,
-                    onPressed: () {},
-                    icon: Icon(Icons.arrow_downward_outlined),
-                  ),
-                ],
-              )
+              PostVoteButtons(postIndex: postIndex),
             ],
           ),
         ],

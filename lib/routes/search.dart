@@ -85,7 +85,6 @@ class SearchBody extends StatelessWidget {
   final bool condition;
   final TextEditingController searchController;
 
-  final SubredditController controller = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -103,10 +102,9 @@ class SearchBody extends StatelessWidget {
                   return MaterialButton(
                     height: 100,
                     onPressed: () {
-                      controller.name.value = subreddit.name;
-                      Get.to(
-                        () => SubredditView(subreddit: subreddit),
-                      );
+                      reddit.subreddit = subreddit;
+                      reddit.getInitPosts(subreddit.name);
+                      Get.back();
                     },
                     child: Row(
                       children: [

@@ -1,4 +1,4 @@
-export 'subscribe.button.dart';
+export 'bottom.navigation.dart';
 
 // Drawer widget components
 export 'drawer/drawer.dart';
@@ -10,22 +10,28 @@ export 'drawer/subreddit.icon.dart';
 export 'drawer/subreddit.list.dart';
 
 // Feed view components
-export 'feed/galleryThumbnail.dart';
+export 'feed/thumbnails/default.thumbnail.dart';
 
-export 'feed/imageThumbnail.dart';
+export 'feed/thumbnails/gallery.thumbnail.dart';
 
-export 'feed/post.listing.dart';
+export 'feed/thumbnails/image.thumbnail.dart';
+
+export 'feed/thumbnails/video.thumbnail.dart';
+
+export 'feed/thumbnails/web.thumbnail.dart';
 
 export 'feed/post.tile.dart';
 
-export 'feed/videoThumbnail.dart';
-
-export 'feed/webThumbnail.dart';
+export 'feed/subscribe.button.dart';
 
 // Post view components
-export 'post/comments.content.dart';
+export 'post/comments/tile.dart';
 
-export 'post/comments.list.dart';
+export 'post/comments/comments.dart';
+
+export 'post/comments/list.dart';
+
+export 'post/comments/vote.button.dart';
 
 export 'post/content.dart';
 
