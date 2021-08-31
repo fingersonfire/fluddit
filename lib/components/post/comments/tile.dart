@@ -11,10 +11,7 @@ class CommentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: reddit.postComments[index].level > 10 &&
-              reddit.postComments[index].replies.length > 0
-          ? EdgeInsets.only(left: 10, right: 10, top: 10)
-          : EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(width: 2.0, color: Colors.indigo.shade300),
