@@ -62,6 +62,7 @@ class _SearchViewState extends State<SearchView> {
         ],
         leading: IconButton(
           onPressed: () {
+            reddit.getInitPosts('frontpage');
             Get.back();
           },
           icon: Icon(Icons.arrow_back_outlined),
