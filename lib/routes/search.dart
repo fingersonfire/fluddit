@@ -90,67 +90,74 @@ class SearchBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (condition) {
-      return FutureBuilder(
-        future: reddit.searchSubreddits(query: searchController.text),
-        builder: (BuildContext content, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              child: ListView.separated(
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int i) {
-                  final Subreddit subreddit = snapshot.data[i] as Subreddit;
-                  return MaterialButton(
-                    height: 100,
-                    onPressed: () {
-                      reddit.subreddit = subreddit;
-                      reddit.getInitPosts(subreddit.name);
-                      Get.back();
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 50,
-                          child: SubredditIcon(subreddit: subreddit),
-                          margin: EdgeInsets.all(10),
-                        ),
-                        Expanded(
-                          child: Container(
+      return WillPopScope(
+        onWillPop: () async {
+          reddit.getInitPosts('frontpage');
+          return true;
+        },
+        child: FutureBuilder(
+          future: reddit.searchSubreddits(query: searchController.text),
+          builder: (BuildContext content, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Container(
+                child: ListView.separated(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    final Subreddit subreddit = snapshot.data[i] as Subreddit;
+                    return MaterialButton(
+                      height: 100,
+                      onPressed: () {
+                        reddit.name.value = subreddit.name;
+                        reddit.getInitPosts(subreddit.name);
+                        Get.to(() => SearchFeed(subreddit: subreddit));
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            child: SubredditIcon(subreddit: subreddit),
                             margin: EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  subreddit.name,
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                                Text(
-                                  subreddit.title,
-                                  style: TextStyle(
-                                    color: Theme.of(context).hintColor,
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    subreddit.name,
+                                    style: TextStyle(fontSize: 22),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    subreddit.title,
+                                    style: TextStyle(
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(height: 3, color: Colors.white);
-                },
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(height: 3, color: Colors.white);
+                  },
+                ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.indigo[300],
               ),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.indigo[300],
-            ),
-          );
-        },
+          },
+        ),
       );
     } else {
       return Center(
