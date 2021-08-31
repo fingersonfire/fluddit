@@ -17,6 +17,7 @@ class RedditPost {
   final String title;
   final String? postHint;
   final String? url;
+  final String videoUrl;
   int vote;
 
   RedditPost({
@@ -38,6 +39,7 @@ class RedditPost {
     required this.title,
     required this.postHint,
     required this.url,
+    required this.videoUrl,
     required this.vote,
   });
 
@@ -61,6 +63,7 @@ class RedditPost {
       title: json['title'],
       postHint: json['post_hint'],
       url: json['url_overridden_by_dest'],
+      videoUrl: json['secure_media']?['reddit_video']?['fallback_url'] ?? '',
       vote: _getVote(json['likes']),
     );
   }
