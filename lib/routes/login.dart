@@ -1,21 +1,20 @@
+import 'dart:io';
+
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/secrets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-class WebLogin extends StatefulWidget {
-  const WebLogin({Key? key}) : super(key: key);
-
+class LoginView extends StatefulWidget {
   @override
-  _WebLoginState createState() => _WebLoginState();
+  LoginViewState createState() => LoginViewState();
 }
 
-class _WebLoginState extends State<WebLogin> {
+class LoginViewState extends State<LoginView> {
   final AuthController auth = Get.find();
   final RedditController reddit = Get.find();
 
-  final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
+  late WebViewController _webController;
 
   final String authUrl = 'https://www.reddit.com/api/v1/authorize.compact?' +
       'client_id=$clientId&response_type=code&state=$codeVerifier' +
@@ -27,31 +26,40 @@ class _WebLoginState extends State<WebLogin> {
   @override
   void initState() {
     super.initState();
-
-    flutterWebviewPlugin.onUrlChanged.listen((String url) async {
-      if (url.contains(redirectUri) && !url.contains('www.reddit.com')) {
-        flutterWebviewPlugin.close();
-
-        await auth.setAuthToken(url);
-        await reddit.getSubscriptions();
-
-        Get.back();
-      }
-    });
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
+  NavigationDecision handleNav(NavigationRequest request) {
+    if (request.url.contains(redirectUri) &&
+        !request.url.contains('www.reddit.com')) {
+      handleAuth(request.url);
+      return NavigationDecision.prevent;
+    } else {
+      return NavigationDecision.navigate;
+    }
+  }
+
+  Future<void> handleAuth(String url) async {
+    await auth.setAuthToken(url);
+    await reddit.getInitPosts('frontpage');
+    await reddit.getSubscriptions();
+    Get.back();
+  }
+
+  void setController(WebViewController controller) {
+    _webController = controller;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: authUrl,
-      userAgent: userAgent,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).bottomAppBarColor,
-        leading: IconButton(
-          onPressed: () {
-            flutterWebviewPlugin.close();
-            Get.back();
-          },
-          icon: Icon(Icons.close),
+    return Scaffold(
+      body: SafeArea(
+        child: WebView(
+          initialUrl: authUrl,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: setController,
+          userAgent: userAgent,
+          navigationDelegate: handleNav,
         ),
       ),
     );
