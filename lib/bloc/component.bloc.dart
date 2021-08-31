@@ -16,6 +16,18 @@ class ComponentController extends GetxController {
     }
   }
 
+  void displaySnackbar(String message) {
+    if (!(Get.isSnackbarOpen ?? false)) {
+      Get.snackbar(
+        'Alert',
+        message,
+        isDismissible: true,
+        snackPosition: SnackPosition.TOP,
+        snackStyle: SnackStyle.FLOATING,
+      );
+    }
+  }
+
   Widget getPostThumbnail(RedditPost post) {
     if (post.isSelf) {
       return Center(
