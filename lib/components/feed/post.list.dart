@@ -18,15 +18,20 @@ class FeedPosts extends StatelessWidget {
             if (i < reddit.posts.length) {
               return PostTile(post: reddit.posts[i]);
             } else {
-              if (reddit.posts.length > 1) {
+              if (reddit.posts.length > 0 && reddit.after.value != '') {
                 reddit.getNextPosts();
               }
-              return Container(
-                height: 75,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
+
+              if (reddit.posts.length > 0 && reddit.after.value == '') {
+                return Container();
+              } else {
+                return Container(
+                  height: 75,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
             }
           },
         ),

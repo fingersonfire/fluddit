@@ -32,60 +32,66 @@ class PostTile extends StatelessWidget {
             transition: Transition.rightToLeft,
           );
         },
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ListTile(
-              leading: Container(
-                width: 25,
-                height: 50,
-                child: Center(
-                  child: Text(
-                    post.getScoreString(),
-                  ),
+            Container(
+              width: 25,
+              height: 50,
+              child: Center(
+                child: Text(
+                  post.getScoreString(),
                 ),
-              ),
-              // Post title
-              title: Text(
-                post.title,
-                maxLines: 2,
-                style: TextStyle(
-                  color: post.stickied ? Colors.green : null,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              // Thumbnail
-              trailing: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).canvasColor,
-                ),
-                height: 50,
-                width: 50,
-                child: comp.getPostThumbnail(post),
               ),
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'r/${post.subreddit} | ${post.author}',
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width - 125,
+                  child: Text(
+                    post.title,
+                    maxLines: 4,
                     style: TextStyle(
-                      fontSize: 10,
-                      color: Theme.of(context).hintColor,
+                      color: post.stickied ? Colors.green : null,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  post.thumbnail == 'nsfw'
-                      ? Text(
-                          '[NSFW]',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.red[400],
-                          ),
-                        )
-                      : Container(),
-                ],
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'r/${post.subreddit} | ${post.author}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                      post.thumbnail == 'nsfw'
+                          ? Text(
+                              '[NSFW]',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.red[400],
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
               ),
+              height: 50,
+              width: 50,
+              child: comp.getPostThumbnail(post),
             ),
           ],
         ),
