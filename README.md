@@ -1,7 +1,11 @@
 # fluddit
-An open source Reddit client for Android and iOS using the [Nord theme](https://www.nordtheme.com/).
+An open source Reddit client for Android and iOS using the [Nord theme](https://www.nordtheme.com/). Feel free to file issues and feature requests, I will be working on this regularly.
 
 ## Functionality
-As it currently stands the app is not complete. However, I make updates everyday with new fixes and functionality. There are pre-release builds available for Android if you wish to test the initial functionality.
+- Logging into a Reddit account and fetching users subscribed subreddits
+- Viewing posts in minimal and large content mode
+- Upvoting posts and comments
+- Viewing reddit hosted galleries, reddit and imgur images, and videos
 
-The app supports logging in to your account, browsing subreddits, and viewing most types of post content.
+
+https://user-images.githubusercontent.com/60234090/131275893-5f2dfb25-7820-4a93-bef6-ab874198f581.mp4
