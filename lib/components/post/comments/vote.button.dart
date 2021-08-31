@@ -24,13 +24,13 @@ class VoteButtons extends StatelessWidget {
               onPressed: () async {
                 if (isClickable) {
                   isClickable = false;
-                  await reddit.voteOnComment(comment.fullName, 1);
+                  await reddit.voteOnComment(comment.fullName, -1);
                 }
                 isClickable = true;
               },
               icon: Icon(
-                Icons.arrow_upward_outlined,
-                color: comment.vote == 1 ? Colors.orange[300] : Colors.white,
+                Icons.arrow_downward_outlined,
+                color: comment.vote == -1 ? Colors.purple[300] : Colors.white,
               ),
             ),
             Text(
@@ -41,13 +41,13 @@ class VoteButtons extends StatelessWidget {
               onPressed: () async {
                 if (isClickable) {
                   isClickable = false;
-                  await reddit.voteOnComment(comment.fullName, -1);
+                  await reddit.voteOnComment(comment.fullName, 1);
                 }
                 isClickable = true;
               },
               icon: Icon(
-                Icons.arrow_downward_outlined,
-                color: comment.vote == -1 ? Colors.purple[300] : Colors.white,
+                Icons.arrow_upward_outlined,
+                color: comment.vote == 1 ? Colors.orange[300] : Colors.white,
               ),
             ),
           ],
