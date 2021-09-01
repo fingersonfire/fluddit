@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/secrets.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as HTTP;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RedditController extends GetxController {
   RxString after = ''.obs;
@@ -264,10 +264,10 @@ class RedditController extends GetxController {
 }
 
 Future<HTTP.Response> _get(String endpoint) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final box = GetStorage();
 
   HTTP.Response resp;
-  final bool isLoggedIn = prefs.getString('access_token') != null;
+  final bool isLoggedIn = box.read('access_token') != null;
 
   // Requests need to be made to different URl dependeding on auth state.
   String baseUrl = isLoggedIn ? 'oauth.reddit.com' : 'www.reddit.com';
@@ -278,7 +278,7 @@ Future<HTTP.Response> _get(String endpoint) async {
 
   // Add bearer auth to header if token exists.
   if (isLoggedIn) {
-    headers['Authorization'] = 'bearer ${prefs.getString('access_token')}';
+    headers['Authorization'] = 'bearer ${box.read('access_token')}';
   }
 
   Uri url = Uri.parse('https://$baseUrl$endpoint');
@@ -290,7 +290,7 @@ Future<HTTP.Response> _get(String endpoint) async {
     resp = await HTTP.get(url, headers: headers);
   }
 
-  print(prefs.getString('access_token'));
+  print(box.read('access_token'));
   return resp;
 }
 
@@ -314,10 +314,10 @@ List<Comment> _flattenComments({
 }
 
 Future<HTTP.Response> _post(String endpoint, Map? body) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final box = GetStorage();
 
   HTTP.Response _resp;
-  final bool isLoggedIn = prefs.getString('access_token') != null;
+  final bool isLoggedIn = box.read('access_token') != null;
 
   // Requests need to be made to different URl dependeding on auth state.
   String baseUrl = isLoggedIn ? 'oauth.reddit.com' : 'www.reddit.com';
@@ -328,7 +328,7 @@ Future<HTTP.Response> _post(String endpoint, Map? body) async {
 
   // Add bearer auth to header if token exists.
   if (isLoggedIn) {
-    headers['Authorization'] = 'bearer ${prefs.getString('access_token')}';
+    headers['Authorization'] = 'bearer ${box.read('access_token')}';
   }
 
   Uri url = Uri.parse('https://$baseUrl$endpoint');

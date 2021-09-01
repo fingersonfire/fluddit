@@ -1,18 +1,16 @@
 import 'dart:convert';
 
 import 'package:fluddit/secrets.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as HTTP;
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   Future refreshAuthToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (prefs.getString('refresh_token') != null) {
+    if (GetStorage().read('refresh_token') != null) {
       await _getToken({
         'grant_type': 'refresh_token',
-        'refresh_token': prefs.getString('refresh_token'),
+        'refresh_token': GetStorage().read('refresh_token'),
       });
     }
   }
@@ -20,9 +18,6 @@ class AuthController extends GetxController {
   /// Gets Reddit auth token.
   Future setAuthToken(String url) async {
     final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
-
-    // Starts the getInstance function while making time consuming requests.
-    Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 
     final String _query = url.split('$redirectUri/')[1];
     final Map<String, dynamic> _result = Uri.splitQueryString(_query);
@@ -46,17 +41,15 @@ class AuthController extends GetxController {
 
     Map<String, dynamic> _json = jsonDecode(_resp.body);
 
-    // Await the results of the getInstance function called earlier.
-    SharedPreferences instance = await prefs;
-    await instance.setString('access_token', _json['access_token']);
-    await instance.setString('refresh_token', _json['refresh_token']);
+    final box = GetStorage();
+
+    await box.write('access_token', _json['access_token']);
+    await box.write('refresh_token', _json['refresh_token']);
   }
 }
 
 Future _getToken(Map<String, dynamic> body) async {
   final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
-  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-
   final HTTP.Response _resp = await HTTP.post(
     authUrl,
     headers: {
@@ -69,8 +62,8 @@ Future _getToken(Map<String, dynamic> body) async {
 
   Map<String, dynamic> _json = jsonDecode(_resp.body);
 
-  // Await the results of the getInstance function called earlier.
-  SharedPreferences instance = await prefs;
-  await instance.setString('access_token', _json['access_token']);
-  await instance.setString('refresh_token', _json['refresh_token']);
+  final box = GetStorage();
+
+  await box.write('access_token', _json['access_token']);
+  await box.write('refresh_token', _json['refresh_token']);
 }
