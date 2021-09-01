@@ -9,3 +9,5 @@ export 'post.dart';
 export 'search.dart';
 
 export 'search-feed.dart';
+
+export 'settings.dart';
