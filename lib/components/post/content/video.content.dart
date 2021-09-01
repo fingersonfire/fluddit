@@ -1,3 +1,4 @@
+import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/widgets/conditional.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -18,6 +19,8 @@ class VideoContent extends StatefulWidget {
 
 class _VideoContentState extends State<VideoContent> {
   late VideoPlayerController _controller;
+
+  final ComponentController component = Get.find();
 
   @override
   void initState() {
@@ -76,7 +79,7 @@ class _VideoContentState extends State<VideoContent> {
                     _controller,
                     allowScrubbing: true,
                     colors: VideoProgressColors(
-                      playedColor: Colors.indigo.shade300,
+                      playedColor: Color(component.accentColor.value),
                     ),
                     padding: EdgeInsets.zero,
                   ),
@@ -88,7 +91,7 @@ class _VideoContentState extends State<VideoContent> {
       ),
       falseWidget: Center(
         child: CircularProgressIndicator(
-          color: Colors.indigo[300],
+          color: Color(component.accentColor.value),
         ),
       ),
     );

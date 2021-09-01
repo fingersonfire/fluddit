@@ -8,6 +8,7 @@ class CommentContent extends StatelessWidget {
 
   final RedditPost post;
 
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -32,8 +33,10 @@ class CommentContent extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: 300,
             child: Center(
-              child: CircularProgressIndicator(
-                color: Colors.indigo[300],
+              child: Obx(
+                () => CircularProgressIndicator(
+                  color: Color(component.accentColor.value),
+                ),
               ),
             ),
           );

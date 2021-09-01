@@ -10,6 +10,7 @@ GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 class Feed extends StatelessWidget {
   Feed({Key? key}) : super(key: key);
 
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -18,24 +19,26 @@ class Feed extends StatelessWidget {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 50,
-              backgroundColor: Colors.indigo[300],
-              brightness: Brightness.dark,
-              centerTitle: true,
-              title: Column(
-                children: [
-                  Obx(() => Text(reddit.name.value)),
-                ],
-              ),
-              actions: [
-                Obx(
-                  () => reddit.name.value != 'frontpage'
-                      ? SubscribeButton(subreddit: reddit.subreddit)
-                      : Container(),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(50),
+              child: Obx(
+                () => AppBar(
+                  backgroundColor: Color(component.accentColor.value),
+                  brightness: Brightness.dark,
+                  centerTitle: true,
+                  title: Column(
+                    children: [
+                      Text(reddit.name.value),
+                    ],
+                  ),
+                  actions: [
+                    reddit.name.value != 'frontpage'
+                        ? SubscribeButton(subreddit: reddit.subreddit)
+                        : Container(),
+                  ],
+                  leading: Container(),
                 ),
-              ],
-              leading: Container(),
+              ),
             ),
             key: scaffoldKey,
             body: FeedPosts(),

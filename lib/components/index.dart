@@ -36,3 +36,6 @@ export 'post/comments/vote.button.dart';
 export 'post/content.dart';
 
 export 'post/title.dart';
+
+// Settings view components
+export 'settings/color.button.dart';

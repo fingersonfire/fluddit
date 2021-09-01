@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ComponentController extends GetxController {
+  RxInt accentColor = 0.obs;
+  RxBool isDarkMode = true.obs;
+
   void openDrawer(scaffoldKey) {
     if (!scaffoldKey.currentState.isDrawerOpen) {
       scaffoldKey.currentState.openDrawer();

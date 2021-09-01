@@ -8,21 +8,26 @@ class PostView extends StatelessWidget {
   PostView({Key? key, required this.post}) : super(key: key);
 
   final RedditPost post;
+
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 40,
-        backgroundColor: Colors.indigo[300],
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(Icons.close),
-        ),
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: Obx(
+            () => AppBar(
+              backgroundColor: Color(component.accentColor.value),
+              leading: IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: Icon(Icons.close),
+              ),
+            ),
+          )),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
