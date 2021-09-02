@@ -10,24 +10,29 @@ class SearchFeed extends StatelessWidget {
 
   final Subreddit subreddit;
 
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 50,
-        backgroundColor: Colors.indigo[300],
-        brightness: Brightness.dark,
-        centerTitle: true,
-        title: Column(
-          children: [
-            Text(subreddit.name),
-          ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: Obx(
+          () => AppBar(
+            backgroundColor: Color(component.accentColor.value),
+            brightness: Brightness.dark,
+            centerTitle: true,
+            title: Column(
+              children: [
+                Text(subreddit.name),
+              ],
+            ),
+            actions: [
+              SubscribeButton(subreddit: subreddit),
+            ],
+          ),
         ),
-        actions: [
-          SubscribeButton(subreddit: subreddit),
-        ],
       ),
       body: FeedPosts(),
     );

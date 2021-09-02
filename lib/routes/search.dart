@@ -12,6 +12,7 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
   final TextEditingController searchController = new TextEditingController();
 
@@ -28,44 +29,49 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.indigo[300],
-        title: TextField(
-          controller: searchController,
-          style: TextStyle(fontSize: 20),
-          cursorColor: Colors.white,
-          textInputAction: TextInputAction.search,
-          onSubmitted: (String param) {
-            search();
-          },
-          decoration: InputDecoration(
-            focusColor: Colors.white,
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white,
-                width: 1.0,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: Obx(
+          () => AppBar(
+            backgroundColor: Color(component.accentColor.value),
+            title: TextField(
+              controller: searchController,
+              style: TextStyle(fontSize: 20),
+              cursorColor: Colors.white,
+              textInputAction: TextInputAction.search,
+              onSubmitted: (String param) {
+                search();
+              },
+              decoration: InputDecoration(
+                focusColor: Colors.white,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
+                  ),
+                ),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.0,
+                  ),
+                ),
               ),
             ),
-            border: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white,
-                width: 1.0,
+            actions: [
+              IconButton(
+                onPressed: search,
+                icon: Icon(Icons.search_outlined),
               ),
+            ],
+            leading: IconButton(
+              onPressed: () {
+                reddit.getInitPosts('frontpage');
+                Get.back();
+              },
+              icon: Icon(Icons.arrow_back_outlined),
             ),
           ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: search,
-            icon: Icon(Icons.search_outlined),
-          ),
-        ],
-        leading: IconButton(
-          onPressed: () {
-            reddit.getInitPosts('frontpage');
-            Get.back();
-          },
-          icon: Icon(Icons.arrow_back_outlined),
         ),
       ),
       body: SearchBody(
