@@ -50,10 +50,7 @@ class Feed extends StatelessWidget {
         }
         return LoadingView();
       },
-      future: Future.wait([
-        reddit.getInitPosts('frontpage'),
-        reddit.getSubscriptions(),
-      ]),
+      future: reddit.initFeed(),
     );
   }
 }

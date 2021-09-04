@@ -12,6 +12,7 @@ class CommentList extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(
+        // TODO: Need to make the comments more performant
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(reddit.postComments.length, (i) {
