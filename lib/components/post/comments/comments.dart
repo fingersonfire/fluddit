@@ -32,13 +32,7 @@ class CommentContent extends StatelessWidget {
           return Container(
             width: MediaQuery.of(context).size.width,
             height: 300,
-            child: Center(
-              child: Obx(
-                () => CircularProgressIndicator(
-                  color: Color(component.accentColor.value),
-                ),
-              ),
-            ),
+            child: LoadingIndicator(),
           );
         },
         future: reddit.getPostComments(

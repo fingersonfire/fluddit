@@ -1,14 +1,19 @@
+import 'package:fluddit/bloc/index.dart';
 import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {
-  const LoadingView({Key? key}) : super(key: key);
+  LoadingView({Key? key}) : super(key: key);
+
+  final ComponentController component = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).hintColor,
+        child: Obx(
+          () => CircularProgressIndicator(
+            color: Color(component.accentColor.value),
+          ),
         ),
       ),
     );

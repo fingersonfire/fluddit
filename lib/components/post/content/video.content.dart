@@ -1,4 +1,5 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/components/index.dart';
 import 'package:fluddit/widgets/conditional.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -89,11 +90,7 @@ class _VideoContentState extends State<VideoContent> {
           )
         ],
       ),
-      falseWidget: Center(
-        child: CircularProgressIndicator(
-          color: Color(component.accentColor.value),
-        ),
-      ),
+      falseWidget: LoadingIndicator(),
     );
   }
 

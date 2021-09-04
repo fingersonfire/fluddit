@@ -1,5 +1,7 @@
 export 'bottom.navigation.dart';
 
+export 'loading.dart';
+
 // Drawer widget components
 export 'drawer/drawer.dart';
 
@@ -36,6 +38,9 @@ export 'post/comments/vote.button.dart';
 export 'post/content.dart';
 
 export 'post/title.dart';
+
+// Profile dialog components
+export 'profile/dialog.dart';
 
 // Settings view components
 export 'settings/color.button.dart';

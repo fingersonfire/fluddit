@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class FeedPosts extends StatelessWidget {
   FeedPosts({Key? key}) : super(key: key);
 
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -27,9 +28,7 @@ class FeedPosts extends StatelessWidget {
               } else {
                 return Container(
                   height: 75,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: LoadingIndicator(),
                 );
               }
             }

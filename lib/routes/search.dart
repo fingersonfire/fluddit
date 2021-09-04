@@ -158,11 +158,7 @@ class SearchBody extends StatelessWidget {
                 ),
               );
             }
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.indigo[300],
-              ),
-            );
+            return LoadingIndicator();
           },
         ),
       );
