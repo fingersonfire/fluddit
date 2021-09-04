@@ -8,6 +8,7 @@ class SubredditDrawer extends StatelessWidget {
   SubredditDrawer({Key? key}) : super(key: key);
 
   final ComponentController component = Get.find();
+  final RedditController reddit = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -18,60 +19,20 @@ class SubredditDrawer extends StatelessWidget {
             child: SubredditList(),
           ),
           Container(
-            margin: EdgeInsets.all(2),
-            color: Theme.of(context).backgroundColor,
-            height: 50,
-            width: 300,
             child: ConditionalWidget(
-              // condition: snapshot.data?.getString('access_token') != null,
               condition: GetStorage().read('access_token') != null,
-              trueWidget: TextButton(
-                onPressed: () async {},
-                child: Text(
-                  'Account',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              falseWidget: TextButton(
-                onPressed: () {
-                  Get.back();
-                  Get.to(() => LoginView());
-                },
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              trueWidget: AccountButton(),
+              falseWidget: LoginButton(),
             ),
           ),
           Container(
+            padding: EdgeInsets.zero,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  color: Theme.of(context).backgroundColor,
-                  width: 150,
-                  height: 50,
-                  child: IconButton(
-                    onPressed: () {
-                      Get.to(() => Settings());
-                    },
-                    icon: Icon(Icons.settings_outlined),
-                  ),
-                ),
-                Container(
-                  color: Theme.of(context).backgroundColor,
-                  width: 150,
-                  height: 50,
-                  child: IconButton(
-                    onPressed: () {
-                      component.displaySnackbar(
-                        'Mail not yet implemented',
-                      );
-                    },
-                    icon: Icon(Icons.mail_outline),
-                  ),
-                ),
+                MailButton(),
+                SettingsButton(),
               ],
             ),
           ),

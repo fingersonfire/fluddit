@@ -3,7 +3,15 @@ export 'bottom.navigation.dart';
 export 'loading.dart';
 
 // Drawer widget components
+export 'drawer/account.button.dart';
+
 export 'drawer/drawer.dart';
+
+export 'drawer/login.button.dart';
+
+export 'drawer/mail.button.dart';
+
+export 'drawer/settings.button.dart';
 
 export 'drawer/subreddit.button.dart';
 
