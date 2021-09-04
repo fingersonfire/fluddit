@@ -13,6 +13,7 @@ class RedditController extends GetxController {
   RxString name = 'frontpage'.obs;
   RxList subscriptions = [].obs;
   RxString time = 'day'.obs;
+  RxString userName = ''.obs;
 
   late Subreddit subreddit;
 
@@ -118,6 +119,11 @@ class RedditController extends GetxController {
     this.postComments.value = flattenedComments;
   }
 
+  Future getUserInfo() async {
+    HTTP.Response _resp = await _get('/api/v1/me');
+    return jsonDecode(_resp.body);
+  }
+
   /// Fetches the subreddits for the logged in user.
   Future getUserSubreddits() async {
     try {
@@ -137,6 +143,19 @@ class RedditController extends GetxController {
       print(e);
       return [];
     }
+  }
+
+  Future<void> initFeed() async {
+    final GetStorage box = GetStorage();
+
+    if (box.read('access_token') != null) {
+      await this.getSubscriptions();
+
+      final info = await this.getUserInfo();
+      this.userName.value = info['name'];
+    }
+
+    this.getInitPosts('frontpage');
   }
 
   Future<List<dynamic>> searchSubreddits({required String query}) async {
