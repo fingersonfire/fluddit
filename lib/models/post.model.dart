@@ -8,14 +8,14 @@ class RedditPost {
   final bool isSelf;
   final bool isVideo;
   final Map metaData;
-  final bool saved;
+  final String? postHint;
+  bool saved;
   int score;
   final String selfText;
   final bool stickied;
   final String subreddit;
   final String thumbnail;
   final String title;
-  final String? postHint;
   final String? url;
   final String videoUrl;
   int vote;
@@ -30,6 +30,7 @@ class RedditPost {
     required this.isSelf,
     required this.isVideo,
     required this.metaData,
+    required this.postHint,
     required this.saved,
     required this.score,
     required this.selfText,
@@ -37,7 +38,6 @@ class RedditPost {
     required this.subreddit,
     required this.thumbnail,
     required this.title,
-    required this.postHint,
     required this.url,
     required this.videoUrl,
     required this.vote,
@@ -54,6 +54,7 @@ class RedditPost {
       isSelf: json['is_self'],
       isVideo: json['is_video'],
       metaData: json['media_metadata'] ?? {},
+      postHint: json['post_hint'],
       saved: json['saved'],
       score: json['score'],
       selfText: json['selftext'],
@@ -61,7 +62,6 @@ class RedditPost {
       subreddit: json['subreddit'],
       thumbnail: json['thumbnail'],
       title: json['title'],
-      postHint: json['post_hint'],
       url: json['url_overridden_by_dest'],
       videoUrl: json['secure_media']?['reddit_video']?['fallback_url'] ?? '',
       vote: _getVote(json['likes']),
@@ -77,6 +77,10 @@ class RedditPost {
     } else {
       return this.score.toString();
     }
+  }
+
+  void save(bool save) {
+    this.saved = save;
   }
 
   void updateVote(int vote) {
