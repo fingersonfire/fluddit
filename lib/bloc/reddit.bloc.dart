@@ -17,6 +17,7 @@ class RedditController extends GetxController {
 
   late Subreddit subreddit;
 
+  /// Get the subscribed subreddits for the currently authenticated user
   Future getSubscriptions() async {
     final List subscriptions = await this.getUserSubreddits();
     if (subscriptions.length > 0) {
@@ -119,9 +120,34 @@ class RedditController extends GetxController {
     this.postComments.value = flattenedComments;
   }
 
-  Future getUserInfo() async {
-    HTTP.Response _resp = await _get('/api/v1/me');
+  Future getUserComments(String username) async {
+    HTTP.Response _resp = await _get('/user/$username/comments');
     return jsonDecode(_resp.body);
+  }
+
+  Future<User> getUserInfo() async {
+    HTTP.Response _resp = await _get('/api/v1/me');
+
+    final _json = jsonDecode(_resp.body);
+    final User user = User.fromJson(_json);
+
+    return user;
+  }
+
+  Future<List<RedditPost>> getUserPosts(String username) async {
+    HTTP.Response _resp = await _get('/user/$username/submitted');
+    final _json = jsonDecode(_resp.body);
+
+    final List<RedditPost> posts = _json['data']['children']
+        .map(
+          (p) {
+            return RedditPost.fromJson(p['data']);
+          },
+        )
+        .toList()
+        .cast<RedditPost>();
+
+    return posts;
   }
 
   /// Fetches the subreddits for the logged in user.
@@ -152,7 +178,7 @@ class RedditController extends GetxController {
       await this.getSubscriptions();
 
       final info = await this.getUserInfo();
-      this.userName.value = info['name'];
+      this.userName.value = info.name;
     }
 
     this.getInitPosts('frontpage');
