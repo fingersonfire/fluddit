@@ -17,6 +17,31 @@ class RedditController extends GetxController {
 
   late Subreddit subreddit;
 
+  Future<HTTP.Response> comment(String fullName, String body) async {
+    final HTTP.Response _resp = await _post(
+      '/api/comment?thing_id=$fullName&text=$body',
+      null,
+    );
+
+    return _resp;
+  }
+
+  Future<void> commentOnPost(
+    String subreddit,
+    String postId,
+    String fullName,
+    String body,
+  ) async {
+    print('subreddit: $subreddit, postId: $postId, fullName: $fullName');
+    final HTTP.Response _resp = await this.comment(fullName, body);
+
+    if (_resp.statusCode == 200) {
+      await this.getPostComments(subreddit: subreddit, postId: postId);
+    } else {
+      print(_resp.body);
+    }
+  }
+
   /// Get the subscribed subreddits for the currently authenticated user
   Future getSubscriptions() async {
     final List subscriptions = await this.getUserSubreddits();
