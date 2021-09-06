@@ -41,8 +41,8 @@ class LoginViewState extends State<LoginView> {
 
   Future<void> handleAuth(String url) async {
     await auth.setAuthToken(url);
-    await reddit.getInitPosts('frontpage');
-    await reddit.getSubscriptions();
+    await reddit.initFeed();
+
     Get.back();
   }
 
