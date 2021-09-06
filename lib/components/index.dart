@@ -43,6 +43,8 @@ export 'post/comments/list.dart';
 
 export 'post/comments/vote.button.dart';
 
+export 'post/reply/reply.dart';
+
 export 'post/content.dart';
 
 export 'post/save.button.dart';
