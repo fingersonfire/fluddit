@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/widgets.dart';
@@ -6,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ComponentController extends GetxController {
-  RxBool isDarkMode = true.obs;
+  CarouselController carouselController = new CarouselController();
+  RxInt carouselIndex = 0.obs;
 
   void openDrawer(scaffoldKey) {
     if (!scaffoldKey.currentState.isDrawerOpen) {
@@ -55,10 +58,14 @@ class ComponentController extends GetxController {
         parsedUrl.endsWith('gif');
   }
 
-  Future<void> updateThemeMode(bool dark) async {
+  void onCarouselPageUpdate(int page, CarouselPageChangedReason changedReason) {
+    this.carouselIndex.value = page;
+  }
+
+  Future<void> updateThemeMode(bool darkMode) async {
     final GetStorage box = GetStorage();
 
-    if (dark) {
+    if (darkMode) {
       await box.write('darkMode', true);
       Get.changeTheme(
         NordTheme.dark().copyWith(

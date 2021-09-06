@@ -9,6 +9,7 @@ class PostView extends StatelessWidget {
 
   final RedditPost post;
 
+  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -23,6 +24,10 @@ class PostView extends StatelessWidget {
           },
           icon: Icon(Icons.close),
         ),
+        actions: [
+          SavePostButton(),
+          SharePostButton(),
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -33,8 +38,9 @@ class PostView extends StatelessWidget {
               options: CarouselOptions(
                 enableInfiniteScroll: false,
                 height: constraints.maxHeight,
-                viewportFraction: 1,
                 initialPage: postIndex,
+                onPageChanged: component.onCarouselPageUpdate,
+                viewportFraction: 1,
               ),
               items: List.generate(
                 reddit.posts.length,

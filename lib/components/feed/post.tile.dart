@@ -19,6 +19,9 @@ class PostTile extends StatelessWidget {
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () {
+          final postIndex = reddit.posts.indexOf(post);
+          comp.carouselIndex.value = postIndex;
+
           Get.to(
             () => PostView(post: post),
             transition: Transition.rightToLeft,
