@@ -45,6 +45,10 @@ export 'post/comments/vote.button.dart';
 
 export 'post/content.dart';
 
+export 'post/save.button.dart';
+
+export 'post/share.button.dart';
+
 export 'post/title.dart';
 
 // Profile dialog components
