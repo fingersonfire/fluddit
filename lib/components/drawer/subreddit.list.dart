@@ -14,39 +14,42 @@ class SubredditList extends StatelessWidget {
       color: Colors.transparent,
       child: Obx(
         () => SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Divider(),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 40,
-                  child: MaterialButton(
-                    child: Text(
-                      'frontpage',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).hintColor,
+          child: GlowingOverscrollIndicator(
+            color: Theme.of(context).accentColor,
+            axisDirection: AxisDirection.down,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Divider(),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
+                    child: MaterialButton(
+                      child: Text(
+                        'frontpage',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
+                      onPressed: () {
+                        if (reddit.name.value != 'frontpage') {
+                          reddit.getInitPosts('frontpage');
+                        }
+                        Get.back();
+                      },
                     ),
-                    onPressed: () {
-                      if (reddit.name.value != 'frontpage') {
-                        reddit.getInitPosts('frontpage');
-                      }
-                      Get.back();
+                  ),
+                  Divider(),
+                  ...List<Widget>.generate(
+                    reddit.subscriptions.length,
+                    (i) {
+                      final Subreddit subreddit =
+                          reddit.subscriptions[i] as Subreddit;
+                      return SubredditButton(subreddit: subreddit);
                     },
                   ),
-                ),
-                Divider(),
-                ...List<Widget>.generate(
-                  reddit.subscriptions.length,
-                  (i) {
-                    final Subreddit subreddit =
-                        reddit.subscriptions[i] as Subreddit;
-                    return SubredditButton(subreddit: subreddit);
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

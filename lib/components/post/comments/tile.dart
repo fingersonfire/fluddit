@@ -7,7 +7,6 @@ class CommentTile extends StatelessWidget {
 
   final int index;
 
-  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -19,7 +18,7 @@ class CommentTile extends StatelessWidget {
           border: Border(
             left: BorderSide(
               width: 2.0,
-              color: Color(component.accentColor.value),
+              color: Theme.of(context).accentColor,
             ),
           ),
           color: reddit.postComments[index].level.isEven

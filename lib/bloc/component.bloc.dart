@@ -1,10 +1,11 @@
 import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ComponentController extends GetxController {
-  RxInt accentColor = 0.obs;
   RxBool isDarkMode = true.obs;
 
   void openDrawer(scaffoldKey) {
@@ -52,5 +53,44 @@ class ComponentController extends GetxController {
     return parsedUrl.endsWith('jpg') ||
         parsedUrl.endsWith('png') ||
         parsedUrl.endsWith('gif');
+  }
+
+  Future<void> updateThemeMode(bool dark) async {
+    final GetStorage box = GetStorage();
+
+    if (dark) {
+      await box.write('darkMode', true);
+      Get.changeTheme(
+        NordTheme.dark().copyWith(
+          accentColor: Color(int.parse(box.read('accent_color'))),
+        ),
+      );
+    } else {
+      await box.write('darkMode', false);
+      Get.changeTheme(
+        NordTheme.light().copyWith(
+          accentColor: Color(int.parse(box.read('accent_color'))),
+        ),
+      );
+    }
+
+    Get.appUpdate();
+  }
+
+  Future<void> updateAccentColor(int color) async {
+    final GetStorage box = GetStorage();
+    await box.write('accent_color', '$color');
+
+    if (box.read('darkMode')) {
+      Get.changeTheme(
+        NordTheme.dark().copyWith(accentColor: Color(color)),
+      );
+    } else {
+      Get.changeTheme(
+        NordTheme.light().copyWith(accentColor: Color(color)),
+      );
+    }
+
+    Get.appUpdate();
   }
 }

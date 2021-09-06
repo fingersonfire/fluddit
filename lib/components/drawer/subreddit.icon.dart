@@ -4,10 +4,7 @@ import 'package:fluddit/widgets/conditional.widget.dart';
 import 'package:flutter/material.dart';
 
 class SubredditIcon extends StatelessWidget {
-  SubredditIcon({
-    Key? key,
-    required this.subreddit,
-  }) : super(key: key);
+  SubredditIcon({Key? key, required this.subreddit}) : super(key: key);
 
   final Subreddit subreddit;
 

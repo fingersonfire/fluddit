@@ -80,7 +80,7 @@ class _VideoContentState extends State<VideoContent> {
                     _controller,
                     allowScrubbing: true,
                     colors: VideoProgressColors(
-                      playedColor: Color(component.accentColor.value),
+                      playedColor: Theme.of(context).accentColor,
                     ),
                     padding: EdgeInsets.zero,
                   ),

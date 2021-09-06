@@ -1,14 +1,9 @@
-import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
-import 'package:fluddit/routes/index.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:get_storage/get_storage.dart';
 
 class SubredditDrawer extends StatelessWidget {
-  SubredditDrawer({Key? key}) : super(key: key);
-
-  final ComponentController component = Get.find();
-  final RedditController reddit = Get.find();
+  const SubredditDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

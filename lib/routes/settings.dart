@@ -6,19 +6,15 @@ import 'package:get_storage/get_storage.dart';
 class Settings extends StatelessWidget {
   Settings({Key? key}) : super(key: key);
 
-  final ComponentController component = Get.find();
   final GetStorage box = GetStorage();
+  final ComponentController component = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: Obx(
-          () => AppBar(
-            backgroundColor: Color(component.accentColor.value),
-          ),
-        ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).accentColor,
+        toolbarHeight: 50,
       ),
       body: SafeArea(
         child: Column(
@@ -60,22 +56,12 @@ class Settings extends StatelessWidget {
                 style: TextStyle(fontSize: 22),
               ),
             ),
-            Obx(
-              () => Container(
-                margin: EdgeInsets.only(left: 10),
-                child: Switch(
-                  activeColor: Color(component.accentColor.value),
-                  value: component.isDarkMode.value,
-                  onChanged: (darkMode) {
-                    if (darkMode) {
-                      component.isDarkMode.value = true;
-                      Get.changeThemeMode(ThemeMode.dark);
-                    } else {
-                      component.isDarkMode.value = false;
-                      Get.changeThemeMode(ThemeMode.light);
-                    }
-                  },
-                ),
+            Container(
+              margin: EdgeInsets.only(left: 10),
+              child: Switch(
+                activeColor: Theme.of(context).accentColor,
+                value: box.read('darkMode'),
+                onChanged: component.updateThemeMode,
               ),
             ),
           ],

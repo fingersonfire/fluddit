@@ -10,7 +10,6 @@ GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 class Feed extends StatelessWidget {
   Feed({Key? key}) : super(key: key);
 
-  final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
 
   @override
@@ -23,7 +22,7 @@ class Feed extends StatelessWidget {
               preferredSize: Size.fromHeight(50),
               child: Obx(
                 () => AppBar(
-                  backgroundColor: Color(component.accentColor.value),
+                  backgroundColor: Theme.of(context).accentColor,
                   brightness: Brightness.dark,
                   centerTitle: true,
                   title: Column(

@@ -10,6 +10,7 @@ void main() async {
 
   await GetStorage.init();
   GetStorage().writeIfNull('accent_color', '0xffb48ead');
+  GetStorage().writeIfNull('darkMode', true);
 
   _loadBlocs();
   runApp(App());
@@ -17,13 +18,18 @@ void main() async {
 
 class App extends StatelessWidget {
   final AuthController auth = Get.find();
-  final ComponentController component = Get.find();
+  final GetStorage box = GetStorage();
 
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      themeMode: ThemeMode.dark,
-      theme: NordTheme.light(),
-      darkTheme: NordTheme.dark(),
+      themeMode: ThemeMode.light,
+      theme: box.read('darkMode')
+          ? NordTheme.dark().copyWith(
+              accentColor: Color(int.parse(box.read('accent_color'))),
+            )
+          : NordTheme.light().copyWith(
+              accentColor: Color(int.parse(box.read('accent_color'))),
+            ),
       title: 'fluddit',
       home: FutureBuilder(
         builder: (context, AsyncSnapshot snapshot) {
@@ -40,8 +46,6 @@ class App extends StatelessWidget {
 
 void _loadBlocs() {
   Get.put<AuthController>(AuthController());
+  Get.put<ComponentController>(ComponentController());
   Get.put<RedditController>(RedditController());
-
-  final ComponentController component = Get.put(ComponentController());
-  component.accentColor.value = int.parse(GetStorage().read('accent_color'));
 }
