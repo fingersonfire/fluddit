@@ -14,8 +14,6 @@ class LoginViewState extends State<LoginView> {
   final AuthController auth = Get.find();
   final RedditController reddit = Get.find();
 
-  late WebViewController _webController;
-
   final String authUrl = 'https://www.reddit.com/api/v1/authorize.compact?' +
       'client_id=$clientId&response_type=code&state=$codeVerifier' +
       '&duration=permanent&redirect_uri=$redirectUri' +
@@ -46,10 +44,6 @@ class LoginViewState extends State<LoginView> {
     Get.back();
   }
 
-  void setController(WebViewController controller) {
-    _webController = controller;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +51,6 @@ class LoginViewState extends State<LoginView> {
         child: WebView(
           initialUrl: authUrl,
           javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: setController,
           userAgent: userAgent,
           navigationDelegate: handleNav,
         ),
