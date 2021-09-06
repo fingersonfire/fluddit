@@ -1,7 +1,7 @@
 name: fluddit
 description: An open source Reddit client written in Flutter.
 publish_to: 'none'
-version: 0.1.4+14
+version: 0.1.5+15
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
   get: ^4.2.5
   get_storage: ^2.0.3
   http: ^0.13.3
+  share_plus: ^2.1.4
   video_player: ^2.1.12
   webview_flutter: ^2.0.12
 
