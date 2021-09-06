@@ -1,4 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/components/index.dart';
+import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 
 class PostVoteButtons extends StatelessWidget {
@@ -19,6 +21,16 @@ class PostVoteButtons extends StatelessWidget {
         () => Container(
           child: Row(
             children: [
+              IconButton(
+                onPressed: () {
+                  final RedditPost post = reddit.posts[postIndex] as RedditPost;
+                  replyDialog(context, post.fullName);
+                },
+                icon: Icon(
+                  Icons.reply_outlined,
+                ),
+                iconSize: 20,
+              ),
               IconButton(
                 iconSize: 20,
                 onPressed: () async {
