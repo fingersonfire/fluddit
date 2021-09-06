@@ -8,9 +8,7 @@ void main() async {
   // Calling this as the binding needs to be initialized before running the app
   WidgetsFlutterBinding.ensureInitialized();
 
-  await GetStorage.init();
-  GetStorage().writeIfNull('accent_color', '0xffb48ead');
-  GetStorage().writeIfNull('darkMode', true);
+  await _initStorage();
 
   _loadBlocs();
   runApp(App());
@@ -42,6 +40,12 @@ class App extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _initStorage() async {
+  await GetStorage.init();
+  GetStorage().writeIfNull('accent_color', '0xffb48ead');
+  GetStorage().writeIfNull('darkMode', true);
 }
 
 void _loadBlocs() {
