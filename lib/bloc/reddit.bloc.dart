@@ -184,6 +184,24 @@ class RedditController extends GetxController {
     this.getInitPosts('frontpage');
   }
 
+  Future<void> savePost(int postIndex) async {
+    final bool _saveState = this.posts[postIndex].saved;
+    final String _fullName = this.posts[postIndex].fullName;
+
+    this.posts[postIndex].save(!_saveState);
+    this.posts.refresh();
+
+    final HTTP.Response _resp = await _post(
+      '/api/${_saveState ? 'unsave' : 'save'}?id=$_fullName',
+      null,
+    );
+
+    if (_resp.statusCode != 200) {
+      this.posts[postIndex].save(_saveState);
+      this.posts.refresh();
+    }
+  }
+
   Future<List<dynamic>> searchSubreddits({required String query}) async {
     final HTTP.Response _resp = await _get('/subreddits/search?q=$query');
 
