@@ -7,7 +7,6 @@ void profileDialog() {
 
   Get.defaultDialog(
     title: reddit.userName.value,
-    middleText: '',
     content: FutureBuilder(
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {

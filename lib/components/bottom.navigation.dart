@@ -1,4 +1,5 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/components/feed/sorting/sort.modal.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,12 @@ class BottomNavBar extends StatelessWidget {
               await reddit.getInitPosts(reddit.name.value);
             },
             icon: Icon(Icons.refresh_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              sortDialog(context);
+            },
+            icon: Icon(Icons.sort),
           ),
           IconButton(
               icon: Icon(Icons.search_outlined),
