@@ -64,7 +64,10 @@ void replyDialog(
                     onPressed: () {
                       Get.back();
                     },
-                    icon: Icon(Icons.delete),
+                    icon: Icon(
+                      Icons.delete,
+                      color: Color(0xFF2e3440),
+                    ),
                   ),
                   SendCommentButton(
                     fullName: fullName,
