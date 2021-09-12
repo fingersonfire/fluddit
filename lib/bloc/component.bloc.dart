@@ -69,14 +69,14 @@ class ComponentController extends GetxController {
       await box.write('darkMode', true);
       Get.changeTheme(
         NordTheme.dark().copyWith(
-          accentColor: Color(int.parse(box.read('accent_color'))),
+          primaryColor: Color(int.parse(box.read('accent_color'))),
         ),
       );
     } else {
       await box.write('darkMode', false);
       Get.changeTheme(
         NordTheme.light().copyWith(
-          accentColor: Color(int.parse(box.read('accent_color'))),
+          primaryColor: Color(int.parse(box.read('accent_color'))),
         ),
       );
     }
@@ -90,11 +90,11 @@ class ComponentController extends GetxController {
 
     if (box.read('darkMode')) {
       Get.changeTheme(
-        NordTheme.dark().copyWith(accentColor: Color(color)),
+        NordTheme.dark().copyWith(primaryColor: Color(color)),
       );
     } else {
       Get.changeTheme(
-        NordTheme.light().copyWith(accentColor: Color(color)),
+        NordTheme.light().copyWith(primaryColor: Color(color)),
       );
     }
 

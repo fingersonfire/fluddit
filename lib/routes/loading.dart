@@ -8,7 +8,7 @@ class LoadingView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

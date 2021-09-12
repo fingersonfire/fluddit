@@ -23,13 +23,19 @@ class SubscribeButton extends StatelessWidget {
             onPressed: () async {
               await reddit.unsubscribe(subreddit.fullName);
             },
-            icon: Icon(Icons.remove_outlined),
+            icon: Icon(
+              Icons.remove_outlined,
+              color: Color(0xFF2e3440),
+            ),
           ),
           falseWidget: IconButton(
             onPressed: () async {
               await reddit.subscribe(subreddit.fullName);
             },
-            icon: Icon(Icons.add_outlined),
+            icon: Icon(
+              Icons.add_outlined,
+              color: Color(0xFF2e3440),
+            ),
           ),
         );
       }),

@@ -1,5 +1,4 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -13,12 +12,15 @@ class SharePostButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        final post = reddit.posts[component.carouselIndex.value] as RedditPost;
+        final post = reddit.posts[component.carouselIndex.value];
         Share.share(
           'https://www.reddit.com/r/${post.subreddit}/${post.id}',
         );
       },
-      icon: Icon(Icons.share_outlined),
+      icon: Icon(
+        Icons.share_outlined,
+        color: Color(0xFF2e3440),
+      ),
     );
   }
 }

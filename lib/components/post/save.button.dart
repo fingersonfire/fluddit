@@ -18,12 +18,18 @@ class SavePostButton extends StatelessWidget {
         icon: Obx(
           () {
             final int carouselIndex = component.carouselIndex.value;
-            final RedditPost post = reddit.posts[carouselIndex] as RedditPost;
+            final RedditPost post = reddit.posts[carouselIndex];
 
             if (post.saved) {
-              return Icon(Icons.bookmark_remove_outlined);
+              return Icon(
+                Icons.bookmark_remove_outlined,
+                color: Color(0xFF2e3440),
+              );
             } else {
-              return Icon(Icons.bookmark_outline_outlined);
+              return Icon(
+                Icons.bookmark_outline_outlined,
+                color: Color(0xFF2e3440),
+              );
             }
           },
         ),

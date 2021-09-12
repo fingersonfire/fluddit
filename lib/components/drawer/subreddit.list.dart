@@ -1,6 +1,5 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
-import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 
 class SubredditList extends StatelessWidget {
@@ -15,7 +14,7 @@ class SubredditList extends StatelessWidget {
       child: Obx(
         () => SafeArea(
           child: GlowingOverscrollIndicator(
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             axisDirection: AxisDirection.down,
             child: SingleChildScrollView(
               child: Column(
@@ -43,9 +42,9 @@ class SubredditList extends StatelessWidget {
                   ...List<Widget>.generate(
                     reddit.subscriptions.length,
                     (i) {
-                      final Subreddit subreddit =
-                          reddit.subscriptions[i] as Subreddit;
-                      return SubredditButton(subreddit: subreddit);
+                      return SubredditButton(
+                        subreddit: reddit.subscriptions[i],
+                      );
                     },
                   ),
                 ],

@@ -13,7 +13,7 @@ class SettingsButton extends StatelessWidget {
       child: MaterialButton(
         padding: EdgeInsets.zero,
         child: Container(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           width: 150,
           height: 45,
           child: Center(

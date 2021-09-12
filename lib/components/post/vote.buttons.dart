@@ -23,8 +23,8 @@ class PostVoteButtons extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  final RedditPost post = reddit.posts[postIndex] as RedditPost;
-                  replyDialog(context, post.fullName);
+                  final RedditPost post = reddit.posts[postIndex];
+                  replyDialog(context, post.fullName, post.id, post.title);
                 },
                 icon: Icon(
                   Icons.reply_outlined,

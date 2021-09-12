@@ -10,7 +10,7 @@ class LoginButton extends StatelessWidget {
     return MaterialButton(
       padding: EdgeInsets.zero,
       child: Container(
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).primaryColor,
         width: 300,
         height: 45,
         child: Center(
