@@ -8,23 +8,12 @@ import 'package:http/http.dart' as HTTP;
 class RedditController extends GetxController {
   RxString after = ''.obs;
   RxString listing = 'hot'.obs;
-  RxList<Comment> postComments = <Comment>[].obs;
-  RxList posts = [].obs;
+  RxList<RedditPost> posts = <RedditPost>[].obs;
   RxString name = 'frontpage'.obs;
-  RxList subscriptions = [].obs;
+  late Subreddit subreddit;
+  RxList<Subreddit> subscriptions = <Subreddit>[].obs;
   RxString time = 'day'.obs;
   RxString userName = ''.obs;
-
-  late Subreddit subreddit;
-
-  Future<HTTP.Response> comment(String fullName, String body) async {
-    final HTTP.Response _resp = await _post(
-      '/api/comment?thing_id=$fullName&text=$body',
-      null,
-    );
-
-    return _resp;
-  }
 
   Future<void> commentOnPost(
     String subreddit,
@@ -32,21 +21,42 @@ class RedditController extends GetxController {
     String fullName,
     String body,
   ) async {
-    print('subreddit: $subreddit, postId: $postId, fullName: $fullName');
-    final HTTP.Response _resp = await this.comment(fullName, body);
+    print(
+      'comment on subreddit: $subreddit, postId: $postId, fullName: $fullName',
+    );
+
+    final HTTP.Response _resp = await _comment(fullName, body);
+    final int pIndex = _getPostIdIndex(postId);
 
     if (_resp.statusCode == 200) {
-      await this.getPostComments(subreddit: subreddit, postId: postId);
-    } else {
-      print(_resp.body);
-    }
-  }
+      final response = jsonDecode(_resp.body);
 
-  /// Get the subscribed subreddits for the currently authenticated user
-  Future getSubscriptions() async {
-    final List subscriptions = await this.getUserSubreddits();
-    if (subscriptions.length > 0) {
-      this.subscriptions.value = subscriptions;
+      // Get the new comment data from the jquery response
+      final commentData = List.castFrom(response['jquery'])
+          .singleWhere((c) => c.toString().contains('kind'))
+          .last
+          .first
+          .first['data'];
+
+      // Create a new comment object from the parsed response
+      final Comment newComment = Comment.fromJson(commentData);
+
+      if (posts[pIndex].fullName == fullName) {
+        // If the comment is a direct response to the post, add it to the top
+        posts[pIndex].comments.insert(0, newComment);
+      } else {
+        // If a comment is a reply to another comment, display below the original
+        final int cIndex =
+            posts[pIndex].comments.indexWhere((c) => c.fullName == fullName);
+
+        newComment.level = posts[pIndex].comments[cIndex].level + 1;
+        posts[pIndex].comments.insert(cIndex + 1, newComment);
+      }
+
+      // Refresh the posts item to update UI
+      posts.refresh();
+    } else {
+      print(jsonDecode(_resp.body));
     }
   }
 
@@ -57,17 +67,17 @@ class RedditController extends GetxController {
     required String subreddit,
     required String time,
   }) async {
-    HTTP.Response resp;
+    HTTP.Response _resp;
 
     // Fetch the default route json if subreddit is 'frontpage'.
     if (subreddit == 'frontpage') {
-      resp = await _get(
+      _resp = await _get(
         '/.json' +
             '?limit=$limit' +
             '&after=$after', // [after] param being empty returns first page.
       );
     } else {
-      resp = await _get(
+      _resp = await _get(
         '/r/$subreddit/' +
             '$listing.json' +
             '?limit=$limit' +
@@ -76,17 +86,13 @@ class RedditController extends GetxController {
       );
     }
 
-    Map<String, dynamic> _json = jsonDecode(resp.body);
+    Map<String, dynamic> _json = jsonDecode(_resp.body);
     List posts = _json['data']['children']
         .map((p) => RedditPost.fromJson(p['data']))
-        .toList();
+        .toList()
+        .cast<RedditPost>();
 
-    final Map<String, dynamic> response = {
-      'after': _json['data']['after'],
-      'posts': posts
-    };
-
-    return response;
+    return {'after': _json['data']['after'], 'posts': posts};
   }
 
   Future<void> getInitPosts(String subreddit) async {
@@ -103,7 +109,7 @@ class RedditController extends GetxController {
     );
 
     this.after.value = _data['after'] == null ? '' : _data['after'];
-    this.posts.value = _data['posts'];
+    this.posts.value = _data['posts'].toList().cast<RedditPost>();
   }
 
   Future getNextPosts() async {
@@ -116,14 +122,14 @@ class RedditController extends GetxController {
     );
 
     this.after.value = _data['after'];
-    this.posts.addAll(_data['posts']);
+    this.posts.addAll(_data['posts'].toList().cast<RedditPost>());
   }
 
   Future<void> getPostComments({
     required String subreddit,
     required String postId,
   }) async {
-    HTTP.Response _resp = await _get('/r/$subreddit/comments/$postId');
+    HTTP.Response _resp = await _get('/r/$subreddit/comments/$postId.json');
     List<dynamic> _json = jsonDecode(_resp.body);
 
     print('Loaded post: $subreddit $postId');
@@ -131,21 +137,25 @@ class RedditController extends GetxController {
     final List<dynamic> repliesJson = _json[1]['data']['children'];
     repliesJson.removeWhere((e) => e['kind'] == 'more');
 
-    final List<Comment> comments = repliesJson
-        .map(
-          (s) => Comment.fromJson(s['data']),
-        )
-        .toList();
+    final List<Comment> comments =
+        repliesJson.map((s) => Comment.fromJson(s['data'])).toList();
 
     final List<Comment> flattenedComments = _flattenComments(
       comments: comments,
       list: <Comment>[],
     );
 
-    this.postComments.value = flattenedComments;
+    final int pIndex = _getPostIdIndex(postId);
+    posts[pIndex].updateComments(flattenedComments);
+    posts[pIndex].commentsLoaded = true;
+    posts.refresh();
   }
 
-  Future getUserComments(String username) async {
+  int _getPostIdIndex(String postId) {
+    return this.posts.indexWhere((p) => p.id == postId);
+  }
+
+  Future<dynamic> getUserComments(String username) async {
     HTTP.Response _resp = await _get('/user/$username/comments');
     return jsonDecode(_resp.body);
   }
@@ -159,16 +169,22 @@ class RedditController extends GetxController {
     return user;
   }
 
+  /// Get the subscribed subreddits for the currently authenticated user
+  Future<void> getSubscriptions() async {
+    final List<Subreddit> subscriptions = await this.getUserSubreddits();
+    if (subscriptions.length > 0) {
+      this.subscriptions.value = subscriptions;
+    }
+  }
+
   Future<List<RedditPost>> getUserPosts(String username) async {
     HTTP.Response _resp = await _get('/user/$username/submitted');
     final _json = jsonDecode(_resp.body);
 
     final List<RedditPost> posts = _json['data']['children']
-        .map(
-          (p) {
-            return RedditPost.fromJson(p['data']);
-          },
-        )
+        .map((p) {
+          return RedditPost.fromJson(p['data']);
+        })
         .toList()
         .cast<RedditPost>();
 
@@ -176,14 +192,15 @@ class RedditController extends GetxController {
   }
 
   /// Fetches the subreddits for the logged in user.
-  Future getUserSubreddits() async {
+  Future<List<Subreddit>> getUserSubreddits() async {
     try {
       HTTP.Response _resp = await _get('/subreddits/mine/subscriber?limit=150');
 
       Map<String, dynamic> _json = jsonDecode(_resp.body);
-      List subreddits = _json['data']['children']
+      List<Subreddit> subreddits = _json['data']['children']
           .map((s) => Subreddit.fromJson(s['data']))
-          .toList();
+          .toList()
+          .cast<Subreddit>();
 
       subreddits.sort(
         (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
@@ -192,7 +209,7 @@ class RedditController extends GetxController {
       return subreddits;
     } catch (e) {
       print(e);
-      return [];
+      return <Subreddit>[];
     }
   }
 
@@ -267,9 +284,9 @@ class RedditController extends GetxController {
     return _resp.statusCode == 200;
   }
 
-  void _updateLocalCommentVote(int vote, int commentIndex) {
-    this.postComments[commentIndex].updateVote(vote);
-    this.postComments.refresh();
+  void _updateLocalCommentVote(int commentIndex, int postIndex, int vote) {
+    this.posts[postIndex].comments[commentIndex].updateVote(vote);
+    this.posts.refresh();
   }
 
   void _updateLocalPostVote(int vote, int postIndex) {
@@ -282,29 +299,29 @@ class RedditController extends GetxController {
     return _resp.statusCode;
   }
 
-  Future<void> voteOnComment(String fullName, int vote) async {
-    final int i = this.postComments.indexWhere((c) => c.fullName == fullName);
-    final int originalVote = this.postComments[i].vote;
+  Future<void> voteOnComment(int commentIndex, int postIndex, int vote) async {
+    final String id = posts[postIndex].comments[commentIndex].fullName;
+    final int originalVote = posts[postIndex].comments[commentIndex].vote;
 
     late int voteStatus;
 
     switch (vote) {
       case 1:
-        if (this.postComments[i].vote == 1) {
-          _updateLocalCommentVote(vote, i);
-          voteStatus = await this.vote(fullName, 0);
+        if (originalVote == 1) {
+          _updateLocalCommentVote(commentIndex, postIndex, vote);
+          voteStatus = await this.vote(id, 0);
         } else {
-          _updateLocalCommentVote(vote, i);
-          voteStatus = await this.vote(fullName, 1);
+          _updateLocalCommentVote(commentIndex, postIndex, vote);
+          voteStatus = await this.vote(id, 1);
         }
         break;
       case -1:
-        if (this.postComments[i].vote == -1) {
-          _updateLocalCommentVote(vote, i);
-          voteStatus = await this.vote(fullName, 0);
+        if (originalVote == -1) {
+          _updateLocalCommentVote(commentIndex, postIndex, vote);
+          voteStatus = await this.vote(id, 0);
         } else {
-          _updateLocalCommentVote(vote, i);
-          voteStatus = await this.vote(fullName, -1);
+          _updateLocalCommentVote(commentIndex, postIndex, vote);
+          voteStatus = await this.vote(id, -1);
         }
         break;
       default:
@@ -312,7 +329,7 @@ class RedditController extends GetxController {
     }
 
     if (voteStatus != 200) {
-      _updateLocalCommentVote(originalVote, i);
+      _updateLocalCommentVote(commentIndex, postIndex, originalVote);
     }
   }
 
@@ -351,6 +368,34 @@ class RedditController extends GetxController {
   }
 }
 
+Future<HTTP.Response> _comment(String fullName, String body) async {
+  final HTTP.Response _resp = await _post(
+    '/api/comment?thing_id=$fullName&text=$body',
+    null,
+  );
+
+  return _resp;
+}
+
+List<Comment> _flattenComments({
+  required List comments,
+  required List<Comment> list,
+  int level = 0,
+}) {
+  for (Comment comment in comments) {
+    comment.level = level;
+    list.add(comment);
+
+    list = _flattenComments(
+      comments: comment.replies,
+      list: list,
+      level: level + 1,
+    );
+  }
+
+  return list;
+}
+
 Future<HTTP.Response> _get(String endpoint) async {
   final box = GetStorage();
 
@@ -380,25 +425,6 @@ Future<HTTP.Response> _get(String endpoint) async {
 
   print(box.read('access_token'));
   return resp;
-}
-
-List<Comment> _flattenComments({
-  required List comments,
-  required List<Comment> list,
-  int level = 0,
-}) {
-  for (Comment comment in comments) {
-    comment.level = level;
-    list.add(comment);
-
-    list = _flattenComments(
-      comments: comment.replies,
-      list: list,
-      level: level + 1,
-    );
-  }
-
-  return list;
 }
 
 Future<HTTP.Response> _post(String endpoint, Map? body) async {

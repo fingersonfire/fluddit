@@ -14,32 +14,32 @@ class CommentContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (reddit.postComments.length < 1) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: 75,
-                child: Center(
-                  child: Text('No comments'),
-                ),
-              );
-            } else {
-              return CommentList();
-            }
+      child: Obx(() {
+        final postIndex = reddit.posts.indexWhere((p) => p.id == post.id);
+        if (reddit.posts[postIndex].commentsLoaded) {
+          if (reddit.posts[postIndex].comments.length < 1) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: 75,
+              child: Center(
+                child: Text('No comments'),
+              ),
+            );
+          } else {
+            return CommentList(postId: post.id);
           }
+        } else {
+          reddit.getPostComments(
+            subreddit: reddit.posts[postIndex].subreddit,
+            postId: reddit.posts[postIndex].id,
+          );
           return Container(
             width: MediaQuery.of(context).size.width,
-            height: 300,
+            height: 75,
             child: LoadingIndicator(),
           );
-        },
-        future: reddit.getPostComments(
-          subreddit: post.subreddit,
-          postId: post.id,
-        ),
-      ),
+        }
+      }),
     );
   }
 }

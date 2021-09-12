@@ -1,5 +1,9 @@
+import 'package:fluddit/models/comment.model.dart';
+
 class RedditPost {
   final String author;
+  List<Comment> comments = [];
+  bool commentsLoaded = false;
   final String domain;
   final String fullName;
   final List galleryData;
@@ -22,6 +26,8 @@ class RedditPost {
 
   RedditPost({
     required this.author,
+    required this.comments,
+    required this.commentsLoaded,
     required this.domain,
     required this.fullName,
     required this.galleryData,
@@ -46,6 +52,8 @@ class RedditPost {
   factory RedditPost.fromJson(Map<String, dynamic> json) {
     return RedditPost(
       author: json['author'],
+      comments: <Comment>[],
+      commentsLoaded: false,
       domain: json['domain'],
       fullName: json['name'],
       galleryData: json['gallery_data']?['items'] ?? [],
@@ -79,8 +87,16 @@ class RedditPost {
     }
   }
 
+  void insertComment(Comment comment, int index) {
+    this.comments.insert(index, comment);
+  }
+
   void save(bool save) {
     this.saved = save;
+  }
+
+  void updateComments(List<Comment> comments) {
+    this.comments = comments;
   }
 
   void updateVote(int vote) {
