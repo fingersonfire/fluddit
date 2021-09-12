@@ -1,81 +1,84 @@
+import 'dart:math';
+
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/models/index.dart';
+import 'package:fluddit/components/post/reply/components/comment.textfield.dart';
+import 'package:fluddit/components/post/reply/components/format.buttons.dart';
+import 'package:fluddit/components/post/reply/components/quote.button.dart';
+import 'package:fluddit/components/post/reply/components/send.button.dart';
 import 'package:fluddit/widgets/index.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-void replyDialog(BuildContext context, String fullName) {
-  final ComponentController component = Get.find();
-  final RedditController reddit = Get.find();
+void replyDialog(
+  BuildContext context,
+  String fullName,
+  String postId,
+  String quoteText,
+) {
   final TextEditingController textController = new TextEditingController();
 
-  bool isSubmitting = false;
+  void insertText({required String insert, int? positionFromEnd}) {
+    final int cursorPos = textController.selection.base.offset;
 
-  Get.defaultDialog(
-    title: 'Enter comment below...',
-    content: Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
+    textController.value = textController.value.copyWith(
+      text: textController.text.replaceRange(
+        max(cursorPos, 0),
+        max(cursorPos, 0),
+        insert,
+      ),
+      selection: TextSelection.fromPosition(
+        TextPosition(
+          offset: max(cursorPos, 0) + (insert.length - (positionFromEnd ?? 0)),
         ),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      width: MediaQuery.of(context).size.width * .75,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: TextField(
-              cursorColor: Theme.of(context).accentColor,
-              cursorHeight: 20,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 10,
-              controller: textController,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
+    );
+  }
+
+  Get.bottomSheet(
+    GestureDetector(
+      onTap: () {
+        new FocusNode().requestFocus();
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+      },
+      child: Container(
+        color: Theme.of(context).cardColor,
+        height: 400,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            QuoteButton(insertText: insertText, quoteText: quoteText),
+            Expanded(
+              child: CommentInput(textController: textController),
+            ),
+            FormatButtons(insertText: insertText),
+            Container(
+              color: Theme.of(context).primaryColor,
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 5,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(Icons.delete),
                   ),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
+                  SendCommentButton(
+                    fullName: fullName,
+                    postId: postId,
+                    textController: textController,
                   ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0,
-                  ),
-                ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
-    onConfirm: () async {
-      if (!isSubmitting) {
-        isSubmitting = true;
-        final RedditPost post =
-            reddit.posts[component.carouselIndex.value] as RedditPost;
-
-        await reddit.commentOnPost(
-          post.subreddit,
-          post.id,
-          fullName,
-          textController.text,
-        );
-        Get.back();
-      }
-    },
-    textCancel: 'CANCEL',
-    textConfirm: 'REPLY',
+    enterBottomSheetDuration: Duration(milliseconds: 150),
+    exitBottomSheetDuration: Duration(milliseconds: 150),
   );
 }
