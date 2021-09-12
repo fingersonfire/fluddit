@@ -10,7 +10,7 @@ class GalleryContent extends StatelessWidget {
   }) : super(key: key);
 
   final BoxConstraints constraints;
-  final RedditPost post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

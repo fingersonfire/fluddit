@@ -8,7 +8,7 @@ import 'package:http/http.dart' as HTTP;
 class RedditController extends GetxController {
   RxString after = ''.obs;
   RxString listing = 'hot'.obs;
-  RxList<RedditPost> posts = <RedditPost>[].obs;
+  RxList<Post> posts = <Post>[].obs;
   RxString name = 'frontpage'.obs;
   late Subreddit subreddit;
   RxList<Subreddit> subscriptions = <Subreddit>[].obs;
@@ -72,8 +72,9 @@ class RedditController extends GetxController {
     // Fetch the default route json if subreddit is 'frontpage'.
     if (subreddit == 'frontpage') {
       _resp = await _get(
-        '/.json' +
+        '/$listing.json' +
             '?limit=$limit' +
+            '&t=$time' +
             '&after=$after', // [after] param being empty returns first page.
       );
     } else {
@@ -88,9 +89,9 @@ class RedditController extends GetxController {
 
     Map<String, dynamic> _json = jsonDecode(_resp.body);
     List posts = _json['data']['children']
-        .map((p) => RedditPost.fromJson(p['data']))
+        .map((p) => Post.fromJson(p['data']))
         .toList()
-        .cast<RedditPost>();
+        .cast<Post>();
 
     return {'after': _json['data']['after'], 'posts': posts};
   }
@@ -109,7 +110,7 @@ class RedditController extends GetxController {
     );
 
     this.after.value = _data['after'] == null ? '' : _data['after'];
-    this.posts.value = _data['posts'].toList().cast<RedditPost>();
+    this.posts.value = _data['posts'].toList().cast<Post>();
   }
 
   Future getNextPosts() async {
@@ -122,7 +123,7 @@ class RedditController extends GetxController {
     );
 
     this.after.value = _data['after'];
-    this.posts.addAll(_data['posts'].toList().cast<RedditPost>());
+    this.posts.addAll(_data['posts'].toList().cast<Post>());
   }
 
   Future<void> getPostComments({
@@ -177,16 +178,16 @@ class RedditController extends GetxController {
     }
   }
 
-  Future<List<RedditPost>> getUserPosts(String username) async {
+  Future<List<Post>> getUserPosts(String username) async {
     HTTP.Response _resp = await _get('/user/$username/submitted');
     final _json = jsonDecode(_resp.body);
 
-    final List<RedditPost> posts = _json['data']['children']
+    final List<Post> posts = _json['data']['children']
         .map((p) {
-          return RedditPost.fromJson(p['data']);
+          return Post.fromJson(p['data']);
         })
         .toList()
-        .cast<RedditPost>();
+        .cast<Post>();
 
     return posts;
   }

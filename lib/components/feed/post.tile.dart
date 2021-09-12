@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class PostTile extends StatelessWidget {
   PostTile({Key? key, required this.post}) : super(key: key);
 
-  final RedditPost post;
+  final Post post;
 
   final RedditController reddit = Get.find();
   final ComponentController comp = Get.find();

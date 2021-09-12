@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class GalleryThumbnail extends StatelessWidget {
   const GalleryThumbnail({Key? key, required this.post}) : super(key: key);
 
-  final RedditPost post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

@@ -14,7 +14,7 @@ class ContentBox extends StatelessWidget {
   }) : super(key: key);
 
   final BoxConstraints constraints;
-  final RedditPost post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ContentBox extends StatelessWidget {
   }
 }
 
-Widget getContent(RedditPost post, BoxConstraints constraints) {
+Widget getContent(Post post, BoxConstraints constraints) {
   final ComponentController component = Get.find();
 
   if (post.isSelf) {

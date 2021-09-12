@@ -35,7 +35,7 @@ class ComponentController extends GetxController {
     }
   }
 
-  Widget getPostThumbnail(RedditPost post) {
+  Widget getPostThumbnail(Post post) {
     if (post.isSelf) {
       return Center(
         child: Text('Tt'),

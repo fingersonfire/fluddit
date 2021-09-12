@@ -1,6 +1,6 @@
 import 'package:fluddit/models/comment.model.dart';
 
-class RedditPost {
+class Post {
   final String author;
   List<Comment> comments = [];
   bool commentsLoaded = false;
@@ -24,7 +24,7 @@ class RedditPost {
   final String videoUrl;
   int vote;
 
-  RedditPost({
+  Post({
     required this.author,
     required this.comments,
     required this.commentsLoaded,
@@ -49,8 +49,8 @@ class RedditPost {
     required this.vote,
   });
 
-  factory RedditPost.fromJson(Map<String, dynamic> json) {
-    return RedditPost(
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
       author: json['author'],
       comments: <Comment>[],
       commentsLoaded: false,

@@ -18,7 +18,7 @@ class SavePostButton extends StatelessWidget {
         icon: Obx(
           () {
             final int carouselIndex = component.carouselIndex.value;
-            final RedditPost post = reddit.posts[carouselIndex];
+            final Post post = reddit.posts[carouselIndex];
 
             if (post.saved) {
               return Icon(

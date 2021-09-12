@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 class PostView extends StatelessWidget {
   PostView({Key? key, required this.post}) : super(key: key);
 
-  final RedditPost post;
+  final Post post;
 
   final ComponentController component = Get.find();
   final RedditController reddit = Get.find();

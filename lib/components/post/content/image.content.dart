@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ImageContent extends StatelessWidget {
   const ImageContent({Key? key, required this.post}) : super(key: key);
 
-  final RedditPost post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

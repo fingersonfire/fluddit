@@ -17,7 +17,7 @@ class SendCommentButton extends StatelessWidget {
   final TextEditingController textController;
 
   void _postComment() async {
-    final RedditPost post = reddit.posts.singleWhere((p) => p.id == postId);
+    final Post post = reddit.posts.singleWhere((p) => p.id == postId);
 
     reddit.commentOnPost(
       post.subreddit,

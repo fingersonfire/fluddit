@@ -11,7 +11,7 @@ class DefaultThumbnail extends StatelessWidget {
   }) : super(key: key);
 
   final Icon contentIcon;
-  final RedditPost post;
+  final Post post;
 
   final ComponentController component = Get.find();
 

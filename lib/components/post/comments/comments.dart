@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CommentContent extends StatelessWidget {
   CommentContent({Key? key, required this.post}) : super(key: key);
 
-  final RedditPost post;
+  final Post post;
 
   final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
