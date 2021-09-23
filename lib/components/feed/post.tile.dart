@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostTile extends StatelessWidget {
-  PostTile({Key? key, required this.post}) : super(key: key);
+  PostTile({Key? key, required this.post, this.width}) : super(key: key);
 
   final Post post;
+  double? width;
 
   final RedditController reddit = Get.find();
   final ComponentController comp = Get.find();
@@ -52,7 +53,7 @@ class PostTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width - 125,
+                    width: width ?? MediaQuery.of(context).size.width - 125,
                     child: Text(
                       post.title,
                       maxLines: 4,

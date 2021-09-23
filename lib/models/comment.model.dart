@@ -6,6 +6,7 @@ class Comment {
   int level;
   final List<Comment> replies;
   int score;
+  final String subreddit;
   int vote;
 
   Comment({
@@ -16,6 +17,7 @@ class Comment {
     this.level = 0,
     required this.replies,
     required this.score,
+    required this.subreddit,
     required this.vote,
   });
 
@@ -60,6 +62,7 @@ class Comment {
       id: json['id'],
       replies: _getReplies(json['replies']),
       score: json['score'],
+      subreddit: json['subreddit'] ?? '',
       vote: _getVote(json['likes']),
     );
   }

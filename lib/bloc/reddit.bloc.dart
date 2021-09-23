@@ -71,14 +71,14 @@ class RedditController extends GetxController {
 
     // Fetch the default route json if subreddit is 'frontpage'.
     if (subreddit == 'frontpage') {
-      _resp = await _get(
+      _resp = await getR(
         '/$listing.json' +
             '?limit=$limit' +
             '&t=$time' +
             '&after=$after', // [after] param being empty returns first page.
       );
     } else {
-      _resp = await _get(
+      _resp = await getR(
         '/r/$subreddit/' +
             '$listing.json' +
             '?limit=$limit' +
@@ -126,11 +126,11 @@ class RedditController extends GetxController {
     this.posts.addAll(_data['posts'].toList().cast<Post>());
   }
 
-  Future<void> getPostComments({
+  Future<List<Comment>> getPostComments({
     required String subreddit,
     required String postId,
   }) async {
-    HTTP.Response _resp = await _get('/r/$subreddit/comments/$postId.json');
+    HTTP.Response _resp = await getR('/r/$subreddit/comments/$postId.json');
     List<dynamic> _json = jsonDecode(_resp.body);
 
     print('Loaded post: $subreddit $postId');
@@ -146,10 +146,15 @@ class RedditController extends GetxController {
       list: <Comment>[],
     );
 
-    final int pIndex = _getPostIdIndex(postId);
-    posts[pIndex].updateComments(flattenedComments);
-    posts[pIndex].commentsLoaded = true;
-    posts.refresh();
+    if (posts.where((p0) => p0.id == postId).isNotEmpty) {
+      final int pIndex = _getPostIdIndex(postId);
+
+      posts[pIndex].updateComments(flattenedComments);
+      posts[pIndex].commentsLoaded = true;
+      posts.refresh();
+    }
+
+    return flattenedComments;
   }
 
   int _getPostIdIndex(String postId) {
@@ -157,12 +162,12 @@ class RedditController extends GetxController {
   }
 
   Future<dynamic> getUserComments(String username) async {
-    HTTP.Response _resp = await _get('/user/$username/comments');
+    HTTP.Response _resp = await getR('/user/$username/comments');
     return jsonDecode(_resp.body);
   }
 
   Future<User> getUserInfo() async {
-    HTTP.Response _resp = await _get('/api/v1/me');
+    HTTP.Response _resp = await getR('/api/v1/me');
 
     final _json = jsonDecode(_resp.body);
     final User user = User.fromJson(_json);
@@ -178,24 +183,10 @@ class RedditController extends GetxController {
     }
   }
 
-  Future<List<Post>> getUserPosts(String username) async {
-    HTTP.Response _resp = await _get('/user/$username/submitted');
-    final _json = jsonDecode(_resp.body);
-
-    final List<Post> posts = _json['data']['children']
-        .map((p) {
-          return Post.fromJson(p['data']);
-        })
-        .toList()
-        .cast<Post>();
-
-    return posts;
-  }
-
   /// Fetches the subreddits for the logged in user.
   Future<List<Subreddit>> getUserSubreddits() async {
     try {
-      HTTP.Response _resp = await _get('/subreddits/mine/subscriber?limit=150');
+      HTTP.Response _resp = await getR('/subreddits/mine/subscriber?limit=150');
 
       Map<String, dynamic> _json = jsonDecode(_resp.body);
       List<Subreddit> subreddits = _json['data']['children']
@@ -246,7 +237,7 @@ class RedditController extends GetxController {
   }
 
   Future<List<dynamic>> searchSubreddits({required String query}) async {
-    final HTTP.Response _resp = await _get('/subreddits/search?q=$query');
+    final HTTP.Response _resp = await getR('/subreddits/search?q=$query');
 
     Map<String, dynamic> _json = jsonDecode(_resp.body);
 
@@ -397,7 +388,7 @@ List<Comment> _flattenComments({
   return list;
 }
 
-Future<HTTP.Response> _get(String endpoint) async {
+Future<HTTP.Response> getR(String endpoint) async {
   final box = GetStorage();
 
   HTTP.Response resp;

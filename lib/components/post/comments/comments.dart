@@ -15,9 +15,8 @@ class CommentContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Obx(() {
-        final postIndex = reddit.posts.indexWhere((p) => p.id == post.id);
-        if (reddit.posts[postIndex].commentsLoaded) {
-          if (reddit.posts[postIndex].comments.length < 1) {
+        if (post.commentsLoaded) {
+          if (post.comments.length < 1) {
             return Container(
               width: MediaQuery.of(context).size.width,
               height: 75,
@@ -30,8 +29,8 @@ class CommentContent extends StatelessWidget {
           }
         } else {
           reddit.getPostComments(
-            subreddit: reddit.posts[postIndex].subreddit,
-            postId: reddit.posts[postIndex].id,
+            subreddit: post.subreddit,
+            postId: post.id,
           );
           return Container(
             width: MediaQuery.of(context).size.width,
