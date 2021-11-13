@@ -17,7 +17,7 @@ class SharePostButton extends StatelessWidget {
           'https://www.reddit.com/r/${post.subreddit}/${post.id}',
         );
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.share_outlined,
         color: Color(0xFF2e3440),
       ),

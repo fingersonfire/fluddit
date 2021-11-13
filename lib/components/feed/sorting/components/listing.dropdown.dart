@@ -14,12 +14,12 @@ class ListingDropdown extends StatelessWidget {
           color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(25),
         ),
-        margin: EdgeInsets.all(20),
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: DropdownButton<String>(
           value: reddit.listing.value,
           underline: Container(),
-          icon: Icon(Icons.expand_more_rounded),
+          icon: const Icon(Icons.expand_more_rounded),
           items: <String>[
             'hot',
             'best',
@@ -30,11 +30,11 @@ class ListingDropdown extends StatelessWidget {
             (String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Container(
+                child: SizedBox(
                   width: 100,
                   child: Text(
                     value,
-                    style: TextStyle(fontSize: 22),
+                    style: const TextStyle(fontSize: 22),
                   ),
                 ),
               );

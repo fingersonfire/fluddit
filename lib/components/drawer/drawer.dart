@@ -8,30 +8,30 @@ class SubredditDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: [
-          Expanded(
-            child: SubredditList(),
-          ),
-          Container(
-            child: ConditionalWidget(
+      child: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SubredditList(),
+            ),
+            ConditionalWidget(
               condition: GetStorage().read('access_token') != null,
               trueWidget: AccountButton(),
-              falseWidget: LoginButton(),
+              falseWidget: const LoginButton(),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.zero,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MailButton(),
-                SettingsButton(),
-              ],
+            Container(
+              padding: EdgeInsets.zero,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MailButton(),
+                  const SettingsButton(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

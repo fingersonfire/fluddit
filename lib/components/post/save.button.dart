@@ -10,29 +10,27 @@ class SavePostButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: IconButton(
-        onPressed: () {
-          reddit.savePost(component.carouselIndex.value);
-        },
-        icon: Obx(
-          () {
-            final int carouselIndex = component.carouselIndex.value;
-            final Post post = reddit.posts[carouselIndex];
+    return IconButton(
+      onPressed: () {
+        reddit.savePost(component.carouselIndex.value);
+      },
+      icon: Obx(
+        () {
+          final int carouselIndex = component.carouselIndex.value;
+          final Post post = reddit.posts[carouselIndex];
 
-            if (post.saved) {
-              return Icon(
-                Icons.bookmark_remove_outlined,
-                color: Color(0xFF2e3440),
-              );
-            } else {
-              return Icon(
-                Icons.bookmark_outline_outlined,
-                color: Color(0xFF2e3440),
-              );
-            }
-          },
-        ),
+          if (post.saved) {
+            return const Icon(
+              Icons.bookmark_remove_outlined,
+              color: Color(0xFF2e3440),
+            );
+          } else {
+            return const Icon(
+              Icons.bookmark_outline_outlined,
+              color: Color(0xFF2e3440),
+            );
+          }
+        },
       ),
     );
   }

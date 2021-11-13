@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ComponentController extends GetxController {
-  CarouselController carouselController = new CarouselController();
+  CarouselController carouselController = CarouselController();
   RxInt carouselIndex = 0.obs;
 
   void openDrawer(scaffoldKey) {
@@ -37,7 +37,7 @@ class ComponentController extends GetxController {
 
   Widget getPostThumbnail(Post post) {
     if (post.isSelf) {
-      return Center(
+      return const Center(
         child: Text('Tt'),
       );
     } else if (post.isVideo) {
@@ -59,7 +59,7 @@ class ComponentController extends GetxController {
   }
 
   void onCarouselPageUpdate(int page, CarouselPageChangedReason changedReason) {
-    this.carouselIndex.value = page;
+    carouselIndex.value = page;
   }
 
   Future<void> updateThemeMode(bool darkMode) async {

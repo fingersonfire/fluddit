@@ -13,14 +13,15 @@ class CommentContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Obx(() {
-        if (post.commentsLoaded) {
-          if (post.comments.length < 1) {
-            return Container(
+    return Obx(
+      () {
+        final postIndex = reddit.posts.indexWhere((p) => p.id == post.id);
+        if (reddit.posts[postIndex].commentsLoaded) {
+          if (reddit.posts[postIndex].comments.isEmpty) {
+            return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 75,
-              child: Center(
+              child: const Center(
                 child: Text('No comments'),
               ),
             );
@@ -32,13 +33,13 @@ class CommentContent extends StatelessWidget {
             subreddit: post.subreddit,
             postId: post.id,
           );
-          return Container(
+          return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 75,
-            child: LoadingIndicator(),
+            child: const LoadingIndicator(),
           );
         }
-      }),
+      },
     );
   }
 }

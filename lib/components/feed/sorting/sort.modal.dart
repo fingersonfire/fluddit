@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/feed/sorting/components/listing.dropdown.dart';
 import 'package:fluddit/components/feed/sorting/components/time.dropdown.dart';
@@ -11,17 +13,22 @@ void sortDialog(BuildContext context) {
   Get.bottomSheet(
     GestureDetector(
       onTap: () {
-        new FocusNode().requestFocus();
+        FocusNode().requestFocus();
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
       child: Container(
         color: Theme.of(context).cardColor,
-        height: 190,
+        height: 225,
         width: MediaQuery.of(context).size.width,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ListingDropdown(),
-            TimeDropdown(),
+            Column(
+              children: [
+                ListingDropdown(),
+                TimeDropdown(),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -31,18 +38,22 @@ void sortDialog(BuildContext context) {
                     reddit.getInitPosts(reddit.name.value);
                     Get.back();
                   },
-                  child: Text(
+                  child: const Text(
                     'Apply',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
               ],
             ),
+            ConditionalWidget(
+              condition: Platform.isIOS,
+              trueWidget: const SizedBox(height: 5),
+            ),
           ],
         ),
       ),
     ),
-    enterBottomSheetDuration: Duration(milliseconds: 150),
-    exitBottomSheetDuration: Duration(milliseconds: 150),
+    enterBottomSheetDuration: const Duration(milliseconds: 150),
+    exitBottomSheetDuration: const Duration(milliseconds: 150),
   );
 }

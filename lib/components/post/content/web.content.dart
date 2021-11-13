@@ -27,15 +27,14 @@ class WebContentState extends State<WebContent> {
   @override
   Widget build(BuildContext context) {
     return WebView(
-      gestureRecognizers: Set()
-        ..add(
-          Factory<VerticalDragGestureRecognizer>(
-            () => VerticalDragGestureRecognizer(),
-          ), // or null
-        ),
+      gestureRecognizers: {
+        Factory<VerticalDragGestureRecognizer>(
+          () => VerticalDragGestureRecognizer(),
+        ), // or null
+      },
       debuggingEnabled: true,
       javascriptMode: JavascriptMode.unrestricted,
-      initialUrl: '${widget.url}',
+      initialUrl: widget.url,
     );
   }
 }

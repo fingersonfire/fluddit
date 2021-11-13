@@ -8,7 +8,7 @@ class PostTile extends StatelessWidget {
   PostTile({Key? key, required this.post, this.width}) : super(key: key);
 
   final Post post;
-  double? width;
+  final double? width;
 
   final RedditController reddit = Get.find();
   final ComponentController comp = Get.find();
@@ -16,7 +16,7 @@ class PostTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+      margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () {
@@ -30,17 +30,17 @@ class PostTile extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
             color: Theme.of(context).cardColor,
           ),
-          padding: EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.symmetric(vertical: 5),
           width: MediaQuery.of(context).size.width,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
+              SizedBox(
                 width: 30,
                 child: Center(
                   child: Text(
@@ -52,8 +52,8 @@ class PostTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: width ?? MediaQuery.of(context).size.width - 125,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 125,
                     child: Text(
                       post.title,
                       maxLines: 4,
@@ -64,7 +64,7 @@ class PostTile extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 5),
+                    margin: const EdgeInsets.only(top: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

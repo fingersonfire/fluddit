@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class Feed extends StatelessWidget {
   Feed({Key? key}) : super(key: key);
@@ -20,12 +20,13 @@ class Feed extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(50),
+              preferredSize: const Size.fromHeight(50),
               child: Obx(
                 () => AppBar(
                   backgroundColor: Theme.of(context).primaryColor,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarBrightness: Brightness.dark,
+                  systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.dark,
                     statusBarColor: Colors.transparent,
                   ),
                   centerTitle: true,
@@ -33,7 +34,7 @@ class Feed extends StatelessWidget {
                     children: [
                       Text(
                         reddit.name.value,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xFF2e3440),
                         ),
                       ),
@@ -53,10 +54,10 @@ class Feed extends StatelessWidget {
             bottomNavigationBar: BottomNavBar(
               scaffoldKey: scaffoldKey,
             ),
-            drawer: SubredditDrawer(),
+            drawer: const SubredditDrawer(),
           );
         }
-        return LoadingView();
+        return const LoadingView();
       },
       future: reddit.initFeed(),
     );

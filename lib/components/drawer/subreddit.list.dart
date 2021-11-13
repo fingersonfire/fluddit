@@ -19,12 +19,12 @@ class SubredditList extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Divider(),
-                  Container(
+                  const Divider(),
+                  SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 40,
                     child: MaterialButton(
-                      child: Text(
+                      child: const Text(
                         'frontpage',
                         style: TextStyle(
                           fontSize: 20,
@@ -38,7 +38,7 @@ class SubredditList extends StatelessWidget {
                       },
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   ...List<Widget>.generate(
                     reddit.subscriptions.length,
                     (i) {

@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/secrets.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as HTTP;
+import 'package:http/http.dart' as http;
 
 class RedditController extends GetxController {
   RxString after = ''.obs;
@@ -21,11 +22,7 @@ class RedditController extends GetxController {
     String fullName,
     String body,
   ) async {
-    print(
-      'comment on subreddit: $subreddit, postId: $postId, fullName: $fullName',
-    );
-
-    final HTTP.Response _resp = await _comment(fullName, body);
+    final http.Response _resp = await _comment(fullName, body);
     final int pIndex = _getPostIdIndex(postId);
 
     if (_resp.statusCode == 200) {
@@ -56,7 +53,7 @@ class RedditController extends GetxController {
       // Refresh the posts item to update UI
       posts.refresh();
     } else {
-      print(jsonDecode(_resp.body));
+      log(jsonDecode(_resp.body));
     }
   }
 
@@ -67,23 +64,23 @@ class RedditController extends GetxController {
     required String subreddit,
     required String time,
   }) async {
-    HTTP.Response _resp;
+    http.Response _resp;
 
     // Fetch the default route json if subreddit is 'frontpage'.
     if (subreddit == 'frontpage') {
-      _resp = await getR(
-        '/$listing.json' +
-            '?limit=$limit' +
-            '&t=$time' +
-            '&after=$after', // [after] param being empty returns first page.
+      _resp = await _get(
+        '/$listing.json'
+        '?limit=$limit'
+        '&t=$time'
+        '&after=$after', // [after] param being empty returns first page.
       );
     } else {
-      _resp = await getR(
-        '/r/$subreddit/' +
-            '$listing.json' +
-            '?limit=$limit' +
-            '&t=$time' +
-            '&after=$after', // [after] param being empty returns first page.
+      _resp = await _get(
+        '/r/$subreddit/'
+        '$listing.json'
+        '?limit=$limit'
+        '&t=$time'
+        '&after=$after', // [after] param being empty returns first page.
       );
     }
 
@@ -97,43 +94,43 @@ class RedditController extends GetxController {
   }
 
   Future<void> getInitPosts(String subreddit) async {
-    this.name.value = subreddit;
-    this.after.value = '';
-    this.posts.clear();
+    name.value = subreddit;
+    after.value = '';
+    posts.clear();
 
-    final Map<String, dynamic> _data = await this.getPosts(
-      after: this.after.value,
+    final Map<String, dynamic> _data = await getPosts(
+      after: after.value,
       limit: 50,
-      listing: this.listing.value,
-      subreddit: this.name.value,
-      time: this.time.value,
+      listing: listing.value,
+      subreddit: name.value,
+      time: time.value,
     );
 
-    this.after.value = _data['after'] == null ? '' : _data['after'];
-    this.posts.value = _data['posts'].toList().cast<Post>();
+    after.value = _data['after'] ?? '';
+    posts.value = _data['posts'].toList().cast<Post>();
   }
 
   Future getNextPosts() async {
-    final Map<String, dynamic> _data = await this.getPosts(
-      after: this.after.value,
+    final Map<String, dynamic> _data = await getPosts(
+      after: after.value,
       limit: 25,
-      listing: this.listing.value,
-      subreddit: this.name.value,
-      time: this.time.value,
+      listing: listing.value,
+      subreddit: name.value,
+      time: time.value,
     );
 
-    this.after.value = _data['after'];
-    this.posts.addAll(_data['posts'].toList().cast<Post>());
+    after.value = _data['after'];
+    posts.addAll(_data['posts'].toList().cast<Post>());
   }
 
   Future<List<Comment>> getPostComments({
     required String subreddit,
     required String postId,
   }) async {
-    HTTP.Response _resp = await getR('/r/$subreddit/comments/$postId.json');
+    http.Response _resp = await _get('/r/$subreddit/comments/$postId.json');
     List<dynamic> _json = jsonDecode(_resp.body);
 
-    print('Loaded post: $subreddit $postId');
+    log('Loaded post: $subreddit $postId');
 
     final List<dynamic> repliesJson = _json[1]['data']['children'];
     repliesJson.removeWhere((e) => e['kind'] == 'more');
@@ -158,16 +155,16 @@ class RedditController extends GetxController {
   }
 
   int _getPostIdIndex(String postId) {
-    return this.posts.indexWhere((p) => p.id == postId);
+    return posts.indexWhere((p) => p.id == postId);
   }
 
   Future<dynamic> getUserComments(String username) async {
-    HTTP.Response _resp = await getR('/user/$username/comments');
+    http.Response _resp = await _get('/user/$username/comments');
     return jsonDecode(_resp.body);
   }
 
   Future<User> getUserInfo() async {
-    HTTP.Response _resp = await getR('/api/v1/me');
+    http.Response _resp = await _get('/api/v1/me');
 
     final _json = jsonDecode(_resp.body);
     final User user = User.fromJson(_json);
@@ -177,16 +174,30 @@ class RedditController extends GetxController {
 
   /// Get the subscribed subreddits for the currently authenticated user
   Future<void> getSubscriptions() async {
-    final List<Subreddit> subscriptions = await this.getUserSubreddits();
-    if (subscriptions.length > 0) {
+    final List<Subreddit> subscriptions = await getUserSubreddits();
+    if (subscriptions.isNotEmpty) {
       this.subscriptions.value = subscriptions;
     }
+  }
+
+  Future<List<Post>> getUserPosts(String username) async {
+    http.Response _resp = await _get('/user/$username/submitted');
+    final _json = jsonDecode(_resp.body);
+
+    final List<Post> posts = _json['data']['children']
+        .map((p) {
+          return Post.fromJson(p['data']);
+        })
+        .toList()
+        .cast<Post>();
+
+    return posts;
   }
 
   /// Fetches the subreddits for the logged in user.
   Future<List<Subreddit>> getUserSubreddits() async {
     try {
-      HTTP.Response _resp = await getR('/subreddits/mine/subscriber?limit=150');
+      http.Response _resp = await _get('/subreddits/mine/subscriber?limit=150');
 
       Map<String, dynamic> _json = jsonDecode(_resp.body);
       List<Subreddit> subreddits = _json['data']['children']
@@ -200,7 +211,6 @@ class RedditController extends GetxController {
 
       return subreddits;
     } catch (e) {
-      print(e);
       return <Subreddit>[];
     }
   }
@@ -209,35 +219,35 @@ class RedditController extends GetxController {
     final GetStorage box = GetStorage();
 
     if (box.read('access_token') != null) {
-      await this.getSubscriptions();
+      await getSubscriptions();
 
-      final info = await this.getUserInfo();
-      this.userName.value = info.name;
+      final info = await getUserInfo();
+      userName.value = info.name;
     }
 
-    this.getInitPosts('frontpage');
+    getInitPosts('frontpage');
   }
 
   Future<void> savePost(int postIndex) async {
-    final bool _saveState = this.posts[postIndex].saved;
-    final String _fullName = this.posts[postIndex].fullName;
+    final bool _saveState = posts[postIndex].saved;
+    final String _fullName = posts[postIndex].fullName;
 
-    this.posts[postIndex].save(!_saveState);
-    this.posts.refresh();
+    posts[postIndex].save(!_saveState);
+    posts.refresh();
 
-    final HTTP.Response _resp = await _post(
+    final http.Response _resp = await _post(
       '/api/${_saveState ? 'unsave' : 'save'}?id=$_fullName',
       null,
     );
 
     if (_resp.statusCode != 200) {
-      this.posts[postIndex].save(_saveState);
-      this.posts.refresh();
+      posts[postIndex].save(_saveState);
+      posts.refresh();
     }
   }
 
   Future<List<dynamic>> searchSubreddits({required String query}) async {
-    final HTTP.Response _resp = await getR('/subreddits/search?q=$query');
+    final http.Response _resp = await _get('/subreddits/search?q=$query');
 
     Map<String, dynamic> _json = jsonDecode(_resp.body);
 
@@ -251,39 +261,39 @@ class RedditController extends GetxController {
   }
 
   Future<bool> subscribe(String subredditFullName) async {
-    final HTTP.Response _resp = await _post(
+    final http.Response _resp = await _post(
       '/api/subscribe?sr=$subredditFullName&action=sub&skip_initial_defaults=true',
       null,
     );
 
     if (_resp.statusCode == 200) {
-      await this.getUserSubreddits();
+      await getUserSubreddits();
     }
 
     return _resp.statusCode == 200;
   }
 
   Future<bool> unsubscribe(String subredditFullName) async {
-    final HTTP.Response _resp = await _post(
+    final http.Response _resp = await _post(
       '/api/subscribe?sr=$subredditFullName&action=unsub',
       null,
     );
 
     if (_resp.statusCode == 200) {
-      this.subscriptions.removeWhere((s) => s.fullName == subredditFullName);
+      subscriptions.removeWhere((s) => s.fullName == subredditFullName);
     }
 
     return _resp.statusCode == 200;
   }
 
   void _updateLocalCommentVote(int commentIndex, int postIndex, int vote) {
-    this.posts[postIndex].comments[commentIndex].updateVote(vote);
-    this.posts.refresh();
+    posts[postIndex].comments[commentIndex].updateVote(vote);
+    posts.refresh();
   }
 
   void _updateLocalPostVote(int vote, int postIndex) {
-    this.posts[postIndex].updateVote(vote);
-    this.posts.refresh();
+    posts[postIndex].updateVote(vote);
+    posts.refresh();
   }
 
   Future<int> vote(String fullname, int dir) async {
@@ -326,14 +336,14 @@ class RedditController extends GetxController {
   }
 
   Future<void> voteOnPost(String fullName, int vote) async {
-    final int i = this.posts.indexWhere((p) => p.fullName == fullName);
-    final int originalVote = this.posts[i].vote;
+    final int i = posts.indexWhere((p) => p.fullName == fullName);
+    final int originalVote = posts[i].vote;
 
     late int voteStatus;
 
     switch (vote) {
       case 1:
-        if (this.posts[i].vote == 1) {
+        if (posts[i].vote == 1) {
           _updateLocalPostVote(vote, i);
           voteStatus = await this.vote(fullName, 0);
         } else {
@@ -342,7 +352,7 @@ class RedditController extends GetxController {
         }
         break;
       case -1:
-        if (this.posts[i].vote == -1) {
+        if (posts[i].vote == -1) {
           _updateLocalPostVote(vote, i);
           voteStatus = await this.vote(fullName, 0);
         } else {
@@ -360,8 +370,8 @@ class RedditController extends GetxController {
   }
 }
 
-Future<HTTP.Response> _comment(String fullName, String body) async {
-  final HTTP.Response _resp = await _post(
+Future<http.Response> _comment(String fullName, String body) async {
+  final http.Response _resp = await _post(
     '/api/comment?thing_id=$fullName&text=$body',
     null,
   );
@@ -388,10 +398,10 @@ List<Comment> _flattenComments({
   return list;
 }
 
-Future<HTTP.Response> getR(String endpoint) async {
+Future<http.Response> _get(String endpoint) async {
   final box = GetStorage();
 
-  HTTP.Response resp;
+  http.Response resp;
   final bool isLoggedIn = box.read('access_token') != null;
 
   // Requests need to be made to different URl dependeding on auth state.
@@ -407,22 +417,20 @@ Future<HTTP.Response> getR(String endpoint) async {
   }
 
   Uri url = Uri.parse('https://$baseUrl$endpoint');
-  resp = await HTTP.get(url, headers: headers);
+  resp = await http.get(url, headers: headers);
 
   if (resp.statusCode == 401) {
     final AuthController auth = Get.find();
     await auth.refreshAuthToken();
-    resp = await HTTP.get(url, headers: headers);
+    resp = await http.get(url, headers: headers);
   }
-
-  print(box.read('access_token'));
   return resp;
 }
 
-Future<HTTP.Response> _post(String endpoint, Map? body) async {
+Future<http.Response> _post(String endpoint, Map? body) async {
   final box = GetStorage();
 
-  HTTP.Response _resp;
+  http.Response _resp;
   final bool isLoggedIn = box.read('access_token') != null;
 
   // Requests need to be made to different URl dependeding on auth state.
@@ -440,15 +448,15 @@ Future<HTTP.Response> _post(String endpoint, Map? body) async {
   Uri url = Uri.parse('https://$baseUrl$endpoint');
 
   if (body != null) {
-    _resp = await HTTP.post(url, headers: headers, body: body);
+    _resp = await http.post(url, headers: headers, body: body);
   } else {
-    _resp = await HTTP.post(url, headers: headers);
+    _resp = await http.post(url, headers: headers);
   }
 
   if (_resp.statusCode == 401) {
     final AuthController auth = Get.find();
     await auth.refreshAuthToken();
-    _resp = await HTTP.get(url, headers: headers);
+    _resp = await http.get(url, headers: headers);
   }
 
   return _resp;

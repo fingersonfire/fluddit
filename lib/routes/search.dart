@@ -14,11 +14,11 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final RedditController reddit = Get.find();
-  final TextEditingController searchController = new TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   InputBorder inputBorder() {
     return OutlineInputBorder(
-      borderSide: BorderSide(
+      borderSide: const BorderSide(
         width: 0,
         color: Colors.transparent,
       ),
@@ -41,23 +41,24 @@ class _SearchViewState extends State<SearchView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
         ),
         toolbarHeight: 50,
         title: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Color(0xFF2e3440),
+            color: const Color(0xFF2e3440),
           ),
           height: 40,
           child: Container(
-            margin: EdgeInsets.only(bottom: 6),
+            margin: const EdgeInsets.only(bottom: 6),
             child: TextField(
               controller: searchController,
               textAlignVertical: TextAlignVertical.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
               ),
               cursorColor: Theme.of(context).primaryColor,
@@ -77,7 +78,10 @@ class _SearchViewState extends State<SearchView> {
         actions: [
           IconButton(
             onPressed: search,
-            icon: Icon(Icons.search_outlined, color: Color(0xFF2e3440)),
+            icon: const Icon(
+              Icons.search_outlined,
+              color: Color(0xFF2e3440),
+            ),
           ),
         ],
         leading: IconButton(
@@ -85,7 +89,7 @@ class _SearchViewState extends State<SearchView> {
             reddit.getInitPosts('frontpage');
             Get.back();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_outlined,
             color: Color(0xFF2e3440),
           ),
@@ -123,64 +127,61 @@ class SearchBody extends StatelessWidget {
           future: reddit.searchSubreddits(query: searchController.text),
           builder: (BuildContext content, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                child: ListView.separated(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    final Subreddit subreddit = snapshot.data[i] as Subreddit;
-                    return MaterialButton(
-                      height: 100,
-                      onPressed: () {
-                        reddit.name.value = subreddit.name;
-                        reddit.getInitPosts(subreddit.name);
-                        Get.to(() => SearchFeed(subreddit: subreddit));
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            child: SubredditIcon(subreddit: subreddit),
-                            margin: EdgeInsets.all(10),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    subreddit.name,
-                                    style: TextStyle(fontSize: 22),
+              return ListView.separated(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int i) {
+                  final Subreddit subreddit = snapshot.data[i] as Subreddit;
+                  return MaterialButton(
+                    height: 100,
+                    onPressed: () {
+                      reddit.name.value = subreddit.name;
+                      reddit.getInitPosts(subreddit.name);
+                      Get.to(() => SearchFeed(subreddit: subreddit));
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: SubredditIcon(subreddit: subreddit),
+                          margin: const EdgeInsets.all(10),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  subreddit.name,
+                                  style: const TextStyle(fontSize: 22),
+                                ),
+                                Text(
+                                  subreddit.title,
+                                  style: TextStyle(
+                                    color: Theme.of(context).hintColor,
                                   ),
-                                  Text(
-                                    subreddit.title,
-                                    style: TextStyle(
-                                      color: Theme.of(context).hintColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider(height: 3, color: Colors.white);
-                  },
-                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(height: 3, color: Colors.white);
+                },
               );
             }
-            return LoadingIndicator();
+            return const LoadingIndicator();
           },
         ),
       );
     } else {
-      return Center(
+      return const Center(
         child: Text('Search subreddits...'),
       );
     }

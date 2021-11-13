@@ -14,11 +14,11 @@ class TimeDropdown extends StatelessWidget {
           color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(25),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: DropdownButton<String>(
           value: reddit.time.value,
           underline: Container(),
-          icon: Icon(Icons.expand_more_rounded),
+          icon: const Icon(Icons.expand_more_rounded),
           items: <String>[
             'day',
             'week',
@@ -28,11 +28,11 @@ class TimeDropdown extends StatelessWidget {
           ].map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Container(
+              child: SizedBox(
                 width: 100,
                 child: Text(
                   value,
-                  style: TextStyle(fontSize: 22),
+                  style: const TextStyle(fontSize: 22),
                 ),
               ),
             );

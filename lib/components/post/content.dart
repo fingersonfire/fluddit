@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ContentBox extends StatelessWidget {
-  ContentBox({
+  const ContentBox({
     Key? key,
     required this.constraints,
     required this.post,
@@ -19,7 +19,7 @@ class ContentBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: constraints.maxHeight - 115,
       width: MediaQuery.of(context).size.width,
       child: getContent(post, constraints),

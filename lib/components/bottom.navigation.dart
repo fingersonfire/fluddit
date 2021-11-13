@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class BottomNavBar extends StatelessWidget {
   BottomNavBar({Key? key, required this.scaffoldKey}) : super(key: key);
 
-  final scaffoldKey;
+  final GlobalKey scaffoldKey;
 
   final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
@@ -17,27 +17,27 @@ class BottomNavBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               onPressed: () {
                 component.openDrawer(scaffoldKey);
               }),
-          Spacer(),
+          const Spacer(),
           IconButton(
             onPressed: () async {
               await reddit.getInitPosts(reddit.name.value);
             },
-            icon: Icon(Icons.refresh_outlined),
+            icon: const Icon(Icons.refresh_outlined),
           ),
           IconButton(
             onPressed: () {
               sortDialog(context);
             },
-            icon: Icon(Icons.sort),
+            icon: const Icon(Icons.sort),
           ),
           IconButton(
-              icon: Icon(Icons.search_outlined),
+              icon: const Icon(Icons.search_outlined),
               onPressed: () {
-                Get.to(() => SearchView());
+                Get.to(() => const SearchView());
               }),
         ],
       ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class GalleryContent extends StatelessWidget {
-  GalleryContent({
+  const GalleryContent({
     Key? key,
     required this.constraints,
     required this.post,
@@ -14,7 +14,6 @@ class GalleryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(post.galleryData);
     return CarouselSlider(
       options: CarouselOptions(
         enableInfiniteScroll: false,
@@ -31,7 +30,7 @@ class GalleryContent extends StatelessWidget {
           return Stack(
             children: [
               Container(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: Image.network(
                   'https://i.redd.it/$mediaId.$contentType',
                   width: MediaQuery.of(context).size.width,
@@ -40,9 +39,9 @@ class GalleryContent extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment.topRight,
-                margin: EdgeInsets.all(15),
+                margin: const EdgeInsets.all(15),
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   color: Colors.black45,
                   child: Text('${i + 1} / ${post.galleryData.length}'),
                 ),

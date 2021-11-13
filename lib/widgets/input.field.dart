@@ -1,3 +1,4 @@
+import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatefulWidget {
@@ -35,19 +36,19 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: 250,
       child: TextField(
         controller: widget.controller,
         decoration: InputDecoration(
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(9),
             ),
           ),
           filled: true,
           fillColor: Colors.black45,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(9),
             ),
@@ -61,20 +62,21 @@ class _InputFieldState extends State<InputField> {
           ),
           labelText: widget.fieldLabel,
           // Password visibility suffix widget
-          suffix: widget.isPassword
-              ? GestureDetector(
-                  onTap: passwordVisibilityToggle,
-                  child: Icon(
-                    passwordIcon,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                )
-              : null,
+          suffix: ConditionalWidget(
+            condition: widget.isPassword,
+            trueWidget: GestureDetector(
+              onTap: passwordVisibilityToggle,
+              child: Icon(
+                passwordIcon,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
         ),
         // Only obscure if the it's a password field and visibility is set to false
         obscureText: widget.isPassword && !passwordVisibility,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
