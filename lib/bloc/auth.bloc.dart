@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fluddit/secrets.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as HTTP;
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -22,7 +22,7 @@ class AuthController extends GetxController {
     final String _query = url.split('$redirectUri/')[1];
     final Map<String, dynamic> _result = Uri.splitQueryString(_query);
 
-    final HTTP.Response _resp = await HTTP.post(
+    final http.Response _resp = await http.post(
       authUrl,
       headers: {
         'Authorization': 'basic $basicAuth',
@@ -50,7 +50,7 @@ class AuthController extends GetxController {
 
 Future _getToken(Map<String, dynamic> body) async {
   final Uri authUrl = Uri.parse('https://www.reddit.com/api/v1/access_token');
-  final HTTP.Response _resp = await HTTP.post(
+  final http.Response _resp = await http.post(
     authUrl,
     headers: {
       'Authorization': 'basic $basicAuth',

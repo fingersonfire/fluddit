@@ -16,7 +16,7 @@ class SettingsButton extends StatelessWidget {
           color: Theme.of(context).primaryColor,
           width: 150,
           height: 45,
-          child: Center(
+          child: const Center(
             child: Icon(
               Icons.settings_outlined,
               color: Colors.black87,

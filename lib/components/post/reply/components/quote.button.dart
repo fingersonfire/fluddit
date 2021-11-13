@@ -16,12 +16,12 @@ class QuoteButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 10, right: 10),
+          margin: const EdgeInsets.only(top: 10, right: 10),
           child: IconButton(
             onPressed: () {
               insertText(insert: '> $quoteText');
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.format_quote,
               size: 35,
             ),

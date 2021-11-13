@@ -19,14 +19,14 @@ class FeedPosts extends StatelessWidget {
             if (i < reddit.posts.length) {
               return PostTile(post: reddit.posts[i]);
             } else {
-              if (reddit.posts.length > 0 && reddit.after.value != '') {
+              if (reddit.posts.isNotEmpty && reddit.after.value != '') {
                 reddit.getNextPosts();
               }
 
-              if (reddit.posts.length > 0 && reddit.after.value == '') {
+              if (reddit.posts.isNotEmpty && reddit.after.value == '') {
                 return Container();
               } else {
-                return Container(
+                return const SizedBox(
                   height: 75,
                   child: LoadingIndicator(),
                 );

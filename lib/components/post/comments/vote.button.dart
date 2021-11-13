@@ -33,7 +33,7 @@ class VoteButtons extends StatelessWidget {
               comment.body,
             );
           },
-          icon: Icon(Icons.reply_outlined),
+          icon: const Icon(Icons.reply_outlined),
           iconSize: 20,
         ),
         IconButton(

@@ -13,7 +13,7 @@ class LoginButton extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         width: 300,
         height: 45,
-        child: Center(
+        child: const Center(
           child: Text(
             'Sign In',
             style: TextStyle(color: Colors.black87),
@@ -22,7 +22,7 @@ class LoginButton extends StatelessWidget {
       ),
       onPressed: () {
         Get.back();
-        Get.to(() => LoginView());
+        Get.to(() => const LoginView());
       },
     );
   }

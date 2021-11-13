@@ -15,7 +15,7 @@ void replyDialog(
   String postId,
   String quoteText,
 ) {
-  final TextEditingController textController = new TextEditingController();
+  final TextEditingController textController = TextEditingController();
 
   void insertText({required String insert, int? positionFromEnd}) {
     final int cursorPos = textController.selection.base.offset;
@@ -37,7 +37,7 @@ void replyDialog(
   Get.bottomSheet(
     GestureDetector(
       onTap: () {
-        new FocusNode().requestFocus();
+        FocusNode().requestFocus();
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
       child: Container(
@@ -53,7 +53,7 @@ void replyDialog(
             FormatButtons(insertText: insertText),
             Container(
               color: Theme.of(context).primaryColor,
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 5,
               ),
@@ -64,7 +64,7 @@ void replyDialog(
                     onPressed: () {
                       Get.back();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete,
                       color: Color(0xFF2e3440),
                     ),
@@ -81,7 +81,7 @@ void replyDialog(
         ),
       ),
     ),
-    enterBottomSheetDuration: Duration(milliseconds: 150),
-    exitBottomSheetDuration: Duration(milliseconds: 150),
+    enterBottomSheetDuration: const Duration(milliseconds: 150),
+    exitBottomSheetDuration: const Duration(milliseconds: 150),
   );
 }

@@ -11,7 +11,8 @@ class CommentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final index = reddit.posts.indexWhere((p) => p.id == postId);
-    return Container(
+
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

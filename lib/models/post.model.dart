@@ -79,20 +79,20 @@ class Post {
   /// Returns the [score] int as a concatinated String (e.g. 3000 => "3k").
   /// Anything that's less than 4 digits long returns as a unconcatinated String.
   String getScoreString() {
-    if (this.score > 999) {
-      String str = this.score.toString();
+    if (score > 999) {
+      String str = score.toString();
       return '${str.substring(0, str.length - 3)}k';
     } else {
-      return this.score.toString();
+      return score.toString();
     }
   }
 
   void insertComment(Comment comment, int index) {
-    this.comments.insert(index, comment);
+    comments.insert(index, comment);
   }
 
   void save(bool save) {
-    this.saved = save;
+    saved = save;
   }
 
   void updateComments(List<Comment> comments) {
@@ -104,12 +104,12 @@ class Post {
       case 1:
         if (this.vote == 1) {
           this.vote = 0;
-          --this.score;
+          --score;
         } else {
           if (this.vote == -1) {
-            this.score = this.score + 2;
+            score = score + 2;
           } else {
-            ++this.score;
+            ++score;
           }
           this.vote = 1;
         }
@@ -117,12 +117,12 @@ class Post {
       case -1:
         if (this.vote == -1) {
           this.vote = 0;
-          ++this.score;
+          ++score;
         } else {
           if (this.vote == 1) {
-            this.score = this.score - 2;
+            score = score - 2;
           } else {
-            --this.score;
+            --score;
           }
           this.vote = -1;
         }

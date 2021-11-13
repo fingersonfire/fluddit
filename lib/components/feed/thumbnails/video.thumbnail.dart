@@ -11,7 +11,7 @@ class VideoThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultThumbnail(
-      contentIcon: Icon(Icons.play_arrow_outlined),
+      contentIcon: const Icon(Icons.play_arrow_outlined),
       post: post,
     );
   }

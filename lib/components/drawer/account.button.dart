@@ -18,7 +18,7 @@ class AccountButton extends StatelessWidget {
         child: Center(
           child: Text(
             reddit.userName.value,
-            style: TextStyle(color: Colors.black87),
+            style: const TextStyle(color: Colors.black87),
           ),
         ),
       ),

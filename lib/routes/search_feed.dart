@@ -16,8 +16,9 @@ class SearchFeed extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 50,
         backgroundColor: Theme.of(context).primaryColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
         ),
         centerTitle: true,
@@ -25,7 +26,7 @@ class SearchFeed extends StatelessWidget {
           children: [
             Text(
               subreddit.name,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF2e3440),
               ),
             ),
@@ -35,7 +36,7 @@ class SearchFeed extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_outlined,
             color: Color(0xFF2e3440),
           ),

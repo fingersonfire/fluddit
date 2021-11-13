@@ -14,7 +14,7 @@ class FormatButtons extends StatelessWidget {
           onPressed: () {
             insertText(insert: '****', positionFromEnd: 2);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.format_bold,
           ),
         ),
@@ -22,7 +22,7 @@ class FormatButtons extends StatelessWidget {
           onPressed: () {
             insertText(insert: '**', positionFromEnd: 1);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.format_italic,
           ),
         ),
@@ -30,7 +30,7 @@ class FormatButtons extends StatelessWidget {
           onPressed: () {
             insertText(insert: '~~~~', positionFromEnd: 2);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.format_strikethrough,
           ),
         ),
@@ -38,7 +38,7 @@ class FormatButtons extends StatelessWidget {
           onPressed: () {
             insertText(insert: '[text](link)');
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.link,
           ),
         ),
@@ -46,7 +46,7 @@ class FormatButtons extends StatelessWidget {
           onPressed: () {
             insertText(insert: '>!!<', positionFromEnd: 2);
           },
-          icon: Icon(Icons.visibility_off),
+          icon: const Icon(Icons.visibility_off),
         ),
       ],
     );
