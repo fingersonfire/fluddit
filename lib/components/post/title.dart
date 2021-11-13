@@ -13,7 +13,7 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+      padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       width: MediaQuery.of(context).size.width,
       height: 115,
       color: Theme.of(context).cardColor,
@@ -22,25 +22,21 @@ class TitleBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            child: Text(
-              reddit.posts[postIndex].title,
-              softWrap: true,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 14,
-              ),
+          Text(
+            reddit.posts[postIndex].title,
+            softWrap: true,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 14,
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: Text(
-                  'u/${reddit.posts[postIndex].author}',
-                  style: TextStyle(fontSize: 12),
-                ),
+              Text(
+                'u/${reddit.posts[postIndex].author}',
+                style: const TextStyle(fontSize: 12),
               ),
               PostVoteButtons(postIndex: postIndex),
             ],

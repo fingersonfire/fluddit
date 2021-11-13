@@ -11,12 +11,12 @@ class CommentInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: TextField(
         controller: textController,
         cursorColor: Theme.of(context).primaryColor,
         maxLines: 15,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           filled: true,
           enabledBorder: OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(),

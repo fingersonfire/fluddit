@@ -17,7 +17,7 @@ class CommentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
@@ -34,7 +34,7 @@ class CommentTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${reddit.posts[postIndex].comments[commentIndex].body}',
+            reddit.posts[postIndex].comments[commentIndex].body,
             softWrap: true,
           ),
           Row(

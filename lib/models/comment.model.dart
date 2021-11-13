@@ -24,12 +24,12 @@ class Comment {
       case 1:
         if (this.vote == 1) {
           this.vote = 0;
-          --this.score;
+          --score;
         } else {
           if (this.vote == -1) {
-            this.score = this.score + 2;
+            score = score + 2;
           } else {
-            ++this.score;
+            ++score;
           }
           this.vote = 1;
         }
@@ -37,12 +37,12 @@ class Comment {
       case -1:
         if (this.vote == -1) {
           this.vote = 0;
-          ++this.score;
+          ++score;
         } else {
           if (this.vote == 1) {
-            this.score = this.score - 2;
+            score = score - 2;
           } else {
-            --this.score;
+            --score;
           }
           this.vote = -1;
         }

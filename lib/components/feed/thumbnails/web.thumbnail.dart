@@ -11,7 +11,7 @@ class WebThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultThumbnail(
-      contentIcon: Icon(Icons.link_outlined),
+      contentIcon: const Icon(Icons.link_outlined),
       post: post,
     );
   }

@@ -4,29 +4,28 @@ import 'package:fluddit/widgets/conditional.widget.dart';
 import 'package:flutter/material.dart';
 
 class SubredditIcon extends StatelessWidget {
-  SubredditIcon({Key? key, required this.subreddit}) : super(key: key);
+  const SubredditIcon({Key? key, required this.subreddit}) : super(key: key);
 
   final Subreddit subreddit;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: 10),
       width: 30,
       height: 30,
       child: ConditionalWidget(
         condition: subreddit.icon == '',
-        trueWidget: SubredditPlaceholderIcon(),
+        trueWidget: const SubredditPlaceholderIcon(),
         falseWidget: CachedNetworkImage(
           imageUrl: subreddit.icon.replaceAll('&amp;', '&'),
-          imageBuilder: (context, imageProvider) => Container(
-            child: CircleAvatar(
-              backgroundImage: imageProvider,
-              backgroundColor: Colors.white24,
-            ),
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundImage: imageProvider,
+            backgroundColor: Colors.white24,
           ),
-          placeholder: (context, url) => SubredditPlaceholderIcon(),
-          errorWidget: (context, url, error) => SubredditPlaceholderIcon(),
+          placeholder: (context, url) => const SubredditPlaceholderIcon(),
+          errorWidget: (context, url, error) =>
+              const SubredditPlaceholderIcon(),
         ),
       ),
     );
@@ -38,7 +37,7 @@ class SubredditPlaceholderIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
+    return const CircleAvatar(
       backgroundImage: AssetImage('lib/assets/redditIcon.png'),
       backgroundColor: Colors.white24,
     );

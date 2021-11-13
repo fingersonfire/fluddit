@@ -8,11 +8,9 @@ class ImageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: InteractiveViewer(
-        child: Image.network(
-          post.domain == 'imgur.com' ? '${post.url}.jpg' : post.url ?? '',
-        ),
+    return InteractiveViewer(
+      child: Image.network(
+        post.domain == 'imgur.com' ? '${post.url}.jpg' : post.url ?? '',
       ),
     );
   }

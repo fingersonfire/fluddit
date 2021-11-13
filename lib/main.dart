@@ -10,7 +10,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
@@ -22,9 +23,12 @@ void main() async {
 }
 
 class App extends StatelessWidget {
+  App({Key? key}) : super(key: key);
+
   final AuthController auth = Get.find();
   final GetStorage box = GetStorage();
 
+  @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       themeMode: ThemeMode.light,
@@ -41,7 +45,7 @@ class App extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             return Feed();
           }
-          return LoadingView();
+          return const LoadingView();
         },
         future: auth.refreshAuthToken(),
       ),

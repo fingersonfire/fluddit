@@ -32,7 +32,7 @@ class SendCommentButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: _postComment,
-      icon: Icon(
+      icon: const Icon(
         Icons.send,
         color: Color(0xFF2e3440),
       ),

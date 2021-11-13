@@ -11,19 +11,18 @@ class SubscribeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Obx(() {
+    return Obx(
+      () {
         return ConditionalWidget(
           // Check if the user is subscribed
           condition: reddit.subscriptions
-                  .where((s) => s.name == subreddit.name)
-                  .length >
-              0,
+              .where((s) => s.name == subreddit.name)
+              .isNotEmpty,
           trueWidget: IconButton(
             onPressed: () async {
               await reddit.unsubscribe(subreddit.fullName);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.remove_outlined,
               color: Color(0xFF2e3440),
             ),
@@ -32,13 +31,13 @@ class SubscribeButton extends StatelessWidget {
             onPressed: () async {
               await reddit.subscribe(subreddit.fullName);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.add_outlined,
               color: Color(0xFF2e3440),
             ),
           ),
         );
-      }),
+      },
     );
   }
 }

@@ -24,7 +24,7 @@ class DefaultThumbnail extends StatelessWidget {
           trueWidget: Opacity(
             opacity: .5,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.pinkAccent, Colors.redAccent],
                   begin: Alignment.topLeft,
@@ -47,7 +47,7 @@ class DefaultThumbnail extends StatelessWidget {
                 ),
               ),
             ),
-            trueWidget: Container(
+            trueWidget: SizedBox(
               width: 75,
               height: 75,
               child: Opacity(

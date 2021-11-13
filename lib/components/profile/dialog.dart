@@ -10,13 +10,11 @@ void profileDialog() {
     content: FutureBuilder(
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            child: Center(
-              child: Text('Please excuse the dust'),
-            ),
+          return const Center(
+            child: Text('Please excuse the dust'),
           );
         }
-        return LoadingIndicator();
+        return const LoadingIndicator();
       },
       future: reddit.getUserInfo(),
     ),

@@ -15,8 +15,9 @@ class Settings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
         ),
         toolbarHeight: 50,
@@ -24,7 +25,7 @@ class Settings extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_outlined,
             color: Color(0xFF2e3440),
           ),
@@ -35,15 +36,15 @@ class Settings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 20, left: 20),
+              margin: const EdgeInsets.only(top: 20, left: 20),
               width: MediaQuery.of(context).size.width,
-              child: Text(
+              child: const Text(
                 'Accent Color:',
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 22),
               ),
             ),
-            Container(
+            SizedBox(
               height: 90,
               width: MediaQuery.of(context).size.width,
               child: GridView.count(
@@ -62,16 +63,16 @@ class Settings extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 20, left: 20),
+              margin: const EdgeInsets.only(top: 20, left: 20),
               width: MediaQuery.of(context).size.width,
-              child: Text(
+              child: const Text(
                 'Dark Theme:',
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 22),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 10),
+              margin: const EdgeInsets.only(left: 10),
               child: Switch(
                 activeColor: Theme.of(context).primaryColor,
                 value: box.read('darkMode'),

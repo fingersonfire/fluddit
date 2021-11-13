@@ -41,7 +41,7 @@ class _VideoContentState extends State<VideoContent> {
       condition: _controller.value.isInitialized,
       trueWidget: Stack(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             height: widget.constraints.maxHeight - 115,
             child: Center(
@@ -75,22 +75,20 @@ class _VideoContentState extends State<VideoContent> {
                     )
                   ],
                 ),
-                Container(
-                  child: VideoProgressIndicator(
-                    _controller,
-                    allowScrubbing: true,
-                    colors: VideoProgressColors(
-                      playedColor: Theme.of(context).primaryColor,
-                    ),
-                    padding: EdgeInsets.zero,
+                VideoProgressIndicator(
+                  _controller,
+                  allowScrubbing: true,
+                  colors: VideoProgressColors(
+                    playedColor: Theme.of(context).primaryColor,
                   ),
+                  padding: EdgeInsets.zero,
                 ),
               ],
             ),
           )
         ],
       ),
-      falseWidget: LoadingIndicator(),
+      falseWidget: const LoadingIndicator(),
     );
   }
 

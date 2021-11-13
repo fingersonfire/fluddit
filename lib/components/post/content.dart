@@ -7,7 +7,7 @@ import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 
 class ContentBox extends StatelessWidget {
-  ContentBox({
+  const ContentBox({
     Key? key,
     required this.constraints,
     required this.post,
@@ -18,7 +18,7 @@ class ContentBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: constraints.maxHeight - 115,
       width: MediaQuery.of(context).size.width,
       child: getContent(post, constraints),
@@ -32,7 +32,7 @@ Widget getContent(Post post, BoxConstraints constraints) {
   if (post.isSelf) {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Text(
           post.selfText,
           softWrap: true,
