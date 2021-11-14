@@ -19,14 +19,14 @@ class UserCommentsTab extends StatelessWidget {
           if (i < user.comments.length) {
             return CommentWidget(comment: user.comments[i]);
           } else {
-            if (user.comments.length > 0 && user.commentAfter.value != '') {
+            if (user.comments.isNotEmpty && user.commentAfter.value != '') {
               user.getAdditionalComments(reddit.userName.value);
             }
 
-            if (user.comments.length > 0 && user.commentAfter.value == '') {
+            if (user.comments.isNotEmpty && user.commentAfter.value == '') {
               return Container();
             } else {
-              return Container(
+              return const SizedBox(
                 height: 75,
                 child: LoadingIndicator(),
               );

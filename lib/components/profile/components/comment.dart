@@ -1,5 +1,4 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -17,11 +16,11 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-      padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
       width: 100,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(5),
         ),
         color: Theme.of(context).cardColor,
@@ -30,10 +29,10 @@ class CommentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MarkdownBody(
-            data: '${comment.body}',
+            data: comment.body,
           ),
           Container(
-            margin: EdgeInsets.only(top: 5),
+            margin: const EdgeInsets.only(top: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

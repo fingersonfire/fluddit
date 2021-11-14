@@ -26,7 +26,7 @@ class UserController extends GetxController {
         .toList()
         .cast<Comment>();
 
-    this.commentAfter.value = _json['data']['after'] ?? '';
+    commentAfter.value = _json['data']['after'] ?? '';
     this.comments.addAll(comments);
   }
 
@@ -41,7 +41,7 @@ class UserController extends GetxController {
         .toList()
         .cast<Comment>();
 
-    this.commentAfter.value = _json['data']['after'] ?? '';
+    commentAfter.value = _json['data']['after'] ?? '';
     this.comments.value = comments;
   }
 

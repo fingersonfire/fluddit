@@ -28,11 +28,11 @@ class Dialog extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 return LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    return ProfileContent();
+                    return const ProfileContent();
                   },
                 );
               }
-              return LoadingIndicator();
+              return const LoadingIndicator();
             },
             future: Future.wait(
               [

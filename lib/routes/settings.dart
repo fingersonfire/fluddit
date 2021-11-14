@@ -1,5 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/widgets/back.button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
@@ -21,15 +22,7 @@ class Settings extends StatelessWidget {
           statusBarColor: Colors.transparent,
         ),
         toolbarHeight: 50,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF2e3440),
-          ),
-        ),
+        leading: const NavBackButton(),
       ),
       body: SafeArea(
         child: Column(

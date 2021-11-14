@@ -20,14 +20,14 @@ class UserPostsTab extends StatelessWidget {
               width: MediaQuery.of(context).size.width - 155,
             );
           } else {
-            if (user.posts.length > 0 && user.after.value != '') {
+            if (user.posts.isNotEmpty && user.after.value != '') {
               // reddit.getNextPosts();
             }
 
-            if (user.posts.length > 0 && user.after.value == '') {
+            if (user.posts.isNotEmpty && user.after.value == '') {
               return Container();
             } else {
-              return Container(
+              return const SizedBox(
                 height: 75,
                 child: LoadingIndicator(),
               );

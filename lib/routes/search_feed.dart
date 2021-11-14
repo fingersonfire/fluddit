@@ -1,9 +1,9 @@
 import 'package:fluddit/components/feed/post.list.dart';
 import 'package:fluddit/components/index.dart';
 import 'package:fluddit/models/index.dart';
+import 'package:fluddit/widgets/back.button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 class SearchFeed extends StatelessWidget {
   const SearchFeed({Key? key, required this.subreddit}) : super(key: key);
@@ -32,15 +32,7 @@ class SearchFeed extends StatelessWidget {
             ),
           ],
         ),
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF2e3440),
-          ),
-        ),
+        leading: const NavBackButton(),
         actions: [
           SubscribeButton(subreddit: subreddit),
         ],

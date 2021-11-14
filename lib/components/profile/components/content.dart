@@ -28,10 +28,10 @@ class _ProfileContentState extends State<ProfileContent> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.all(15),
+            margin: const EdgeInsets.all(15),
             child: Text(
               reddit.userName.value,
-              style: TextStyle(fontSize: 26),
+              style: const TextStyle(fontSize: 26),
             ),
           ),
           Row(
@@ -41,19 +41,19 @@ class _ProfileContentState extends State<ProfileContent> {
                 onPressed: () {
                   changeIndex(0);
                 },
-                child: Icon(Icons.article_rounded),
+                child: const Icon(Icons.article_rounded),
               ),
               MaterialButton(
                 onPressed: () {
                   changeIndex(1);
                 },
-                child: Icon(Icons.question_answer_rounded),
+                child: const Icon(Icons.question_answer_rounded),
               ),
               MaterialButton(
                 onPressed: () {
                   changeIndex(2);
                 },
-                child: Icon(Icons.bookmark_rounded),
+                child: const Icon(Icons.bookmark_rounded),
               ),
             ],
           ),

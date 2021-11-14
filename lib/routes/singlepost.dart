@@ -1,5 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/widgets/back.button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -17,21 +18,13 @@ class SinglePostView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        systemOverlayStyle: SystemUiOverlayStyle(
+        systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
         ),
         toolbarHeight: 50,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF2e3440),
-          ),
-        ),
-        actions: [],
+        leading: const NavBackButton(),
+        actions: const <Widget>[],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -47,8 +40,11 @@ class SinglePostView extends StatelessWidget {
                             constraints: constraints, post: post.single.value),
                         // Title
                         Container(
-                          padding:
-                              EdgeInsets.only(top: 15, left: 15, right: 15),
+                          padding: const EdgeInsets.only(
+                            top: 15,
+                            left: 15,
+                            right: 15,
+                          ),
                           width: MediaQuery.of(context).size.width,
                           height: 115,
                           color: Theme.of(context).cardColor,
@@ -57,26 +53,22 @@ class SinglePostView extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                child: Text(
-                                  post.single.value.title,
-                                  softWrap: true,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                              Text(
+                                post.single.value.title,
+                                softWrap: true,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
                                 ),
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    child: Text(
-                                      'u/${post.single.value.author}',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
+                                  Text(
+                                    'u/${post.single.value.author}',
+                                    style: const TextStyle(fontSize: 12),
                                   ),
                                   // PostVoteButtons(postIndex: postIndex),
                                 ],
@@ -90,7 +82,7 @@ class SinglePostView extends StatelessWidget {
                     ),
                   );
                 }
-                return LoadingIndicator();
+                return const LoadingIndicator();
               },
               future: reddit.getPost(postId),
             );
