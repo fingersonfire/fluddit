@@ -1,6 +1,8 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/routes/web.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class CommentTile extends StatelessWidget {
   CommentTile({
@@ -33,9 +35,11 @@ class CommentTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            reddit.posts[postIndex].comments[commentIndex].body,
-            softWrap: true,
+          MarkdownBody(
+            data: reddit.posts[postIndex].comments[commentIndex].body,
+            onTapLink: (String text, String? url, String other) {
+              Get.to(() => WebPage(url: (url ?? '')));
+            },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
