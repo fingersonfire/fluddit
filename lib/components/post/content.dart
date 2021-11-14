@@ -4,7 +4,9 @@ import 'package:fluddit/components/post/content/image.content.dart';
 import 'package:fluddit/components/post/content/video.content.dart';
 import 'package:fluddit/components/post/content/web.content.dart';
 import 'package:fluddit/models/index.dart';
+import 'package:fluddit/routes/web.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class ContentBox extends StatelessWidget {
   const ContentBox({
@@ -30,12 +32,15 @@ Widget getContent(Post post, BoxConstraints constraints) {
   final ComponentController component = Get.find();
 
   if (post.isSelf) {
+    post.parseUnicode(post.selfText);
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(15),
-        child: Text(
-          post.selfText,
-          softWrap: true,
+        child: MarkdownBody(
+          data: post.parseUnicode(post.selfText),
+          onTapLink: (String text, String? url, String other) {
+            Get.to(() => WebPage(url: (url ?? '')));
+          },
         ),
       ),
     );

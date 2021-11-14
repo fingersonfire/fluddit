@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostTile extends StatelessWidget {
-  PostTile({Key? key, required this.post}) : super(key: key);
+  PostTile({Key? key, required this.post, this.width}) : super(key: key);
 
   final Post post;
+  final double? width;
 
   final RedditController reddit = Get.find();
   final ComponentController comp = Get.find();

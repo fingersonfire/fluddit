@@ -57,6 +57,8 @@ class RedditController extends GetxController {
     }
   }
 
+  Future<void> getPost(String postId) async {}
+
   Future<Map<String, dynamic>> getPosts({
     required String after,
     required int limit,
@@ -123,7 +125,7 @@ class RedditController extends GetxController {
     posts.addAll(_data['posts'].toList().cast<Post>());
   }
 
-  Future<void> getPostComments({
+  Future<List<Comment>> getPostComments({
     required String subreddit,
     required String postId,
   }) async {
@@ -143,10 +145,15 @@ class RedditController extends GetxController {
       list: <Comment>[],
     );
 
-    final int pIndex = _getPostIdIndex(postId);
-    posts[pIndex].updateComments(flattenedComments);
-    posts[pIndex].commentsLoaded = true;
-    posts.refresh();
+    if (posts.where((p0) => p0.id == postId).isNotEmpty) {
+      final int pIndex = _getPostIdIndex(postId);
+
+      posts[pIndex].updateComments(flattenedComments);
+      posts[pIndex].commentsLoaded = true;
+      posts.refresh();
+    }
+
+    return flattenedComments;
   }
 
   int _getPostIdIndex(String postId) {

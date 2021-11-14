@@ -62,5 +62,7 @@ Future<void> _initStorage() async {
 void _loadBlocs() {
   Get.put<AuthController>(AuthController());
   Get.put<ComponentController>(ComponentController());
+  Get.put<PostController>(PostController());
   Get.put<RedditController>(RedditController());
+  Get.put<UserController>(UserController());
 }

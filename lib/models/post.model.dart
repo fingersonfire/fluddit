@@ -91,6 +91,13 @@ class Post {
     comments.insert(index, comment);
   }
 
+  String parseUnicode(String text) {
+    text.replaceAll('&amp;#x200B;', '');
+    text.replaceAll('&gt;', '>');
+    text.replaceAll('&lt;', '<');
+    return text;
+  }
+
   void save(bool save) {
     saved = save;
   }

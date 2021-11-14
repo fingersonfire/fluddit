@@ -30,8 +30,8 @@ class CommentContent extends StatelessWidget {
           }
         } else {
           reddit.getPostComments(
-            subreddit: reddit.posts[postIndex].subreddit,
-            postId: reddit.posts[postIndex].id,
+            subreddit: post.subreddit,
+            postId: post.id,
           );
           return SizedBox(
             width: MediaQuery.of(context).size.width,

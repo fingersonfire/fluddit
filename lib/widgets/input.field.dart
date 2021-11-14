@@ -1,5 +1,4 @@
 import 'package:fluddit/widgets/index.dart';
-import 'package:flutter/material.dart';
 
 class InputField extends StatefulWidget {
   const InputField({
