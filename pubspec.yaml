@@ -15,6 +15,7 @@ dependencies:
   get_storage: ^2.0.3
   http: ^0.13.3
   share_plus: ^2.1.4
+  url_launcher: ^6.0.12
   video_player: ^2.1.12
   webview_flutter: ^2.3.1
 
