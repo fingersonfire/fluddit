@@ -57,6 +57,8 @@ class RedditController extends GetxController {
     }
   }
 
+  Future<void> getPost(String postId) async {}
+
   Future<Map<String, dynamic>> getPosts({
     required String after,
     required int limit,
