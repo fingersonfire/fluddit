@@ -71,7 +71,7 @@ class Post {
       thumbnail: json['thumbnail'],
       title: json['title'],
       url: json['url_overridden_by_dest'],
-      videoUrl: json['secure_media']?['reddit_video']?['fallback_url'] ?? '',
+      videoUrl: json['secure_media']?['reddit_video']?['hls_url'] ?? '',
       vote: _getVote(json['likes']),
     );
   }

@@ -4,11 +4,11 @@ publish_to: 'none'
 version: 0.1.9+19
 
 dependencies:
-  flutter:
-    sdk: flutter
   cached_network_image: ^3.1.0
   carousel_slider: ^4.0.0
   cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
   flutter_markdown: ^0.6.6
   flutter_nord_theme: ^2.1.0
   get: ^4.2.5
@@ -39,4 +39,5 @@ flutter_icons:
   android: 'launcher_icon'
   image_path: ''
   image_path_android: 'lib/assets/launcher/android_adaptive.png'
-  ios: false
+  ios: true
+  image_path_ios: 'lib/assets/launcher/ios.png'

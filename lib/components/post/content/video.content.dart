@@ -27,12 +27,15 @@ class _VideoContentState extends State<VideoContent> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.url)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-          _controller.setLooping(true);
-        });
-      });
+      ..initialize().then(
+        (_) {
+          setState(() {
+            _controller.play();
+            _controller.setVolume(100);
+            _controller.setLooping(true);
+          });
+        },
+      );
   }
 
   @override
