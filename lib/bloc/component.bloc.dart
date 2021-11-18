@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 
 class ComponentController extends GetxController {
   CarouselController carouselController = CarouselController();
+  RxBool autoMute = false.obs;
   RxInt carouselIndex = 0.obs;
 
   void openDrawer(scaffoldKey) {
@@ -82,6 +83,13 @@ class ComponentController extends GetxController {
     }
 
     Get.appUpdate();
+  }
+
+  Future<void> updateAutoMute(bool autoMute) async {
+    this.autoMute.value = autoMute;
+
+    final GetStorage box = GetStorage();
+    await box.write('autoMute', autoMute);
   }
 
   Future<void> updateAccentColor(int color) async {

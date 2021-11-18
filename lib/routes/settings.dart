@@ -29,20 +29,30 @@ class Settings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 20, left: 20),
+              margin: const EdgeInsets.only(top: 15, left: 20),
+              width: MediaQuery.of(context).size.width,
+              child: const Text(
+                'Theme Settings',
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 15, left: 20),
               width: MediaQuery.of(context).size.width,
               child: const Text(
                 'Accent Color:',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 22),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             SizedBox(
-              height: 90,
+              height: 75,
               width: MediaQuery.of(context).size.width,
               child: GridView.count(
                 primary: false,
                 padding: const EdgeInsets.all(20),
+                physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 crossAxisCount: 5,
@@ -55,22 +65,62 @@ class Settings extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 20, left: 20),
-              width: MediaQuery.of(context).size.width,
-              child: const Text(
-                'Dark Theme:',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 22),
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  child: const Text(
+                    'Dark Theme:',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  child: Switch(
+                    activeColor: Theme.of(context).primaryColor,
+                    value: box.read('darkMode'),
+                    onChanged: component.updateThemeMode,
+                  ),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Divider(
+                thickness: 2,
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 10),
-              child: Switch(
-                activeColor: Theme.of(context).primaryColor,
-                value: box.read('darkMode'),
-                onChanged: component.updateThemeMode,
+              margin: const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+              width: MediaQuery.of(context).size.width,
+              child: const Text(
+                'Content Settings',
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 24),
               ),
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: 20),
+                  child: const Text(
+                    'Auto-mute videos:',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  child: Obx(
+                    () => Switch(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: component.autoMute.value,
+                      onChanged: component.updateAutoMute,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

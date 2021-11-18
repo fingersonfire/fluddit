@@ -57,12 +57,16 @@ Future<void> _initStorage() async {
   await GetStorage.init();
   GetStorage().writeIfNull('accent_color', '0xffb48ead');
   GetStorage().writeIfNull('darkMode', true);
+  GetStorage().writeIfNull('autoMute', false);
 }
 
 void _loadBlocs() {
   Get.put<AuthController>(AuthController());
-  Get.put<ComponentController>(ComponentController());
+  ComponentController component =
+      Get.put<ComponentController>(ComponentController());
   Get.put<PostController>(PostController());
   Get.put<RedditController>(RedditController());
   Get.put<UserController>(UserController());
+
+  component.autoMute.value = GetStorage().read('autoMute');
 }
