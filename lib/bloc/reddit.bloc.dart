@@ -262,14 +262,16 @@ class RedditController extends GetxController {
     return subreddits;
   }
 
-  Future<bool> subscribe(String subredditFullName) async {
+  Future<bool> subscribe(Subreddit subreddit) async {
+    subscriptions.add(subreddit);
+
     final http.Response _resp = await _post(
-      '/api/subscribe?sr=$subredditFullName&action=sub&skip_initial_defaults=true',
+      '/api/subscribe?sr=${subreddit.fullName}&action=sub&skip_initial_defaults=true',
       null,
     );
 
-    if (_resp.statusCode == 200) {
-      await getUserSubreddits();
+    if (_resp.statusCode != 200) {
+      subscriptions.removeWhere((s) => s.fullName == subreddit.fullName);
     }
 
     return _resp.statusCode == 200;

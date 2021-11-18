@@ -34,11 +34,17 @@ class BottomNavBar extends StatelessWidget {
             },
             icon: const Icon(Icons.sort),
           ),
-          IconButton(
-              icon: const Icon(Icons.search_outlined),
-              onPressed: () {
-                Get.to(() => const SearchView());
-              }),
+          Obx(
+            () => Visibility(
+              visible: reddit.userName.isNotEmpty,
+              child: IconButton(
+                icon: const Icon(Icons.search_outlined),
+                onPressed: () {
+                  Get.to(() => const SearchView());
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

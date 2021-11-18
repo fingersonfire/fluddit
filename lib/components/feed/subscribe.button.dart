@@ -29,7 +29,7 @@ class SubscribeButton extends StatelessWidget {
           ),
           falseWidget: IconButton(
             onPressed: () async {
-              await reddit.subscribe(subreddit.fullName);
+              await reddit.subscribe(subreddit);
             },
             icon: const Icon(
               Icons.add_outlined,
