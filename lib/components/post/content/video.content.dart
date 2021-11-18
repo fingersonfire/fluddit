@@ -2,6 +2,7 @@ import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
 import 'package:fluddit/widgets/conditional.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoContent extends StatefulWidget {
@@ -20,22 +21,30 @@ class VideoContent extends StatefulWidget {
 
 class _VideoContentState extends State<VideoContent> {
   late VideoPlayerController _controller;
+  bool isMuted = false;
 
   final ComponentController component = Get.find();
 
   @override
   void initState() {
+    isMuted = GetStorage().read('autoMute');
+
     super.initState();
     _controller = VideoPlayerController.network(widget.url)
       ..initialize().then(
         (_) {
           setState(() {
             _controller.play();
-            _controller.setVolume(100);
+            _controller.setVolume(isMuted ? 0 : 100);
             _controller.setLooping(true);
           });
         },
       );
+  }
+
+  void toggleMute() {
+    setState(() => isMuted = !isMuted);
+    _controller.setVolume(isMuted ? 0 : 100);
   }
 
   @override
@@ -75,7 +84,13 @@ class _VideoContentState extends State<VideoContent> {
                             ? Icons.pause
                             : Icons.play_arrow,
                       ),
-                    )
+                    ),
+                    IconButton(
+                      onPressed: toggleMute,
+                      icon: Icon(
+                        isMuted ? Icons.volume_off : Icons.volume_up,
+                      ),
+                    ),
                   ],
                 ),
                 VideoProgressIndicator(
