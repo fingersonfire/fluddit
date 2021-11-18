@@ -51,13 +51,22 @@ class PostView extends StatelessWidget {
                   return SingleChildScrollView(
                     child: Column(
                       children: [
-                        // Content
-                        ContentBox(constraints: constraints, post: post),
-                        // Title
-                        TitleBar(
-                          postIndex: i,
+                        SizedBox(
+                          height: constraints.maxHeight,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: ContentBox(
+                                  constraints: constraints,
+                                  post: post,
+                                ),
+                              ),
+                              TitleBar(
+                                postIndex: i,
+                              ),
+                            ],
+                          ),
                         ),
-                        // Comments
                         CommentContent(post: post),
                       ],
                     ),

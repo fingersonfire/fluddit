@@ -21,8 +21,6 @@ class ContentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: constraints.maxHeight - 115,
-      width: MediaQuery.of(context).size.width,
       child: getContent(post, constraints),
     );
   }
