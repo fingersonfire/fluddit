@@ -1,14 +1,15 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/constants.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ComponentController extends GetxController {
   CarouselController carouselController = CarouselController();
+  RxBool autoMute = false.obs;
   RxInt carouselIndex = 0.obs;
 
   void openDrawer(scaffoldKey) {
@@ -67,21 +68,20 @@ class ComponentController extends GetxController {
 
     if (darkMode) {
       await box.write('darkMode', true);
-      Get.changeTheme(
-        NordTheme.dark().copyWith(
-          primaryColor: Color(int.parse(box.read('accent_color'))),
-        ),
-      );
+      Get.changeTheme(darkTheme);
     } else {
       await box.write('darkMode', false);
-      Get.changeTheme(
-        NordTheme.light().copyWith(
-          primaryColor: Color(int.parse(box.read('accent_color'))),
-        ),
-      );
+      Get.changeTheme(lightTheme);
     }
 
     Get.appUpdate();
+  }
+
+  Future<void> updateAutoMute(bool autoMute) async {
+    this.autoMute.value = autoMute;
+
+    final GetStorage box = GetStorage();
+    await box.write('autoMute', autoMute);
   }
 
   Future<void> updateAccentColor(int color) async {
@@ -90,11 +90,11 @@ class ComponentController extends GetxController {
 
     if (box.read('darkMode')) {
       Get.changeTheme(
-        NordTheme.dark().copyWith(primaryColor: Color(color)),
+        darkTheme.copyWith(primaryColor: Color(color)),
       );
     } else {
       Get.changeTheme(
-        NordTheme.light().copyWith(primaryColor: Color(color)),
+        lightTheme.copyWith(primaryColor: Color(color)),
       );
     }
 

@@ -1,8 +1,8 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/constants.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
@@ -32,13 +32,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       themeMode: ThemeMode.light,
-      theme: box.read('darkMode')
-          ? NordTheme.dark().copyWith(
-              primaryColor: Color(int.parse(box.read('accent_color'))),
-            )
-          : NordTheme.light().copyWith(
-              primaryColor: Color(int.parse(box.read('accent_color'))),
-            ),
+      theme: box.read('darkMode') ? darkTheme : lightTheme,
       title: 'fluddit',
       home: FutureBuilder(
         builder: (context, AsyncSnapshot snapshot) {
@@ -57,12 +51,16 @@ Future<void> _initStorage() async {
   await GetStorage.init();
   GetStorage().writeIfNull('accent_color', '0xffb48ead');
   GetStorage().writeIfNull('darkMode', true);
+  GetStorage().writeIfNull('autoMute', false);
 }
 
 void _loadBlocs() {
   Get.put<AuthController>(AuthController());
-  Get.put<ComponentController>(ComponentController());
+  ComponentController component =
+      Get.put<ComponentController>(ComponentController());
   Get.put<PostController>(PostController());
   Get.put<RedditController>(RedditController());
   Get.put<UserController>(UserController());
+
+  component.autoMute.value = GetStorage().read('autoMute');
 }
