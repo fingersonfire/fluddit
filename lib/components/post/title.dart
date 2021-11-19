@@ -15,7 +15,6 @@ class TitleBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
       width: MediaQuery.of(context).size.width,
-      height: 115,
       color: Theme.of(context).cardColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -25,7 +24,7 @@ class TitleBar extends StatelessWidget {
           Text(
             reddit.posts[postIndex].title,
             softWrap: true,
-            maxLines: 3,
+            maxLines: 8,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 14,
