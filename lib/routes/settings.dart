@@ -31,19 +31,19 @@ class Settings extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 15, left: 20),
               width: MediaQuery.of(context).size.width,
-              child: const Text(
+              child: Text(
                 'Theme Settings',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 24),
+                style: Theme.of(context).textTheme.headline2,
               ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 15, left: 20),
               width: MediaQuery.of(context).size.width,
-              child: const Text(
+              child: Text(
                 'Accent Color:',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 18),
+                style: Theme.of(context).textTheme.headline4,
               ),
             ),
             SizedBox(
@@ -65,14 +65,15 @@ class Settings extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Container(
                   margin: const EdgeInsets.only(left: 20),
-                  child: const Text(
+                  child: Text(
                     'Dark Theme:',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 18),
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
                 Container(
@@ -94,20 +95,20 @@ class Settings extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 10, left: 20, bottom: 10),
               width: MediaQuery.of(context).size.width,
-              child: const Text(
+              child: Text(
                 'Content Settings',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 24),
+                style: Theme.of(context).textTheme.headline2,
               ),
             ),
             Row(
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(left: 20),
-                  child: const Text(
+                  child: Text(
                     'Auto-mute videos:',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 18),
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
                 Container(
