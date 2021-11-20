@@ -42,7 +42,7 @@ class PostVoteButtons extends StatelessWidget {
               Icons.arrow_downward_outlined,
               color: reddit.posts[postIndex].vote == -1
                   ? Colors.purple[300]
-                  : Colors.white,
+                  : Theme.of(context).iconTheme.color,
             ),
           ),
           Text(
@@ -64,7 +64,7 @@ class PostVoteButtons extends StatelessWidget {
               Icons.arrow_upward_outlined,
               color: reddit.posts[postIndex].vote == 1
                   ? Colors.orange[300]
-                  : Colors.white,
+                  : Theme.of(context).iconTheme.color,
             ),
           ),
         ],

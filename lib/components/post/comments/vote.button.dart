@@ -47,7 +47,9 @@ class VoteButtons extends StatelessWidget {
           },
           icon: Icon(
             Icons.arrow_downward_outlined,
-            color: comment.vote == -1 ? Colors.purple[300] : Colors.white,
+            color: comment.vote == -1
+                ? Colors.purple[300]
+                : Theme.of(context).iconTheme.color,
           ),
         ),
         Text(
@@ -64,7 +66,9 @@ class VoteButtons extends StatelessWidget {
           },
           icon: Icon(
             Icons.arrow_upward_outlined,
-            color: comment.vote == 1 ? Colors.orange[300] : Colors.white,
+            color: comment.vote == 1
+                ? Colors.orange[300]
+                : Theme.of(context).iconTheme.color,
           ),
         ),
       ],
