@@ -14,7 +14,7 @@ class SharePostButton extends StatelessWidget {
       onPressed: () {
         final post = reddit.posts[component.carouselIndex.value];
         Share.share(
-          'https://www.reddit.com/r/${post.subreddit}/${post.id}',
+          'https://www.reddit.com${post.permaLink}',
         );
       },
       icon: const Icon(

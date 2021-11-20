@@ -14,6 +14,7 @@ class PostController extends GetxController {
     isSelf: false,
     isVideo: false,
     metaData: {},
+    permaLink: '',
     postHint: '',
     saved: false,
     score: 0,

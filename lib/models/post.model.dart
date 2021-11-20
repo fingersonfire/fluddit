@@ -12,6 +12,7 @@ class Post {
   final bool isSelf;
   final bool isVideo;
   final Map metaData;
+  final String permaLink;
   final String? postHint;
   bool saved;
   int score;
@@ -36,6 +37,7 @@ class Post {
     required this.isSelf,
     required this.isVideo,
     required this.metaData,
+    required this.permaLink,
     required this.postHint,
     required this.saved,
     required this.score,
@@ -62,6 +64,7 @@ class Post {
       isSelf: json['is_self'],
       isVideo: json['is_video'],
       metaData: json['media_metadata'] ?? {},
+      permaLink: json['permalink'] ?? '',
       postHint: json['post_hint'],
       saved: json['saved'],
       score: json['score'],
