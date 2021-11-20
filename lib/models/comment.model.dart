@@ -57,7 +57,7 @@ class Comment {
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
       author: json['author'],
-      body: json['body'],
+      body: _replaceHtml(json['body']),
       fullName: json['name'],
       id: json['id'],
       replies: _getReplies(json['replies']),
@@ -66,6 +66,11 @@ class Comment {
       vote: _getVote(json['likes']),
     );
   }
+}
+
+String _replaceHtml(String text) {
+  String formatedText = text.replaceAll('&gt;', '>');
+  return formatedText;
 }
 
 // This is what causes the recursion to occur

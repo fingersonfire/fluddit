@@ -41,6 +41,11 @@ class CommentTile extends StatelessWidget {
                 onTapLink: (String text, String? url, String other) {
                   Get.to(() => WebPage(url: (url ?? '')));
                 },
+                styleSheet: MarkdownStyleSheet(
+                  blockquoteDecoration: BoxDecoration(
+                    color: Theme.of(context).dialogBackgroundColor,
+                  ),
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
