@@ -12,7 +12,7 @@ class ProfileContent extends StatefulWidget {
 }
 
 class _ProfileContentState extends State<ProfileContent> {
-  final RedditController reddit = Get.find();
+  final UserController user = Get.find();
 
   int index = 0;
 
@@ -30,8 +30,10 @@ class _ProfileContentState extends State<ProfileContent> {
           Container(
             margin: const EdgeInsets.all(15),
             child: Text(
-              reddit.userName.value,
-              style: const TextStyle(fontSize: 26),
+              'u/${user.username.value}',
+              style: const TextStyle(
+                fontSize: 26,
+              ),
             ),
           ),
           Row(
@@ -41,20 +43,35 @@ class _ProfileContentState extends State<ProfileContent> {
                 onPressed: () {
                   changeIndex(0);
                 },
-                child: const Icon(Icons.article_rounded),
+                child: Icon(
+                  Icons.article_rounded,
+                  color: index == 0
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).iconTheme.color,
+                ),
               ),
               MaterialButton(
                 onPressed: () {
                   changeIndex(1);
                 },
-                child: const Icon(Icons.question_answer_rounded),
+                child: Icon(
+                  Icons.question_answer_rounded,
+                  color: index == 1
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).iconTheme.color,
+                ),
               ),
-              MaterialButton(
-                onPressed: () {
-                  changeIndex(2);
-                },
-                child: const Icon(Icons.bookmark_rounded),
-              ),
+              // MaterialButton(
+              //   onPressed: () {
+              //     changeIndex(2);
+              //   },
+              //   child: Icon(
+              //     Icons.bookmark_rounded,
+              //     color: index == 2
+              //         ? Theme.of(context).primaryColor
+              //         : Theme.of(context).iconTheme.color,
+              //   ),
+              // ),
             ],
           ),
           Expanded(

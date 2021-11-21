@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 class RedditController extends GetxController {
   RxString after = ''.obs;
+  RxList<Post> feedPosts = <Post>[].obs;
   RxString listing = 'hot'.obs;
   RxList<Post> posts = <Post>[].obs;
   RxString name = 'frontpage'.obs;
@@ -57,8 +58,6 @@ class RedditController extends GetxController {
     }
   }
 
-  Future<void> getPost(String postId) async {}
-
   Future<Map<String, dynamic>> getPosts({
     required String after,
     required int limit,
@@ -95,10 +94,10 @@ class RedditController extends GetxController {
     return {'after': _json['data']['after'], 'posts': posts};
   }
 
-  Future<void> getInitPosts(String subreddit) async {
+  Future<void> getFeedPosts(String subreddit) async {
     name.value = subreddit;
     after.value = '';
-    posts.clear();
+    feedPosts.clear();
 
     final Map<String, dynamic> _data = await getPosts(
       after: after.value,
@@ -109,7 +108,7 @@ class RedditController extends GetxController {
     );
 
     after.value = _data['after'] ?? '';
-    posts.value = _data['posts'].toList().cast<Post>();
+    feedPosts.value = _data['posts'].toList().cast<Post>();
   }
 
   Future getNextPosts() async {
@@ -122,7 +121,7 @@ class RedditController extends GetxController {
     );
 
     after.value = _data['after'];
-    posts.addAll(_data['posts'].toList().cast<Post>());
+    feedPosts.addAll(_data['posts'].toList().cast<Post>());
   }
 
   Future<List<Comment>> getPostComments({
@@ -160,13 +159,10 @@ class RedditController extends GetxController {
     return posts.indexWhere((p) => p.id == postId);
   }
 
-  Future<dynamic> getUserComments(String username) async {
-    http.Response _resp = await _get('/user/$username/comments');
-    return jsonDecode(_resp.body);
-  }
-
-  Future<User> getUserInfo() async {
-    http.Response _resp = await _get('/api/v1/me');
+  Future<User> getUserInfo({String? username}) async {
+    http.Response _resp = username == null
+        ? await _get('/api/v1/me')
+        : await _get('/user/$username/about');
 
     final _json = jsonDecode(_resp.body);
     final User user = User.fromJson(_json);
@@ -180,20 +176,6 @@ class RedditController extends GetxController {
     if (subscriptions.isNotEmpty) {
       this.subscriptions.value = subscriptions;
     }
-  }
-
-  Future<List<Post>> getUserPosts(String username) async {
-    http.Response _resp = await _get('/user/$username/submitted');
-    final _json = jsonDecode(_resp.body);
-
-    final List<Post> posts = _json['data']['children']
-        .map((p) {
-          return Post.fromJson(p['data']);
-        })
-        .toList()
-        .cast<Post>();
-
-    return posts;
   }
 
   /// Fetches the subreddits for the logged in user.
@@ -227,7 +209,7 @@ class RedditController extends GetxController {
       userName.value = info.name;
     }
 
-    getInitPosts('frontpage');
+    getFeedPosts('frontpage');
   }
 
   Future<void> savePost(int postIndex) async {

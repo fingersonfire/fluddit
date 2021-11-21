@@ -1,17 +1,23 @@
 import 'package:fluddit/bloc/index.dart';
+import 'package:fluddit/constants.dart';
 import 'package:fluddit/models/index.dart';
-import 'package:fluddit/routes/post.dart';
+import 'package:fluddit/routes/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostTile extends StatelessWidget {
-  PostTile({Key? key, required this.post, this.width}) : super(key: key);
+  PostTile({
+    Key? key,
+    required this.post,
+    required this.posts,
+  }) : super(key: key);
 
+  final Posts posts;
   final Post post;
-  final double? width;
 
-  final RedditController reddit = Get.find();
   final ComponentController comp = Get.find();
+  final RedditController reddit = Get.find();
+  final UserController user = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +26,16 @@ class PostTile extends StatelessWidget {
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () {
+          switch (posts) {
+            case Posts.feed:
+              reddit.posts = reddit.feedPosts;
+              break;
+            case Posts.user:
+              reddit.posts = user.posts;
+              break;
+            default:
+          }
+
           final postIndex = reddit.posts.indexOf(post);
           comp.carouselIndex.value = postIndex;
 

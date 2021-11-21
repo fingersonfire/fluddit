@@ -10,10 +10,12 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> data = json['data'] ?? json;
+
     return User(
-      commentKarma: json['comment_karma'],
-      name: json['name'],
-      postKarma: json['link_karma'],
+      commentKarma: data['comment_karma'] ?? 0,
+      name: data['name'] ?? '',
+      postKarma: data['link_karma'] ?? 0,
     );
   }
 }

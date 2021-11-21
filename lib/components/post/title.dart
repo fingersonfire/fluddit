@@ -1,6 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/bloc/reddit.bloc.dart';
-import 'package:fluddit/components/post/vote.buttons.dart';
+import 'package:fluddit/components/index.dart';
 import 'package:flutter/material.dart';
 
 class TitleBar extends StatelessWidget {
@@ -33,9 +33,14 @@ class TitleBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'u/${reddit.posts[postIndex].author}',
-                style: const TextStyle(fontSize: 12),
+              GestureDetector(
+                onTap: () {
+                  // profileDialog(username: reddit.posts[postIndex].author);
+                },
+                child: Text(
+                  'u/${reddit.posts[postIndex].author}',
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
               PostVoteButtons(postIndex: postIndex),
             ],

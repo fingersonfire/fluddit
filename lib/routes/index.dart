@@ -4,7 +4,7 @@ export 'loading.dart';
 
 export 'login.dart';
 
-export 'post.dart';
+export 'posts.dart';
 
 export 'search.dart';
 

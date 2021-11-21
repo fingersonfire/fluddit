@@ -86,7 +86,7 @@ class _SearchViewState extends State<SearchView> {
         ],
         leading: IconButton(
           onPressed: () {
-            reddit.getInitPosts('frontpage');
+            reddit.getFeedPosts('frontpage');
             Get.back();
           },
           icon: const Icon(
@@ -120,7 +120,7 @@ class SearchBody extends StatelessWidget {
     if (condition) {
       return WillPopScope(
         onWillPop: () async {
-          reddit.getInitPosts('frontpage');
+          reddit.getFeedPosts('frontpage');
           return true;
         },
         child: FutureBuilder(
@@ -135,7 +135,7 @@ class SearchBody extends StatelessWidget {
                     height: 100,
                     onPressed: () {
                       reddit.name.value = subreddit.name;
-                      reddit.getInitPosts(subreddit.name);
+                      reddit.getFeedPosts(subreddit.name);
                       Get.to(() => SearchFeed(subreddit: subreddit));
                     },
                     child: Row(

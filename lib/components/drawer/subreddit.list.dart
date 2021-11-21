@@ -32,7 +32,7 @@ class SubredditList extends StatelessWidget {
                       ),
                       onPressed: () {
                         if (reddit.name.value != 'frontpage') {
-                          reddit.getInitPosts('frontpage');
+                          reddit.getFeedPosts('frontpage');
                         }
                         Get.back();
                       },

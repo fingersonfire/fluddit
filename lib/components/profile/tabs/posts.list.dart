@@ -1,6 +1,7 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/bloc/user.bloc.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/constants.dart';
 import 'package:flutter/material.dart';
 
 class UserPostsTab extends StatelessWidget {
@@ -17,7 +18,7 @@ class UserPostsTab extends StatelessWidget {
           if (i < user.posts.length) {
             return PostTile(
               post: user.posts[i],
-              width: MediaQuery.of(context).size.width - 155,
+              posts: Posts.user,
             );
           } else {
             if (user.posts.isNotEmpty && user.after.value != '') {

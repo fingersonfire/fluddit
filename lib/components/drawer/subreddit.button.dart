@@ -21,7 +21,7 @@ class SubredditButton extends StatelessWidget {
       ),
       onPressed: () {
         reddit.subreddit = subreddit;
-        reddit.getInitPosts(subreddit.name);
+        reddit.getFeedPosts(subreddit.name);
         Get.back();
       },
     );

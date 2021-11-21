@@ -24,7 +24,7 @@ class BottomNavBar extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () async {
-              await reddit.getInitPosts(reddit.name.value);
+              await reddit.getFeedPosts(reddit.name.value);
             },
             icon: const Icon(Icons.refresh_outlined),
           ),

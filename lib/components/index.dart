@@ -53,6 +53,8 @@ export 'post/share.button.dart';
 
 export 'post/title.dart';
 
+export 'post/vote.buttons.dart';
+
 // Profile dialog components
 export 'profile/dialog.dart';
 

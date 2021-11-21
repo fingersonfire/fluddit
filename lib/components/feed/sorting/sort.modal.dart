@@ -35,7 +35,7 @@ void sortDialog(BuildContext context) {
                 MaterialButton(
                   onPressed: () {
                     HapticFeedback.mediumImpact();
-                    reddit.getInitPosts(reddit.name.value);
+                    reddit.getFeedPosts(reddit.name.value);
                     Get.back();
                   },
                   child: const Text(

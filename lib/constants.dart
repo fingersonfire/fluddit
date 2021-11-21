@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nord_theme/flutter_nord_theme.dart';
 import 'package:get_storage/get_storage.dart';
 
+enum Posts {
+  feed,
+  search,
+  user,
+}
+
 ThemeData darkTheme = NordTheme.dark().copyWith(
   primaryColor: Color(int.parse(GetStorage().read('accent_color'))),
   textTheme: NordTheme.dark().textTheme.copyWith(

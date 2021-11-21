@@ -1,5 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/components/index.dart';
+import 'package:fluddit/constants.dart';
 import 'package:flutter/material.dart';
 
 class FeedPosts extends StatelessWidget {
@@ -14,16 +15,19 @@ class FeedPosts extends StatelessWidget {
       color: Colors.transparent,
       child: Obx(
         () => ListView.builder(
-          itemCount: reddit.posts.length + 1,
+          itemCount: reddit.feedPosts.length + 1,
           itemBuilder: (context, i) {
-            if (i < reddit.posts.length) {
-              return PostTile(post: reddit.posts[i]);
+            if (i < reddit.feedPosts.length) {
+              return PostTile(
+                post: reddit.feedPosts[i],
+                posts: Posts.feed,
+              );
             } else {
-              if (reddit.posts.isNotEmpty && reddit.after.value != '') {
+              if (reddit.feedPosts.isNotEmpty && reddit.after.value != '') {
                 reddit.getNextPosts();
               }
 
-              if (reddit.posts.isNotEmpty && reddit.after.value == '') {
+              if (reddit.feedPosts.isNotEmpty && reddit.after.value == '') {
                 return Container();
               } else {
                 return const SizedBox(

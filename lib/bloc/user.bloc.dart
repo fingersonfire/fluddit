@@ -30,6 +30,20 @@ class UserController extends GetxController {
     this.comments.addAll(comments);
   }
 
+  Future<void> getUserInfo(String? username) async {
+    http.Response _resp = username == null
+        ? await _get('/api/v1/me')
+        : await _get('/user/$username/about');
+
+    final _json = jsonDecode(_resp.body);
+    final User user = User.fromJson(_json);
+
+    this.username.value = user.name;
+
+    await getUserComments(user.name);
+    await getUserPosts(user.name);
+  }
+
   Future<void> getUserComments(String userName) async {
     http.Response _resp = await _get('/user/$userName/comments?limit=25');
     final _json = jsonDecode(_resp.body);
