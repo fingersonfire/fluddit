@@ -15,10 +15,12 @@ class ImageContent extends StatelessWidget {
         post.domain == 'imgur.com' ? '${post.url}.jpg' : post.url ?? '';
     return GestureDetector(
       onTap: () {
-        displayImageViewer(url);
+        displayImageViewer(post.id, url);
       },
       child: CachedNetworkImage(
         imageUrl: url,
+        fadeInDuration: const Duration(seconds: 0),
+        fadeOutDuration: const Duration(seconds: 0),
         placeholder: (context, string) {
           return const LoadingIndicator();
         },
