@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/constants.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   // Calling this as the binding needs to be initialized before running the app
@@ -48,6 +51,9 @@ class App extends StatelessWidget {
 }
 
 Future<void> _initStorage() async {
+  Directory dir = await getApplicationSupportDirectory();
+  GetStorage('GetStorage', dir.path);
+
   await GetStorage.init();
   GetStorage().writeIfNull('accent_color', '0xffb48ead');
   GetStorage().writeIfNull('darkMode', true);

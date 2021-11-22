@@ -50,7 +50,10 @@ Widget getContent(Post post, BoxConstraints constraints) {
   } else if (component.isImage(post.url) || post.domain == 'imgur.com') {
     return ImageContent(post: post);
   } else if (post.isGallery) {
-    return GalleryContent(constraints: constraints, post: post);
+    return GalleryContent(
+      constraints: constraints,
+      post: post,
+    );
   } else {
     return WebContent(url: '${post.url}');
   }
