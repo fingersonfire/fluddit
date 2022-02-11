@@ -3,7 +3,6 @@ import 'package:fluddit/constants.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/routes/posts.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class PostTile extends StatelessWidget {
   PostTile({
