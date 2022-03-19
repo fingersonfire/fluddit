@@ -37,10 +37,6 @@ export 'feed/subscribe.button.dart';
 // Post view components
 export 'post/comments/tile.dart';
 
-export 'post/comments/comments.dart';
-
-export 'post/comments/list.dart';
-
 export 'post/comments/vote.button.dart';
 
 export 'post/reply/reply.dart';

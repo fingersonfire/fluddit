@@ -147,8 +147,8 @@ class RedditController extends GetxController {
     if (posts.where((p0) => p0.id == postId).isNotEmpty) {
       final int pIndex = _getPostIdIndex(postId);
 
-      posts[pIndex].updateComments(flattenedComments);
       posts[pIndex].commentsLoaded = true;
+      posts[pIndex].updateComments(flattenedComments);
       posts.refresh();
     }
 

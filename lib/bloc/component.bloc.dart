@@ -25,7 +25,7 @@ class ComponentController extends GetxController {
   }
 
   void displaySnackbar(String message) {
-    if (!(Get.isSnackbarOpen ?? false)) {
+    if (!Get.isSnackbarOpen) {
       Get.snackbar(
         'Alert',
         message,

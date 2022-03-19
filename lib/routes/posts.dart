@@ -6,13 +6,55 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 
-class PostView extends StatelessWidget {
-  PostView({Key? key, required this.post}) : super(key: key);
+class PostView extends StatefulWidget {
+  const PostView({Key? key, required this.post}) : super(key: key);
 
   final Post post;
 
+  @override
+  State<PostView> createState() => _PostViewState();
+}
+
+class _PostViewState extends State<PostView> {
   final ComponentController component = Get.find();
   final RedditController reddit = Get.find();
+
+  late int initialIndex;
+
+  @override
+  void initState() {
+    initialIndex = reddit.posts.indexOf(widget.post);
+
+    reddit.getPostComments(
+      subreddit: widget.post.subreddit,
+      postId: widget.post.id,
+    );
+
+    super.initState();
+  }
+
+  Widget getComment(BuildContext context, int commentIndex, int postIndex) {
+    if (!reddit.posts[postIndex].commentsLoaded) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 75,
+        child: const LoadingIndicator(),
+      );
+    } else if (reddit.posts[postIndex].comments.isEmpty) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 75,
+        child: const Center(
+          child: Text('No comments'),
+        ),
+      );
+    } else {
+      return CommentTile(
+        commentIndex: commentIndex,
+        postIndex: postIndex,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,46 +76,67 @@ class PostView extends StatelessWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            final int postIndex = reddit.posts.indexOf(post);
+            return Obx(() {
+              return CarouselSlider(
+                options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  height: constraints.maxHeight,
+                  initialPage: initialIndex,
+                  onPageChanged: (index, pageChange) {
+                    component.onCarouselPageUpdate(index, pageChange);
 
-            return CarouselSlider(
-              options: CarouselOptions(
-                enableInfiniteScroll: false,
-                height: constraints.maxHeight,
-                initialPage: postIndex,
-                onPageChanged: component.onCarouselPageUpdate,
-                viewportFraction: 1,
-              ),
-              items: List.generate(
-                reddit.posts.length,
-                (i) {
-                  final post = reddit.posts[i];
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: constraints.maxHeight,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: ContentBox(
-                                  constraints: constraints,
-                                  post: post,
-                                ),
+                    reddit.getPostComments(
+                      subreddit: reddit.posts[index].subreddit,
+                      postId: reddit.posts[index].id,
+                    );
+                  },
+                  viewportFraction: 1,
+                ),
+                items: List.generate(
+                  reddit.posts.length,
+                  (postIndex) {
+                    return NestedScrollView(
+                      headerSliverBuilder: (
+                        BuildContext context,
+                        bool innerBoxIsScrolled,
+                      ) {
+                        return <Widget>[
+                          SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: constraints.maxHeight,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: ContentBox(
+                                      constraints: constraints,
+                                      post: reddit.posts[postIndex],
+                                    ),
+                                  ),
+                                  TitleBar(
+                                    postIndex: postIndex,
+                                  ),
+                                ],
                               ),
-                              TitleBar(
-                                postIndex: i,
-                              ),
-                            ],
+                            ),
                           ),
+                        ];
+                      },
+                      body: ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: reddit.posts[postIndex].comments.isEmpty
+                            ? 1
+                            : reddit.posts[postIndex].comments.length,
+                        itemBuilder: (context, index) => getComment(
+                          context,
+                          index,
+                          postIndex,
                         ),
-                        CommentContent(post: post),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            );
+                      ),
+                    );
+                  },
+                ),
+              );
+            });
           },
         ),
       ),
