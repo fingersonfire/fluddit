@@ -4,7 +4,6 @@ import 'package:fluddit/components/index.dart';
 import 'package:fluddit/routes/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
