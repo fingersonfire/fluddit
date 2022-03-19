@@ -23,12 +23,6 @@ class BottomNavBar extends StatelessWidget {
               }),
           const Spacer(),
           IconButton(
-            onPressed: () async {
-              await reddit.getFeedPosts(reddit.name.value);
-            },
-            icon: const Icon(Icons.refresh_outlined),
-          ),
-          IconButton(
             onPressed: () {
               sortDialog(context);
             },
