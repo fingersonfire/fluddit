@@ -9,10 +9,12 @@ class PostTile extends StatelessWidget {
     Key? key,
     required this.post,
     required this.posts,
+    this.disableTopPadding = false,
   }) : super(key: key);
 
   final Posts posts;
   final Post post;
+  final bool disableTopPadding;
 
   final ComponentController comp = Get.find();
   final RedditController reddit = Get.find();
@@ -21,7 +23,11 @@ class PostTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+      margin: EdgeInsets.only(
+        top: disableTopPadding ? 0 : 10,
+        left: 10,
+        right: 10,
+      ),
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () {

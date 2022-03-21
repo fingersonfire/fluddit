@@ -5,7 +5,6 @@ import 'package:fluddit/components/feed/sorting/components/listing.dropdown.dart
 import 'package:fluddit/components/feed/sorting/components/time.dropdown.dart';
 import 'package:fluddit/widgets/index.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 void sortDialog(BuildContext context) {
   final RedditController reddit = Get.find();

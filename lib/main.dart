@@ -29,6 +29,8 @@ class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
 
   final AuthController auth = Get.find();
+  final UserController user = Get.find();
+
   final GetStorage box = GetStorage();
 
   @override
@@ -40,8 +42,12 @@ class App extends StatelessWidget {
       home: FutureBuilder(
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            if (box.read('access_token') != null) {
+              user.getUserInfo();
+            }
             return Feed();
           }
+
           return const LoadingView();
         },
         future: auth.refreshAuthToken(),

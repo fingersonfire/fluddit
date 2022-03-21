@@ -1,7 +1,6 @@
 import 'package:fluddit/bloc/index.dart';
 import 'package:fluddit/models/index.dart';
 import 'package:fluddit/widgets/index.dart';
-import 'package:flutter/material.dart';
 
 class DefaultThumbnail extends StatelessWidget {
   DefaultThumbnail({

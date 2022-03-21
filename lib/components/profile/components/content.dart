@@ -1,5 +1,4 @@
 import 'package:fluddit/bloc/index.dart';
-import 'package:fluddit/bloc/reddit.bloc.dart';
 import 'package:fluddit/components/profile/tabs/comments.list.dart';
 import 'package:fluddit/components/profile/tabs/posts.list.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +26,86 @@ class _ProfileContentState extends State<ProfileContent> {
     return Material(
       child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.all(15),
-            child: Text(
+          AppBar(
+            backgroundColor: Theme.of(context).backgroundColor,
+            leading: const SizedBox(),
+            centerTitle: true,
+            elevation: 0,
+            title: Text(
               'u/${user.username.value}',
               style: const TextStyle(
-                fontSize: 26,
+                fontSize: 18,
               ),
             ),
+            primary: false,
+            actions: [
+              GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
+                  child: Icon(
+                    Icons.people_alt,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 1),
+          Container(
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          '${user.linkKarma}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Post Karma',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '${user.commentKarma}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Comment Karma',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

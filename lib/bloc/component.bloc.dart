@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fluddit/components/index.dart';
 import 'package:fluddit/constants.dart';

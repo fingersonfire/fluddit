@@ -8,8 +8,10 @@ import 'package:http/http.dart' as http;
 class UserController extends GetxController {
   RxString after = ''.obs;
   RxString commentAfter = ''.obs;
+  RxInt commentKarma = 0.obs;
   RxList<Comment> comments = <Comment>[].obs;
   RxBool isLoaded = false.obs;
+  RxInt linkKarma = 0.obs;
   RxList<Post> posts = <Post>[].obs;
   Rx<String> username = ''.obs;
 
@@ -30,7 +32,7 @@ class UserController extends GetxController {
     this.comments.addAll(comments);
   }
 
-  Future<void> getUserInfo(String? username) async {
+  Future<void> getUserInfo({String? username}) async {
     http.Response _resp = username == null
         ? await _get('/api/v1/me')
         : await _get('/user/$username/about');
@@ -39,6 +41,8 @@ class UserController extends GetxController {
     final User user = User.fromJson(_json);
 
     this.username.value = user.name;
+    commentKarma.value = user.commentKarma;
+    linkKarma.value = user.postKarma;
 
     await getUserComments(user.name);
     await getUserPosts(user.name);
