@@ -20,10 +20,15 @@ class _PostViewState extends State<PostView> {
   final RedditController reddit = Get.find();
 
   late int initialIndex;
+  late PageController pageController;
 
   @override
   void initState() {
     initialIndex = reddit.posts.indexOf(widget.post);
+    pageController = PageController(
+      initialPage: initialIndex,
+      viewportFraction: 1,
+    );
 
     reddit.getPostComments(
       subreddit: widget.post.subreddit,
@@ -77,64 +82,40 @@ class _PostViewState extends State<PostView> {
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return Obx(() {
-              return CarouselSlider(
-                options: CarouselOptions(
-                  enableInfiniteScroll: false,
-                  height: constraints.maxHeight,
-                  initialPage: initialIndex,
-                  onPageChanged: (index, pageChange) {
-                    component.onCarouselPageUpdate(index, pageChange);
+              return PageView.builder(
+                controller: pageController,
+                onPageChanged: (index) {
+                  component.onCarouselPageUpdate(index);
 
-                    reddit.getPostComments(
-                      subreddit: reddit.posts[index].subreddit,
-                      postId: reddit.posts[index].id,
-                    );
-                  },
-                  viewportFraction: 1,
-                ),
-                items: List.generate(
-                  reddit.posts.length,
-                  (postIndex) {
-                    return NestedScrollView(
-                      headerSliverBuilder: (
-                        BuildContext context,
-                        bool innerBoxIsScrolled,
-                      ) {
-                        return <Widget>[
-                          SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: constraints.maxHeight,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ContentBox(
-                                      constraints: constraints,
-                                      post: reddit.posts[postIndex],
-                                    ),
-                                  ),
-                                  TitleBar(
-                                    postIndex: postIndex,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ];
-                      },
-                      body: ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: reddit.posts[postIndex].comments.isEmpty
-                            ? 1
-                            : reddit.posts[postIndex].comments.length,
-                        itemBuilder: (context, index) => getComment(
-                          context,
-                          index,
-                          postIndex,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                  reddit.getPostComments(
+                    subreddit: reddit.posts[index].subreddit,
+                    postId: reddit.posts[index].id,
+                  );
+                },
+                itemCount: reddit.posts.length,
+                itemBuilder: (context, postIndex) {
+                  return ListView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: reddit.posts[postIndex].comments.isEmpty
+                        ? 2
+                        : reddit.posts[postIndex].comments.length,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return ContentWidget(
+                          constraints: constraints,
+                          post: reddit.posts[postIndex],
+                          postIndex: postIndex,
+                        );
+                      }
+
+                      return getComment(
+                        context,
+                        --index,
+                        postIndex,
+                      );
+                    },
+                  );
+                },
               );
             });
           },
@@ -142,4 +123,51 @@ class _PostViewState extends State<PostView> {
       ),
     );
   }
+}
+
+class ContentWidget extends StatefulWidget {
+  const ContentWidget({
+    Key? key,
+    required this.constraints,
+    required this.post,
+    required this.postIndex,
+  }) : super(key: key);
+
+  final BoxConstraints constraints;
+  final Post post;
+  final int postIndex;
+
+  @override
+  ContentWidgetState createState() {
+    return ContentWidgetState();
+  }
+}
+
+class ContentWidgetState extends State<ContentWidget>
+    with AutomaticKeepAliveClientMixin {
+  final ComponentController component = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return SizedBox(
+      height: widget.constraints.maxHeight,
+      child: Column(
+        children: [
+          Expanded(
+            child: ContentBox(
+              constraints: widget.constraints,
+              post: widget.post,
+            ),
+          ),
+          TitleBar(
+            postIndex: widget.postIndex,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

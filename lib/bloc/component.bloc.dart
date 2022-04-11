@@ -58,7 +58,7 @@ class ComponentController extends GetxController {
         parsedUrl.endsWith('gif');
   }
 
-  void onCarouselPageUpdate(int page, CarouselPageChangedReason changedReason) {
+  void onCarouselPageUpdate(int page) {
     carouselIndex.value = page;
   }
 
